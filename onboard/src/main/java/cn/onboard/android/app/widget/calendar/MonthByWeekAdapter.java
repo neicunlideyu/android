@@ -16,6 +16,9 @@
 
 package cn.onboard.android.app.widget.calendar;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.format.Time;
@@ -28,11 +31,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.widget.calendar.CalendarController.EventType;
-import cn.onboard.android.app.widget.calendar.CalendarController.ViewType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     private static final String TAG = "MonthByWeek";
@@ -47,7 +46,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     protected Time mToday;
     protected int mFirstJulianDay;
     protected int mQueryDays;
-    //    protected boolean mIsMiniMonth = false;
+//    protected boolean mIsMiniMonth = false;
     protected int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
     private final boolean mShowAgendaWithMonth;
 
@@ -136,7 +135,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
         }
 
         if (events == null || events.size() == 0) {
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
+            if(Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "No events. Returning early--go schedule something fun.");
             }
             mEventDayList = eventDayList;
@@ -166,10 +165,10 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
                 }
             }
         }
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
+        if(Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "Processed " + events.size() + " events.");
         }
-        mEventDayList = eventDayList;
+		mEventDayList = eventDayList;
         refresh();
     }
 
@@ -283,16 +282,16 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
         day.minute = currTime.minute;
         day.allDay = false;
         day.normalize(true);
-        if (mShowAgendaWithMonth) {
+         if (mShowAgendaWithMonth) {
             // If agenda view is visible with month view , refresh the views
             // with the selected day's info
-            mController.sendEvent(mContext, EventType.GO_TO, day, day, -1,
-                    ViewType.CURRENT, CalendarController.EXTRA_GOTO_DATE, null, null);
+            mController.sendEvent(mContext, CalendarController.EventType.GO_TO, day, day, -1,
+                    CalendarController.ViewType.CURRENT, CalendarController.EXTRA_GOTO_DATE, null, null);
         } else {
             // Else , switch to the detailed view
-            mController.sendEvent(mContext, EventType.GO_TO, day, day, -1,
-                    ViewType.DETAIL,
-                    CalendarController.EXTRA_GOTO_DATE
+            mController.sendEvent(mContext, CalendarController.EventType.GO_TO, day, day, -1,
+                    CalendarController.ViewType.DETAIL,
+                            CalendarController.EXTRA_GOTO_DATE
                             | CalendarController.EXTRA_GOTO_BACK_TO_PREVIOUS, null, null);
         }
     }
@@ -319,7 +318,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
             // On Up/scroll/move/cancel: hide the "clicked" color.
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
-                    mClickedView = (MonthWeekEventsView) v;
+                    mClickedView = (MonthWeekEventsView)v;
                     mClickedXLocation = event.getX();
                     mClickTime = System.currentTimeMillis();
                     mListView.postDelayed(mDoClick, mOnDownDelay);
@@ -327,12 +326,12 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_SCROLL:
                 case MotionEvent.ACTION_CANCEL:
-                    clearClickedView((MonthWeekEventsView) v);
+                    clearClickedView((MonthWeekEventsView)v);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     // No need to cancel on vertical movement, ACTION_SCROLL will do that.
                     if (Math.abs(event.getX() - mClickedXLocation) > mMovedPixelToCancel) {
-                        clearClickedView((MonthWeekEventsView) v);
+                        clearClickedView((MonthWeekEventsView)v);
                     }
                     break;
                 default:
@@ -357,7 +356,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     // Clear the visual cues of the click animation and related running code.
     private void clearClickedView(MonthWeekEventsView v) {
         mListView.removeCallbacks(mDoClick);
-        synchronized (v) {
+        synchronized(v) {
             v.clearClickedDay();
         }
         mClickedView = null;
@@ -369,7 +368,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
         @Override
         public void run() {
             if (mClickedView != null) {
-                synchronized (mClickedView) {
+                synchronized(mClickedView) {
                     mClickedView.setClickedDay(mClickedXLocation);
                 }
                 mClickedView = null;

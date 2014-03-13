@@ -14,13 +14,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ViewSwitcher;
 
+import com.onboard.domain.model.User;
+
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.api.ApiClient;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
-import com.onboard.domain.model.User;
+import cn.onboard.android.app.ui.BaseActivity;
 
 /**
  * 用户登录页面
@@ -122,7 +124,7 @@ public class Login extends BaseActivity {
                     AppContext ac = (AppContext) getApplication();
                     User user = ac.loginVerify(account, pwd);
                     if (user != null) {
-                        user.setPassword(pwd);
+                    	user.setPassword(pwd);
                         ac.saveLoginInfo(user);// 保存登录信息
                         msg.what = 1;// 成功
                         msg.obj = user;

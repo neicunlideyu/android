@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_bar_bg_n"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/comment_foot_editer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dip"
+                android:layout_marginLeft="4dip"
+                android:layout_marginTop="5dip"
+                android:layout_weight="1"
+                android:autoLink="web|email"
+                android:background="@drawable/reply_edittext_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="top" />
+
+            <Button
+                android:id="@+id/comment_foot_pubcomment"
+                android:layout_width="45dip"
+                android:layout_height="34dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:background="@drawable/widget_button_bg"
+                android:text="评论"
+                android:textColor="@color/black"
+                android:textSize="14dip" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -27,7 +27,7 @@ public class CalendarEvent implements Cloneable {
      * 1) events with an earlier start (begin for normal events, startday for allday)
      * 2) events with a later end (end for normal events, endday for allday)
      * 3) the title (unnecessary, but nice)
-     * <p/>
+     *
      * The start and end day is sorted first so that all day events are
      * sorted correctly with respect to events that are >24 hours (and
      * therefore show up in the allday area).
@@ -55,6 +55,7 @@ public class CalendarEvent implements Cloneable {
     public boolean isRepeating;
 
     public int selfAttendeeStatus;
+
 
 
     @Override
@@ -120,6 +121,7 @@ public class CalendarEvent implements Cloneable {
 
         return e;
     }
+
 
 
     public String getTitleAndLocation() {

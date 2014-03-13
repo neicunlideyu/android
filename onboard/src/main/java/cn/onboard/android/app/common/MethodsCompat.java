@@ -16,23 +16,22 @@ import java.io.File;
 
 /**
  * Android各版本的兼容方法
- *
  * @author liux (http://my.oschina.net/liux)
  * @version 1.0
  * @created 2012-8-6
  */
 public class MethodsCompat {
-
+	
     @TargetApi(5)
     public static void overridePendingTransition(Activity activity, int enter_anim, int exit_anim) {
-        activity.overridePendingTransition(enter_anim, exit_anim);
+       	activity.overridePendingTransition(enter_anim, exit_anim);
     }
 
     @TargetApi(7)
     public static Bitmap getThumbnail(ContentResolver cr, long origId, int kind, Options options) {
-        return MediaStore.Images.Thumbnails.getThumbnail(cr, origId, kind, options);
+       	return MediaStore.Images.Thumbnails.getThumbnail(cr,origId,kind, options);
     }
-
+    
     @TargetApi(8)
     public static File getExternalCacheDir(Context context) {
 
@@ -67,5 +66,5 @@ public class MethodsCompat {
             window.setUiOptions(uiOptions);
         }
     }
-
+        
 }

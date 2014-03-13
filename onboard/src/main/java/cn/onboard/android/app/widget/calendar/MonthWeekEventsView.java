@@ -16,6 +16,14 @@
 
 package cn.onboard.android.app.widget.calendar;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -43,13 +51,6 @@ import android.view.accessibility.AccessibilityManager;
 
 import cn.onboard.android.app.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 public class MonthWeekEventsView extends SimpleWeekView {
 
@@ -113,6 +114,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
     // This is for drawing the outlines around event chips and supports up to 10
     // events being drawn on each day. The code will expand this if necessary.
     protected FloatRef mEventOutlines = new FloatRef(10 * 4 * 4 * 7);
+
 
 
     protected static StringBuilder mStringBuilder = new StringBuilder(50);
@@ -431,9 +433,9 @@ public class MonthWeekEventsView extends SimpleWeekView {
         mEventExtrasPaint.setColor(mMonthEventExtraColor);
         mEventExtrasPaint.setStyle(Style.FILL);
         mEventExtrasPaint.setTextAlign(Align.LEFT);
-        mExtrasHeight = (int) (mEventExtrasPaint.descent() - mEventExtrasPaint.ascent() + 0.5f);
-        mExtrasAscentHeight = (int) (-mEventExtrasPaint.ascent() + 0.5f);
-        mExtrasDescent = (int) (mEventExtrasPaint.descent() + 0.5f);
+        mExtrasHeight = (int)(mEventExtrasPaint.descent() - mEventExtrasPaint.ascent() + 0.5f);
+        mExtrasAscentHeight = (int)(-mEventExtrasPaint.ascent() + 0.5f);
+        mExtrasDescent = (int)(mEventExtrasPaint.descent() + 0.5f);
 
         mEventDeclinedExtrasPaint = new TextPaint();
         mEventDeclinedExtrasPaint.setFakeBoldText(false);
@@ -804,20 +806,20 @@ public class MonthWeekEventsView extends SimpleWeekView {
      * if the event and its extras won't fit or if there are more events and the
      * more events line would not fit after drawing this event.
      *
-     * @param canvas     the canvas to draw on
-     * @param event      the event to draw
-     * @param x          the top left corner for this event's color chip
-     * @param y          the top left corner for this event's color chip
-     * @param rightEdge  the rightmost point we're allowed to draw on (exclusive)
+     * @param canvas the canvas to draw on
+     * @param event the event to draw
+     * @param x the top left corner for this event's color chip
+     * @param y the top left corner for this event's color chip
+     * @param rightEdge the rightmost point we're allowed to draw on (exclusive)
      * @param moreEvents indicates whether additional events will follow this one
-     * @param showTimes  if set, a second line with a time range will be displayed for non-all-day
-     *                   events
-     * @param doDraw     if set, do the actual drawing; otherwise this just computes the height
-     *                   and returns
+     * @param showTimes if set, a second line with a time range will be displayed for non-all-day
+     *   events
+     * @param doDraw if set, do the actual drawing; otherwise this just computes the height
+     *   and returns
      * @return the y for the next event or the original y if it won't fit
      */
     protected int drawEvent(Canvas canvas, CalendarEvent event, int x, int y, int rightEdge,
-                            boolean moreEvents, boolean showTimes, boolean doDraw) {
+            boolean moreEvents, boolean showTimes, boolean doDraw) {
         /*
          * Vertical layout:
          *   (top of box)
@@ -1100,7 +1102,6 @@ public class MonthWeekEventsView extends SimpleWeekView {
         mClickedDayIndex = getDayIndexFromLocation(xLocation);
         invalidate();
     }
-
     public void clearClickedDay() {
         mClickedDayIndex = -1;
         invalidate();

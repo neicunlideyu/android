@@ -7,6 +7,7 @@
         <item>我</item>
     </string-array>
     <string-array name="project_head_titles">
+        <item>活动</item>
         <item>代码</item>
         <item>讨论</item>
         <item>任务</item>

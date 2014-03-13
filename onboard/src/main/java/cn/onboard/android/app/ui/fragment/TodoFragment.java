@@ -10,32 +10,32 @@ import android.widget.RelativeLayout;
 
 public class TodoFragment extends Fragment {
 
-    private int companyId;
+	private int companyId;
 
-    private int projectId;
+	private int projectId;
 
-    public TodoFragment() {
-        setRetainInstance(true);
-    }
+	public TodoFragment() {
+		setRetainInstance(true);
+	}
 
-    public TodoFragment(int companyId, int projectId) {
-        this();
-        this.companyId = companyId;
-        this.projectId = projectId;
-    }
+	public TodoFragment(int companyId, int projectId) {
+		this();
+		this.companyId = companyId;
+		this.projectId = projectId;
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // construct the RelativeLayout
-        RelativeLayout v = new RelativeLayout(getActivity());
-        v.setBackgroundColor(Color.LTGRAY);
-        return v;
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// construct the RelativeLayout
+		RelativeLayout v = new RelativeLayout(getActivity());
+		v.setBackgroundColor(Color.LTGRAY);
+		return v;
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
 
 }

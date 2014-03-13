@@ -16,6 +16,11 @@
 
 package cn.onboard.android.app.widget.calendar;
 
+import java.util.Calendar;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
@@ -38,10 +43,6 @@ import android.widget.TextView;
 
 import cn.onboard.android.app.R;
 
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * <p>
@@ -56,7 +57,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
 
     private static final String TAG = "MonthFragment";
     private static final String KEY_CURRENT_TIME = "current_time";
-
+    
     private static StringBuilder mSB = new StringBuilder(50);
     private static Formatter mF = new Formatter(mSB, Locale.getDefault());
 
@@ -248,7 +249,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * different strings or modify the view params.
      */
     @SuppressWarnings("deprecation")
-    protected void setUpHeader() {
+	protected void setUpHeader() {
         mDayLabels = new String[7];
         for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
             mDayLabels[i - Calendar.SUNDAY] = DateUtils.getDayOfWeekString(i,
@@ -370,12 +371,12 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * the list will not be scrolled unless forceScroll is true. This time may
      * optionally be highlighted as selected as well.
      *
-     * @param time        The time to move to
-     * @param animate     Whether to scroll to the given time or just redraw at the
-     *                    new location
+     * @param time The time to move to
+     * @param animate Whether to scroll to the given time or just redraw at the
+     *            new location
      * @param setSelected Whether to set the given time as selected
      * @param forceScroll Whether to recenter even if the time is already
-     *                    visible
+     *            visible
      * @return Whether or not the view animated to the new location
      */
     public boolean goTo(long time, boolean animate, boolean setSelected, boolean forceScroll) {
@@ -417,7 +418,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
             }
             top = child.getTop();
             if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "child at " + (i - 1) + " has top " + top);
+                Log.d(TAG, "child at " + (i-1) + " has top " + top);
             }
         } while (top < 0);
 
@@ -467,14 +468,14 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
         return false;
     }
 
-    /**
+     /**
      * Updates the title and selected month if the view has moved to a new
      * month.
      */
     @Override
     public void onScroll(
             AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        SimpleWeekView child = (SimpleWeekView) view.getChildAt(0);
+        SimpleWeekView child = (SimpleWeekView)view.getChildAt(0);
         if (child == null) {
             return;
         }
@@ -558,14 +559,14 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * Sets the month displayed at the top of this view based on time. Override
      * to add custom events when the title is changed.
      *
-     * @param time            A day in the new focus month.
+     * @param time A day in the new focus month.
      * @param updateHighlight TODO(epastern):
      */
     protected void setMonthDisplayed(Time time, boolean updateHighlight) {
         CharSequence oldMonth = mMonthName.getText();
         int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_MONTH_DAY
                 | DateUtils.FORMAT_SHOW_YEAR;
-        mMonthName.setText(formatDateRange(mContext, time.toMillis(true), time.toMillis(true), flags));
+        mMonthName.setText(formatDateRange(mContext, time.toMillis(true),time.toMillis(true),flags));
         mMonthName.invalidate();
         if (!TextUtils.equals(oldMonth, mMonthName.getText())) {
             mMonthName.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
@@ -575,7 +576,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
             mAdapter.updateFocusMonth(mCurrentMonthDisplayed);
         }
     }
-
+    
     public static int getWeeksSinceEpochFromJulianDay(int julianDay, int firstDayOfWeek) {
         int diff = Time.THURSDAY - firstDayOfWeek;
         if (diff < 0) {
@@ -584,9 +585,9 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
         int refDay = Time.EPOCH_JULIAN_DAY - diff;
         return (julianDay - refDay) / 7;
     }
-
+    
     public String formatDateRange(Context context, long startMillis,
-                                  long endMillis, int flags) {
+            long endMillis, int flags) {
         String date;
         String tz;
         if ((flags & DateUtils.FORMAT_UTC) != 0) {
@@ -618,7 +619,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
          * Sets up the runnable with a short delay in case the scroll state
          * immediately changes again.
          *
-         * @param view        The list view that changed state
+         * @param view The list view that changed state
          * @param scrollState The new state it changed to
          */
         public void doScrollStateChange(AbsListView view, int scrollState) {

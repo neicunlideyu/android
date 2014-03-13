@@ -1,6 +1,8 @@
 package cn.onboard.android.app.ui;
 
-import android.app.ProgressDialog;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,512 +11,387 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import cn.onboard.android.app.AppConfig;
+
+import com.onboard.domain.model.Comment;
+import com.onboard.domain.model.Discussion;
+
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
-import com.onboard.domain.model.Comment;
-import com.onboard.domain.model.Discussion;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DiscussionDetail extends SherlockActivity {
-    private FrameLayout mHeader;
-    private LinearLayout mFooter;
-    private ImageView mBack;
-    private ImageView mFavorite;
-    private ImageView mRefresh;
-    private TextView mHeadTitle;
-    private ProgressBar mProgressbar;
-    private ScrollView mScrollView;
-    private ViewSwitcher mViewSwitcher;
+	private FrameLayout mHeader;
+	private LinearLayout mFooter;
+	private ImageView mRefresh;
+	private ProgressBar mProgressbar;
+	private ScrollView mScrollView;
 
-    // private BadgeView bv_comment;
-    private ImageView mDetail;
-    private ImageView mCommentList;
-    private ImageView mShare;
 
-    private ImageView mDocTYpe;
-    private TextView mTitle;
-    private TextView mAuthor;
-    private TextView mPubDate;
-    private TextView mCommentCount;
+	private TextView mAuthor;
+	private TextView mPubDate;
+	private TextView mCommentCount;
 
-    private WebView mWebView;
-    private Handler mHandler;
-    private Discussion discussion;
+	private WebView mWebView;
+	private Handler mHandler;
+	private Discussion discussion;
 
-    private int discussionId;
-    private int companyId;
-    private int projectId;
-    private String discussionNameString;
+	private int discussionId;
+	private int companyId;
+	private int projectId;
+	private String discussionTitle;
 
-    private final static int VIEWSWITCH_TYPE_DETAIL = 0x001;
-    private final static int VIEWSWITCH_TYPE_COMMENTS = 0x002;
+	private final static int DATA_LOAD_ING = 0x001;
+	private final static int DATA_LOAD_COMPLETE = 0x002;
+	private final static int DATA_LOAD_FAIL = 0x003;
 
-    private final static int DATA_LOAD_ING = 0x001;
-    private final static int DATA_LOAD_COMPLETE = 0x002;
-    private final static int DATA_LOAD_FAIL = 0x003;
 
-    // private PullToRefreshListView mLvComment;
-    // private ListViewCommentAdapter lvCommentAdapter;
-    private List<Comment> lvCommentData = new ArrayList<Comment>();
-    private View lvComment_footer;
-    private TextView lvComment_foot_more;
-    private ProgressBar lvComment_foot_progress;
-    private Handler mCommentHandler;
-    private int lvSumData;
+	private GestureDetector gd;
+	private boolean isFullScreen;
 
-    private int curId;
-    private int curCatalog; // 博客评论分类
-    private int curLvDataState;
-    private int curLvPosition;// 当前listview选中的item位置
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.blog_detail);
 
-    private ViewSwitcher mFootViewSwitcher;
-    private ImageView mFootEditebox;
-    private EditText mFootEditer;
-    private Button mFootPubcomment;
-    private ProgressDialog mProgress;
-    private InputMethodManager imm;
-    private String tempCommentKey = AppConfig.TEMP_COMMENT;
+		this.initView();
+		this.initData();
 
-    private int _id;
-    private int _uid;
-    private String _content;
+		// //加载评论视图&数据
+		// this.initCommentView();
+		// this.initCommentData();
 
-    private GestureDetector gd;
-    private boolean isFullScreen;
+		// 注册双击全屏事件
+		this.regOnDoubleEvent();
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setTitle(discussionTitle);
+		getSupportActionBar().setIcon(R.drawable.head_back);
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.blog_detail);
+	}
 
-        this.initView();
-        this.initData();
+	private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+			Intent intent = new Intent(getApplicationContext(), CommentList.class);
+			CommentList.identifiable = discussion;
+			if(discussion.getComments()!=null)
+				CommentList.comments =discussion.getComments();
+			else {
+				CommentList.comments = new ArrayList<Comment>();
+			}
+			DiscussionDetail.this.startActivity(intent);
+			return true;
+		}
+	};
 
-        // //加载评论视图&数据
-        // this.initCommentView();
-        // this.initCommentData();
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
 
-        // 注册双击全屏事件
-        this.regOnDoubleEvent();
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(discussionNameString);
-        getSupportActionBar().setIcon(R.drawable.head_back);
+		menu.add("评论").setOnMenuItemClickListener(popupListener)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		return true;
+	}
 
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return true;
+	}
 
-    private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            Intent intent = new Intent(getApplicationContext(), Login.class);
-            DiscussionDetail.this.startActivity(intent);
-            return true;
-        }
-    };
+	private void initView() {
+		discussionId = getIntent().getIntExtra("discussionId", 0);
+		companyId = getIntent().getIntExtra("companyId", 0);
+		projectId = getIntent().getIntExtra("projectId", 0);
+		discussionTitle = getIntent().getStringExtra("discussionTitle");
+		mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+		mAuthor = (TextView) findViewById(R.id.blog_detail_author);
+		mPubDate = (TextView) findViewById(R.id.blog_detail_date);
+		mCommentCount = (TextView) findViewById(R.id.blog_detail_commentcount);
 
-        menu.add("评论").setOnMenuItemClickListener(popupListener)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        return true;
-    }
+		// mDetail.setEnabled(false);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return true;
-    }
+		mWebView = (WebView) findViewById(R.id.blog_detail_webview);
+		mWebView.getSettings().setJavaScriptEnabled(false);
+		mWebView.getSettings().setSupportZoom(true);
+		mWebView.getSettings().setBuiltInZoomControls(true);
+		mWebView.getSettings().setDefaultFontSize(15);
+	}
 
-    private void initView() {
-        discussionId = getIntent().getIntExtra("discussionId", 0);
-        companyId = getIntent().getIntExtra("companyId", 0);
-        projectId = getIntent().getIntExtra("projectId", 0);
-        discussionNameString = getIntent().getStringExtra("discussionSubject");
-        // if(blogId > 0) tempCommentKey = AppConfig.TEMP_COMMENT + "_" +
-        // CommentPub.CATALOG_BLOG + "_" + blogId;
+	// 初始化控件数据
+	private void initData() {
+		mHandler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (msg.what == 1) {
+					// headButtonSwitch(DATA_LOAD_COMPLETE);
 
-        // mHeader = (FrameLayout)findViewById(R.id.blog_detail_header);
-        // mFooter = (LinearLayout)findViewById(R.id.blog_detail_footer);
-        // mBack = (ImageView)findViewById(R.id.blog_detail_back);
-        // mRefresh = (ImageView)findViewById(R.id.blog_detail_refresh);
-        // mProgressbar =
-        // (ProgressBar)findViewById(R.id.blog_detail_head_progress);
-        // mHeadTitle = (TextView)findViewById(R.id.blog_detail_head_title);
-        mViewSwitcher = (ViewSwitcher) findViewById(R.id.blog_detail_viewswitcher);
-        mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
+					// int docType = discussion.getDocumentType();
+					// if(docType == Blog.DOC_TYPE_ORIGINAL){
+					// mDocTYpe.setImageResource(R.drawable.widget_original_icon);
+					// }else if(docType == Blog.DOC_TYPE_REPASTE){
+					// mDocTYpe.setImageResource(R.drawable.widget_repaste_icon);
+					// }
+					mAuthor.setText(discussion.getCreatorName());
+					mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd")
+							.format(discussion.getCreated()));
+					mCommentCount.setText((discussion.getComments()==null?0:discussion.getComments().size())+"");
 
-        // mDetail = (ImageView)findViewById(R.id.blog_detail_footbar_detail);
-        // mCommentList =
-        // (ImageView)findViewById(R.id.blog_detail_footbar_commentlist);
-        // mShare = (ImageView)findViewById(R.id.blog_detail_footbar_share);
-        // mFavorite =
-        // (ImageView)findViewById(R.id.blog_detail_footbar_favorite);
+					// //是否收藏
+					// if(discussion.getFavorite() == 1)
+					// mFavorite.setImageResource(R.drawable.widget_bar_favorite2);
+					// else
+					// mFavorite.setImageResource(R.drawable.widget_bar_favorite);
 
-        mDocTYpe = (ImageView) findViewById(R.id.blog_detail_documentType);
-        // mTitle = (TextView)findViewById(R.id.blog_detail_title);
-        mAuthor = (TextView) findViewById(R.id.blog_detail_author);
-        mPubDate = (TextView) findViewById(R.id.blog_detail_date);
-        mCommentCount = (TextView) findViewById(R.id.blog_detail_commentcount);
+					// 显示评论数
+					// if(discussion.getCommentCount() > 0){
+					// bv_comment.setText(discussion.getCommentCount()+"");
+					// bv_comment.show();
+					// }else{
+					// bv_comment.setText("");
+					// bv_comment.hide();
+					// }
 
-        // mDetail.setEnabled(false);
+					String body = UIHelper.WEB_STYLE + discussion.getContent()
+							+ "<div style=\"margin-bottom: 80px\" />";
+					// 读取用户设置：是否加载文章图片--默认有wifi下始终加载图片
+					boolean isLoadImage;
+					AppContext ac = (AppContext) getApplication();
+					if (AppContext.NETTYPE_WIFI == ac.getNetworkType()) {
+						isLoadImage = true;
+					} else {
+						isLoadImage = ac.isLoadImage();
+					}
+					if (isLoadImage) {
+						body = body.replaceAll(
+								"(<img[^>]*?)\\s+width\\s*=\\s*\\S+", "$1");
+						body = body.replaceAll(
+								"(<img[^>]*?)\\s+height\\s*=\\s*\\S+", "$1");
+					} else {
+						body = body.replaceAll("<\\s*img\\s+([^>]*)\\s*>", "");
+					}
 
-        mWebView = (WebView) findViewById(R.id.blog_detail_webview);
-        mWebView.getSettings().setJavaScriptEnabled(false);
-        mWebView.getSettings().setSupportZoom(true);
-        mWebView.getSettings().setBuiltInZoomControls(true);
-        mWebView.getSettings().setDefaultFontSize(15);
+					mWebView.loadDataWithBaseURL(null, body, "text/html",
+							"utf-8", null);
+					mWebView.setWebViewClient(UIHelper.getWebViewClient());
 
-        // mBack.setOnClickListener(UIHelper.finish(this));
-        // mFavorite.setOnClickListener(favoriteClickListener);
-        // mRefresh.setOnClickListener(refreshClickListener);
-        // mAuthor.setOnClickListener(authorClickListener);
-        // mShare.setOnClickListener(shareClickListener);
-        // mDetail.setOnClickListener(detailClickListener);
-        // mCommentList.setOnClickListener(commentlistClickListener);
-        //
-        // bv_comment = new BadgeView(this, mCommentList);
-        // bv_comment.setBackgroundResource(R.drawable.widget_count_bg2);
-        // bv_comment.setIncludeFontPadding(false);
-        // bv_comment.setGravity(Gravity.CENTER);
-        // bv_comment.setTextSize(8f);
-        // bv_comment.setTextColor(Color.WHITE);
+					// //发送通知广播
+					// if(msg.obj != null){
+					// UIHelper.sendBroadCast(BlogDetail.this, (Notice)msg.obj);
+					// }
+				} else if (msg.what == 0) {
+					// headButtonSwitch(DATA_LOAD_FAIL);
+					//
+					// UIHelper.ToastMessage(BlogDetail.this,
+					// R.string.msg_load_is_null);
+				} else if (msg.what == -1 && msg.obj != null) {
+					// headButtonSwitch(DATA_LOAD_FAIL);
+					//
+					// ((AppException)msg.obj).makeToast(BlogDetail.this);
+				}
+			}
+		};
 
-        // imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+		initData(discussionId, false);
+	}
 
-        // mFootViewSwitcher =
-        // (ViewSwitcher)findViewById(R.id.blog_detail_foot_viewswitcher);
-        // mFootPubcomment =
-        // (Button)findViewById(R.id.blog_detail_foot_pubcomment);
-        // // mFootPubcomment.setOnClickListener(commentpubClickListener);
-        // mFootEditebox =
-        // (ImageView)findViewById(R.id.blog_detail_footbar_editebox);
-        // mFootEditebox.setOnClickListener(new View.OnClickListener() {
-        // public void onClick(View v) {
-        // mFootViewSwitcher.showNext();
-        // mFootEditer.setVisibility(View.VISIBLE);
-        // mFootEditer.requestFocus();
-        // mFootEditer.requestFocusFromTouch();
-        // }
-        // });
-        // // mFootEditer =
-        // (EditText)findViewById(R.id.blog_detail_foot_editer);
-        // mFootEditer.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        // {
-        // public void onFocusChange(View v, boolean hasFocus) {
-        // if(hasFocus){
-        // imm.showSoftInput(v, 0);
-        // }
-        // else{
-        // imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        // }
-        // }
-        // });
-        // mFootEditer.setOnKeyListener(new View.OnKeyListener() {
-        // public boolean onKey(View v, int keyCode, KeyEvent event) {
-        // if (keyCode == KeyEvent.KEYCODE_BACK) {
-        // if(mFootViewSwitcher.getDisplayedChild()==1){
-        // mFootViewSwitcher.setDisplayedChild(0);
-        // mFootEditer.clearFocus();
-        // mFootEditer.setVisibility(View.GONE);
-        // }
-        // return true;
-        // }
-        // return false;
-        // }
-        // });
-        // //编辑器添加文本监听
-        // mFootEditer.addTextChangedListener(UIHelper.getTextWatcher(this,
-        // tempCommentKey));
-        //
-        // //显示临时编辑内容
-        // UIHelper.showTempEditContent(this, mFootEditer, tempCommentKey);
-    }
+	private void initData(final int blog_id, final boolean isRefresh) {
+		// headButtonSwitch(DATA_LOAD_ING);
 
-    // 初始化控件数据
-    private void initData() {
-        mHandler = new Handler() {
-            public void handleMessage(Message msg) {
-                if (msg.what == 1) {
-                    // headButtonSwitch(DATA_LOAD_COMPLETE);
+		new Thread() {
+			public void run() {
+				Message msg = new Message();
+				try {
+					discussion = ((AppContext) getApplication())
+							.getDiscussionById(companyId, projectId,
+									discussionId);
+					msg.what = (discussion != null && discussion.getId() > 0) ? 1
+							: 0;
+					// msg.obj = (discussion!=null) ? discussion.getNotice() :
+					// null;
+				} catch (AppException e) {
+					e.printStackTrace();
+					msg.what = -1;
+					msg.obj = e;
+				}
+				mHandler.sendMessage(msg);
+			}
+		}.start();
+	}
 
-                    // int docType = discussion.getDocumentType();
-                    // if(docType == Blog.DOC_TYPE_ORIGINAL){
-                    // mDocTYpe.setImageResource(R.drawable.widget_original_icon);
-                    // }else if(docType == Blog.DOC_TYPE_REPASTE){
-                    // mDocTYpe.setImageResource(R.drawable.widget_repaste_icon);
-                    // }
+	/**
+	 * 底部栏切换
+	 * 
+	 * @param type
+	 */
+	// private void viewSwitch(int type) {
+	// switch (type) {
+	// case VIEWSWITCH_TYPE_DETAIL:
+	// mDetail.setEnabled(false);
+	// mCommentList.setEnabled(true);
+	// mHeadTitle.setText(R.string.blog_detail_head_title);
+	// mViewSwitcher.setDisplayedChild(0);
+	// break;
+	// case VIEWSWITCH_TYPE_COMMENTS:
+	// mDetail.setEnabled(true);
+	// mCommentList.setEnabled(false);
+	// mHeadTitle.setText(R.string.comment_list_head_title);
+	// mViewSwitcher.setDisplayedChild(1);
+	// break;
+	// }
+	// }
 
-                    mAuthor.setText(discussion.getCreatorName());
-                    mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd")
-                            .format(discussion.getCreated()));
-                    mCommentCount.setText("评论数量");
+	/**
+	 * 头部按钮展示
+	 * 
+	 * @param type
+	 */
+	private void headButtonSwitch(int type) {
+		switch (type) {
+		case DATA_LOAD_ING:
+			mScrollView.setVisibility(View.GONE);
+			mProgressbar.setVisibility(View.VISIBLE);
+			mRefresh.setVisibility(View.GONE);
+			break;
+		case DATA_LOAD_COMPLETE:
+			mScrollView.setVisibility(View.VISIBLE);
+			mProgressbar.setVisibility(View.GONE);
+			mRefresh.setVisibility(View.VISIBLE);
+			break;
+		case DATA_LOAD_FAIL:
+			mScrollView.setVisibility(View.GONE);
+			mProgressbar.setVisibility(View.GONE);
+			mRefresh.setVisibility(View.VISIBLE);
+			break;
+		}
+	}
 
-                    // //是否收藏
-                    // if(discussion.getFavorite() == 1)
-                    // mFavorite.setImageResource(R.drawable.widget_bar_favorite2);
-                    // else
-                    // mFavorite.setImageResource(R.drawable.widget_bar_favorite);
+	// private View.OnClickListener refreshClickListener = new
+	// View.OnClickListener() {
+	// public void onClick(View v) {
+	// initData(blogId, true);
+	// loadLvCommentData(curId,0,mCommentHandler,UIHelper.LISTVIEW_ACTION_REFRESH);
+	// }
+	// };
 
-                    // 显示评论数
-                    // if(discussion.getCommentCount() > 0){
-                    // bv_comment.setText(discussion.getCommentCount()+"");
-                    // bv_comment.show();
-                    // }else{
-                    // bv_comment.setText("");
-                    // bv_comment.hide();
-                    // }
+	// private View.OnClickListener authorClickListener = new
+	// View.OnClickListener() {
+	// public void onClick(View v) {
+	// UIHelper.showUserCenter(v.getContext(), discussion.getAuthorId(),
+	// discussion.getAuthor());
+	// }
+	// };
 
-                    String body = UIHelper.WEB_STYLE + discussion.getContent()
-                            + "<div style=\"margin-bottom: 80px\" />";
-                    // 读取用户设置：是否加载文章图片--默认有wifi下始终加载图片
-                    boolean isLoadImage;
-                    AppContext ac = (AppContext) getApplication();
-                    if (AppContext.NETTYPE_WIFI == ac.getNetworkType()) {
-                        isLoadImage = true;
-                    } else {
-                        isLoadImage = ac.isLoadImage();
-                    }
-                    if (isLoadImage) {
-                        body = body.replaceAll(
-                                "(<img[^>]*?)\\s+width\\s*=\\s*\\S+", "$1");
-                        body = body.replaceAll(
-                                "(<img[^>]*?)\\s+height\\s*=\\s*\\S+", "$1");
-                    } else {
-                        body = body.replaceAll("<\\s*img\\s+([^>]*)\\s*>", "");
-                    }
+	// private View.OnClickListener shareClickListener = new
+	// View.OnClickListener() {
+	// public void onClick(View v) {
+	// if(discussion == null){
+	// UIHelper.ToastMessage(v.getContext(), R.string.msg_read_detail_fail);
+	// return;
+	// }
+	// //分享到
+	// UIHelper.showShareDialog(BlogDetail.this, discussion.getTitle(),
+	// discussion.getUrl());
+	// }
+	// };
 
-                    mWebView.loadDataWithBaseURL(null, body, "text/html",
-                            "utf-8", null);
-                    mWebView.setWebViewClient(UIHelper.getWebViewClient());
+	// private View.OnClickListener detailClickListener = new
+	// View.OnClickListener() {
+	// public void onClick(View v) {
+	// if(blogId == 0){
+	// return;
+	// }
+	// //切换到详情
+	// viewSwitch(VIEWSWITCH_TYPE_DETAIL);
+	// }
+	// };
 
-                    // //发送通知广播
-                    // if(msg.obj != null){
-                    // UIHelper.sendBroadCast(BlogDetail.this, (Notice)msg.obj);
-                    // }
-                } else if (msg.what == 0) {
-                    // headButtonSwitch(DATA_LOAD_FAIL);
-                    //
-                    // UIHelper.ToastMessage(BlogDetail.this,
-                    // R.string.msg_load_is_null);
-                } else if (msg.what == -1 && msg.obj != null) {
-                    // headButtonSwitch(DATA_LOAD_FAIL);
-                    //
-                    // ((AppException)msg.obj).makeToast(BlogDetail.this);
-                }
-            }
-        };
+	// private View.OnClickListener commentlistClickListener = new
+	// View.OnClickListener() {
+	// public void onClick(View v) {
+	// if(blogId == 0){
+	// return;
+	// }
+	// //切换到评论
+	// viewSwitch(VIEWSWITCH_TYPE_COMMENTS);
+	// }
+	// };
 
-        initData(discussionId, false);
-    }
+	// private View.OnClickListener favoriteClickListener = new
+	// View.OnClickListener() {
+	// public void onClick(View v) {
+	// if(blogId == 0 || discussion == null){
+	// return;
+	// }
+	//
+	// final AppContext ac = (AppContext)getApplication();
+	// if(!ac.isLogin()){
+	// UIHelper.showLoginDialog(BlogDetail.this);
+	// return;
+	// }
+	// final int uid = ac.getLoginUid();
+	//
+	// final Handler handler = new Handler(){
+	// public void handleMessage(Message msg) {
+	// if(msg.what == 1){
+	// Result res = (Result)msg.obj;
+	// if(res.OK()){
+	// if(discussion.getFavorite() == 1){
+	// discussion.setFavorite(0);
+	// mFavorite.setImageResource(R.drawable.widget_bar_favorite);
+	// }else{
+	// discussion.setFavorite(1);
+	// mFavorite.setImageResource(R.drawable.widget_bar_favorite2);
+	// }
+	// //重新保存缓存
+	// ac.saveObject(discussion, discussion.getCacheKey());
+	// }
+	// UIHelper.ToastMessage(BlogDetail.this, res.getErrorMessage());
+	// }else{
+	// ((AppException)msg.obj).makeToast(BlogDetail.this);
+	// }
+	// }
+	// };
+	// new Thread(){
+	// public void run() {
+	// Message msg = new Message();
+	// Result res = null;
+	// try {
+	// if(discussion.getFavorite() == 1){
+	// res = ac.delFavorite(uid, blogId, FavoriteList.TYPE_BLOG);
+	// }else{
+	// res = ac.addFavorite(uid, blogId, FavoriteList.TYPE_BLOG);
+	// }
+	// msg.what = 1;
+	// msg.obj = res;
+	// } catch (AppException e) {
+	// e.printStackTrace();
+	// msg.what = -1;
+	// msg.obj = e;
+	// }
+	// handler.sendMessage(msg);
+	// }
+	// }.start();
+	// }
+	// };
 
-    private void initData(final int blog_id, final boolean isRefresh) {
-        // headButtonSwitch(DATA_LOAD_ING);
-
-        new Thread() {
-            public void run() {
-                Message msg = new Message();
-                try {
-                    discussion = ((AppContext) getApplication())
-                            .getDiscussionById(companyId, projectId,
-                                    discussionId);
-                    msg.what = (discussion != null && discussion.getId() > 0) ? 1
-                            : 0;
-                    // msg.obj = (discussion!=null) ? discussion.getNotice() :
-                    // null;
-                } catch (AppException e) {
-                    e.printStackTrace();
-                    msg.what = -1;
-                    msg.obj = e;
-                }
-                mHandler.sendMessage(msg);
-            }
-        }.start();
-    }
-
-    /**
-     * 底部栏切换
-     *
-     * @param type
-     */
-    // private void viewSwitch(int type) {
-    // switch (type) {
-    // case VIEWSWITCH_TYPE_DETAIL:
-    // mDetail.setEnabled(false);
-    // mCommentList.setEnabled(true);
-    // mHeadTitle.setText(R.string.blog_detail_head_title);
-    // mViewSwitcher.setDisplayedChild(0);
-    // break;
-    // case VIEWSWITCH_TYPE_COMMENTS:
-    // mDetail.setEnabled(true);
-    // mCommentList.setEnabled(false);
-    // mHeadTitle.setText(R.string.comment_list_head_title);
-    // mViewSwitcher.setDisplayedChild(1);
-    // break;
-    // }
-    // }
-
-    /**
-     * 头部按钮展示
-     *
-     * @param type
-     */
-    private void headButtonSwitch(int type) {
-        switch (type) {
-            case DATA_LOAD_ING:
-                mScrollView.setVisibility(View.GONE);
-                mProgressbar.setVisibility(View.VISIBLE);
-                mRefresh.setVisibility(View.GONE);
-                break;
-            case DATA_LOAD_COMPLETE:
-                mScrollView.setVisibility(View.VISIBLE);
-                mProgressbar.setVisibility(View.GONE);
-                mRefresh.setVisibility(View.VISIBLE);
-                break;
-            case DATA_LOAD_FAIL:
-                mScrollView.setVisibility(View.GONE);
-                mProgressbar.setVisibility(View.GONE);
-                mRefresh.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
-
-    // private View.OnClickListener refreshClickListener = new
-    // View.OnClickListener() {
-    // public void onClick(View v) {
-    // initData(blogId, true);
-    // loadLvCommentData(curId,0,mCommentHandler,UIHelper.LISTVIEW_ACTION_REFRESH);
-    // }
-    // };
-
-    // private View.OnClickListener authorClickListener = new
-    // View.OnClickListener() {
-    // public void onClick(View v) {
-    // UIHelper.showUserCenter(v.getContext(), discussion.getAuthorId(),
-    // discussion.getAuthor());
-    // }
-    // };
-
-    // private View.OnClickListener shareClickListener = new
-    // View.OnClickListener() {
-    // public void onClick(View v) {
-    // if(discussion == null){
-    // UIHelper.ToastMessage(v.getContext(), R.string.msg_read_detail_fail);
-    // return;
-    // }
-    // //分享到
-    // UIHelper.showShareDialog(BlogDetail.this, discussion.getTitle(),
-    // discussion.getUrl());
-    // }
-    // };
-
-    // private View.OnClickListener detailClickListener = new
-    // View.OnClickListener() {
-    // public void onClick(View v) {
-    // if(blogId == 0){
-    // return;
-    // }
-    // //切换到详情
-    // viewSwitch(VIEWSWITCH_TYPE_DETAIL);
-    // }
-    // };
-
-    // private View.OnClickListener commentlistClickListener = new
-    // View.OnClickListener() {
-    // public void onClick(View v) {
-    // if(blogId == 0){
-    // return;
-    // }
-    // //切换到评论
-    // viewSwitch(VIEWSWITCH_TYPE_COMMENTS);
-    // }
-    // };
-
-    // private View.OnClickListener favoriteClickListener = new
-    // View.OnClickListener() {
-    // public void onClick(View v) {
-    // if(blogId == 0 || discussion == null){
-    // return;
-    // }
-    //
-    // final AppContext ac = (AppContext)getApplication();
-    // if(!ac.isLogin()){
-    // UIHelper.showLoginDialog(BlogDetail.this);
-    // return;
-    // }
-    // final int uid = ac.getLoginUid();
-    //
-    // final Handler handler = new Handler(){
-    // public void handleMessage(Message msg) {
-    // if(msg.what == 1){
-    // Result res = (Result)msg.obj;
-    // if(res.OK()){
-    // if(discussion.getFavorite() == 1){
-    // discussion.setFavorite(0);
-    // mFavorite.setImageResource(R.drawable.widget_bar_favorite);
-    // }else{
-    // discussion.setFavorite(1);
-    // mFavorite.setImageResource(R.drawable.widget_bar_favorite2);
-    // }
-    // //重新保存缓存
-    // ac.saveObject(discussion, discussion.getCacheKey());
-    // }
-    // UIHelper.ToastMessage(BlogDetail.this, res.getErrorMessage());
-    // }else{
-    // ((AppException)msg.obj).makeToast(BlogDetail.this);
-    // }
-    // }
-    // };
-    // new Thread(){
-    // public void run() {
-    // Message msg = new Message();
-    // Result res = null;
-    // try {
-    // if(discussion.getFavorite() == 1){
-    // res = ac.delFavorite(uid, blogId, FavoriteList.TYPE_BLOG);
-    // }else{
-    // res = ac.addFavorite(uid, blogId, FavoriteList.TYPE_BLOG);
-    // }
-    // msg.what = 1;
-    // msg.obj = res;
-    // } catch (AppException e) {
-    // e.printStackTrace();
-    // msg.what = -1;
-    // msg.obj = e;
-    // }
-    // handler.sendMessage(msg);
-    // }
-    // }.start();
-    // }
-    // };
-
-    // 初始化视图控件
-    /*
+	// 初始化视图控件
+	/*
 	 * private void initCommentView() { lvComment_footer =
 	 * getLayoutInflater().inflate(R.layout.listview_footer, null);
 	 * lvComment_foot_more =
@@ -640,18 +517,18 @@ public class DiscussionDetail extends SherlockActivity {
 	 * this.loadLvCommentData
 	 * (curId,0,mCommentHandler,UIHelper.LISTVIEW_ACTION_INIT); }
 	 */
-    /**
-     * 线程加载评论数据
-     *
-     * @param id
-     *            当前文章id
-     * @param pageIndex
-     *            当前页数
-     * @param handler
-     *            处理器
-     * @param action
-     *            动作标识
-     */
+	/**
+	 * 线程加载评论数据
+	 * 
+	 * @param id
+	 *            当前文章id
+	 * @param pageIndex
+	 *            当前页数
+	 * @param handler
+	 *            处理器
+	 * @param action
+	 *            动作标识
+	 */
 	/*
 	 * private void loadLvCommentData(final int id,final int pageIndex,final
 	 * Handler handler,final int action){ new Thread(){ public void run() {
@@ -723,45 +600,44 @@ public class DiscussionDetail extends SherlockActivity {
 	 * e.printStackTrace(); msg.what = -1; msg.obj = e; }
 	 * handler.sendMessage(msg); } }.start(); } };
 	 */
+	/**
+	 * 注册双击全屏事件
+	 */
+	private void regOnDoubleEvent() {
+		gd = new GestureDetector(this,
+				new GestureDetector.SimpleOnGestureListener() {
+					@Override
+					public boolean onDoubleTap(MotionEvent e) {
+						isFullScreen = !isFullScreen;
+						if (!isFullScreen) {
+							WindowManager.LayoutParams params = getWindow()
+									.getAttributes();
+							params.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+							getWindow().setAttributes(params);
+							getWindow()
+									.clearFlags(
+											WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+							mHeader.setVisibility(View.VISIBLE);
+							mFooter.setVisibility(View.VISIBLE);
+						} else {
+							WindowManager.LayoutParams params = getWindow()
+									.getAttributes();
+							params.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+							getWindow().setAttributes(params);
+							getWindow()
+									.addFlags(
+											WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+							mHeader.setVisibility(View.GONE);
+							mFooter.setVisibility(View.GONE);
+						}
+						return true;
+					}
+				});
+	}
 
-    /**
-     * 注册双击全屏事件
-     */
-    private void regOnDoubleEvent() {
-        gd = new GestureDetector(this,
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onDoubleTap(MotionEvent e) {
-                        isFullScreen = !isFullScreen;
-                        if (!isFullScreen) {
-                            WindowManager.LayoutParams params = getWindow()
-                                    .getAttributes();
-                            params.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                            getWindow().setAttributes(params);
-                            getWindow()
-                                    .clearFlags(
-                                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                            mHeader.setVisibility(View.VISIBLE);
-                            mFooter.setVisibility(View.VISIBLE);
-                        } else {
-                            WindowManager.LayoutParams params = getWindow()
-                                    .getAttributes();
-                            params.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-                            getWindow().setAttributes(params);
-                            getWindow()
-                                    .addFlags(
-                                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                            mHeader.setVisibility(View.GONE);
-                            mFooter.setVisibility(View.GONE);
-                        }
-                        return true;
-                    }
-                });
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        gd.onTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		gd.onTouchEvent(event);
+		return super.dispatchTouchEvent(event);
+	}
 }

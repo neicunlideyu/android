@@ -1,5 +1,8 @@
 package cn.onboard.android.app.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -12,38 +15,37 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.onboard.domain.model.Company;
+
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.ListViewCompanyAdapter;
 import cn.onboard.android.app.common.UIHelper;
-import com.onboard.domain.model.Company;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressLint("HandlerLeak")
-public class SelectCompany extends BaseActivity {
+public class SelectCompany extends SherlockActivity {
 
     private Handler handler;
 
     private AppContext appContext;
 
-    private List<Company> companyList = new ArrayList<Company>();
+	private List<Company> companyList = new ArrayList<Company>();
 
-    ListViewCompanyAdapter listViewCompanyAdapter;
+	ListViewCompanyAdapter listViewCompanyAdapter;
 
-    ListView companyListView;
-
+	ListView companyListView;
+	
     View companyListLoading;
-
+    
     @SuppressLint("HandlerLeak")
-    private Handler getHandler(final Context context) {
+	private Handler getHandler(final Context context) {
         return new Handler() {
             @SuppressWarnings("unchecked")
-            public void handleMessage(Message msg) {
-                if (msg.what >= 0) {
-                    companyList = (List<Company>) msg.obj;
+			public void handleMessage(Message msg) {
+                if (msg.what >=0 ) {
+                    companyList = (List<Company>) msg.obj;             
                     listViewCompanyAdapter = new ListViewCompanyAdapter(context, companyList, R.layout.company_item);
                     companyListView.setAdapter(listViewCompanyAdapter);
                     companyListView.setVisibility(0);
@@ -59,6 +61,7 @@ public class SelectCompany extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_company);
+        getActionBar().setTitle("公司列表");
         initCompanyListView();
         appContext = (AppContext) getApplication();
         handler = getHandler(this);
@@ -89,9 +92,8 @@ public class SelectCompany extends BaseActivity {
                 context.startActivity(intent);
             }
         });
-
-    }
-
+		
+	}
     private void getCompanyList(final Handler handler) {
         new Thread() {
             public void run() {

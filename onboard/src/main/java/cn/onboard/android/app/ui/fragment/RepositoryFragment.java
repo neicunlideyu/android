@@ -10,31 +10,31 @@ import android.widget.RelativeLayout;
 
 public class RepositoryFragment extends Fragment {
 
-    private int companyId;
+	private int companyId;
 
-    private int projectId;
+	private int projectId;
 
-    public RepositoryFragment() {
-        setRetainInstance(true);
-    }
+	public RepositoryFragment() {
+		setRetainInstance(true);
+	}
 
-    public RepositoryFragment(int companyId, int projectId) {
-        this();
-        this.companyId = companyId;
-        this.projectId = projectId;
-    }
+	public RepositoryFragment(int companyId, int projectId) {
+		this();
+		this.companyId = companyId;
+		this.projectId = projectId;
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        RelativeLayout v = new RelativeLayout(getActivity());
-        v.setBackgroundColor(Color.GREEN);
-        return v;
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		RelativeLayout v = new RelativeLayout(getActivity());
+		v.setBackgroundColor(Color.GREEN);
+		return v;
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
 
 }

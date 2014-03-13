@@ -6,15 +6,6 @@
     android:gravity="center_vertical"
     android:orientation="vertical" >
 
-    <TextView
-        style="@style/main_head_title"
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:background="@drawable/widget_head_bg"
-        android:gravity="center"
-        android:text="公司列表" >
-    </TextView>
-
     <ListView
         android:id="@+id/company_list"
         android:layout_width="match_parent"
