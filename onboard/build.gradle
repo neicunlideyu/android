@@ -1,0 +1,56 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.1"
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/jdbc.properties'
+    }
+}
+
+
+dependencies {
+    compile project(':slidingmenu')
+    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+
+    compile 'commons-httpclient:commons-httpclient:3.1'
+    compile 'joda-time:joda-time:2.3'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.7.6'
+
+    compile('com.onboard:com.onboard.domain.mapper.model:2.0.6') {
+        transitive = false
+    }
+    compile('com.onboard:com.onboard.domain.model:2.0.6') {
+        transitive = false
+    }
+    compile('com.onboard:com.onboard.plugin.git:2.0.6') {
+        transitive = false
+    }
+    compile('com.onboard:com.onboard.plugin.upload:2.0.6') {
+        transitive = false
+    }
+    compile('com.onboard:com.onboard.plugin.wiki:2.0.6') {
+        transitive = false
+    }
+
+}
