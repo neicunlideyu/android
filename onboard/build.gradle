@@ -1,3 +1,18 @@
+buildscript {
+    dependencies {
+
+        repositories {
+            mavenCentral()
+            mavenLocal()
+            maven {
+                name 'Sonatype SNAPSHOTS'
+                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            }
+        }
+        classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.9.6-SNAPSHOT'
+    }
+}
+
 apply plugin: 'android'
 apply plugin: 'spoon'
 
@@ -29,13 +44,23 @@ android {
         exclude 'META-INF/jdbc.properties'
     }
 
+    productFlavors {
+        free {
+
+        }
+        pro {
+
+        }
+    }
 
 }
+
 
 spoon {
-    debug = true
+    debug = false
     baseOutputDir = file("$buildDir/custom-report-dir")
 }
+
 
 dependencies {
     compile project(':slidingmenu')
@@ -50,6 +75,7 @@ dependencies {
         transitive = false
     }
 
+    compile 'com.squareup:fest-android:1.0.7'
     instrumentTestCompile "com.squareup.spoon:spoon-client:1.1.0"
 
 }
