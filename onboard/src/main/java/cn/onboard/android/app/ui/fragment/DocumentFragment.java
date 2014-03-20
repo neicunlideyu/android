@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.onboard.plugin.wiki.model.Document;
+import com.onboard.api.dto.Document;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

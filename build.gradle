@@ -3,9 +3,16 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            name 'Sonatype SNAPSHOTS'
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.8.3'
+        classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.9.6-SNAPSHOT'
+
     }
 }
 

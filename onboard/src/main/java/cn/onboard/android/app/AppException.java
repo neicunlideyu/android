@@ -1,5 +1,13 @@
 package cn.onboard.android.app;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.os.Environment;
+import android.os.Looper;
+import android.widget.Toast;
+
+import org.apache.commons.httpclient.HttpException;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,16 +17,6 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
-
-
-import org.apache.commons.httpclient.HttpException;
-
-
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.os.Environment;
-import android.os.Looper;
-import android.widget.Toast;
 
 import cn.onboard.android.app.common.UIHelper;
 

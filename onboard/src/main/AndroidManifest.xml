@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.onboard.android.app"
-    android:versionCode="1"
-    android:versionName="1.0.0">
+    android:versionCode="18"
+    android:versionName="1.7.4" >
 
     <uses-sdk
-        android:minSdkVersion="11"
-        android:targetSdkVersion="19" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="15" />
 
     <application
-        android:allowBackup="true"
         android:name=".AppContext"
         android:icon="@drawable/logo"
-        android:label="@string/app_name">
+        android:label="@string/app_name" >
         <activity
             android:name=".AppStart"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,10 +27,10 @@
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.HalfTranslucent"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".ui.Company"
+            android:name="cn.onboard.android.app.ui.Company"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.FullTranslucent" />
@@ -39,25 +39,40 @@
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FullTranslucent" />
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
         <activity
-            android:name=".ui.Project"
+            android:name="cn.onboard.android.app.ui.Project"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
         <activity
             android:name=".ui.DiscussionDetail"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
+        <activity
+            android:name=".ui.DocumentDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
+        <activity
+            android:name=".ui.NewDiscussion"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
+        <activity
+            android:name=".ui.CommentList"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
+        <activity
+            android:name=".ui.EditTodo"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
 
-        <receiver android:name=".ui.BroadCast">
-            <intent-filter>
-                <action android:name="com.onboard.app.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-        </receiver>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--
+         <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />

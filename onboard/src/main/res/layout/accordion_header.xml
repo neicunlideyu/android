@@ -16,7 +16,7 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
-        <com.onboard.app.widget.accordion.ToggleImageLabeledButton
+        <cn.onboard.android.app.widget.accordion.ToggleImageLabeledButton
             android:id="@+id/foldButton"
             android:layout_width="24dip"
             android:layout_height="24dip"

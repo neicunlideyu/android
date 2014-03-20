@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.domain.model.Discussion;
+import com.onboard.api.dto.Discussion;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

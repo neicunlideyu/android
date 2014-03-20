@@ -1,13 +1,13 @@
 package cn.onboard.android.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import cn.onboard.android.app.common.StringUtils;
 

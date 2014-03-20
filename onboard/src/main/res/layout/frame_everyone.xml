@@ -12,7 +12,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <com.onboard.app.widget.accordion.AccordionView
+        <cn.onboard.android.app.widget.accordion.AccordionView
             android:id="@+id/accordion_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -75,7 +75,7 @@
                     android:layout_gravity="center"
                     android:text="罗总" />
             </LinearLayout>
-        </com.onboard.app.widget.accordion.AccordionView>
+        </cn.onboard.android.app.widget.accordion.AccordionView>
     </ScrollView>
 
 </LinearLayout>

@@ -1,8 +1,5 @@
 package cn.onboard.android.app.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +20,11 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.onboard.api.dto.Comment;
+import com.onboard.api.dto.Discussion;
 
-import com.onboard.domain.model.Comment;
-import com.onboard.domain.model.Discussion;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -85,8 +84,12 @@ public class DiscussionDetail extends SherlockActivity {
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			Intent intent = new Intent(getApplicationContext(), CommentList.class);
-			CommentList.identifiable = discussion;
-			if(discussion.getComments()!=null)
+			CommentList.companyId = discussion.getCompanyId();
+            CommentList.projectId = discussion.getProjectId();
+            CommentList.attachId=discussion.getId();
+            CommentList.attachType = "discussion";
+
+            if(discussion.getComments()!=null)
 				CommentList.comments =discussion.getComments();
 			else {
 				CommentList.comments = new ArrayList<Comment>();

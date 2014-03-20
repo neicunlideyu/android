@@ -3,13 +3,13 @@
  */
 package cn.onboard.android.app.widget.accordion;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import cn.onboard.android.app.R;
 

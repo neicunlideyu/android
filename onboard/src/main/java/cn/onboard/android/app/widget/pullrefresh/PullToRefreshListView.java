@@ -1,4 +1,4 @@
-package cn.onboard.android.app.widget;
+package cn.onboard.android.app.widget.pullrefresh;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -16,10 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import java.util.Formatter;
-import java.util.HashSet;
-import java.util.Locale;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.AsyncQueryHandler;
@@ -34,6 +30,10 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
+
+import java.util.Formatter;
+import java.util.HashSet;
+import java.util.Locale;
 
 /**
  * A class containing utility methods related to Calendar apps.

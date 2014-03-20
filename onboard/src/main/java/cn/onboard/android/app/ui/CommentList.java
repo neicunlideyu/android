@@ -1,9 +1,5 @@
 package cn.onboard.android.app.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -24,8 +20,11 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.onboard.domain.model.Comment;
-import com.onboard.domain.model.type.Identifiable;
+import com.onboard.api.dto.Comment;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -33,7 +32,7 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.widget.PullToRefreshListView;
+import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 /**
  * 应用程序Activity的基类
@@ -45,13 +44,14 @@ import cn.onboard.android.app.widget.PullToRefreshListView;
 public class CommentList extends SherlockActivity {
 
 	private ListViewTweetAdapter lvCommentAdapter;
-	// private View lvComment_footer;
-	// private TextView lvComment_foot_more;
-	// private ProgressBar lvComment_foot_progress;
 	private PullToRefreshListView lvComment;
 	static public List<Comment> comments = new ArrayList<Comment>();
-	static public Identifiable identifiable;
-	private InputMethodManager imm;
+	static public int companyId;
+    static public int projectId;
+    static public String attachType;
+    static public int attachId;
+
+    private InputMethodManager imm;
 	private EditText commentContent;
 	private Button commentPublish;
 	private Comment comment;
@@ -401,10 +401,10 @@ public class CommentList extends SherlockActivity {
 
 			comment = new Comment();
 
-			comment.setAttachType(identifiable.getType());
-			comment.setAttachId(identifiable.getId());
-			comment.setCompanyId(identifiable.getCompanyId());
-			comment.setProjectId(identifiable.getProjectId());
+			comment.setAttachType(attachType);
+			comment.setAttachId(attachId);
+			comment.setCompanyId(companyId);
+			comment.setProjectId(projectId);
 			comment.setCreatorId(ac.getLoginUid());
 			comment.setContent(commentString);
 			// comment.setCompanyId(companyId);

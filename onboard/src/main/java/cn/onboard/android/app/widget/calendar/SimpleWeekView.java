@@ -16,11 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import java.security.InvalidParameterException;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Locale;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
@@ -36,6 +31,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
+
+import java.security.InvalidParameterException;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Locale;
 
 import cn.onboard.android.app.R;
 

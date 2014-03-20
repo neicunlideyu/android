@@ -14,7 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ViewSwitcher;
 
-import com.onboard.domain.model.User;
+import com.onboard.api.dto.User;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -22,7 +22,6 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.api.ApiClient;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.ui.BaseActivity;
 
 /**
  * 用户登录页面

@@ -29,6 +29,7 @@ public class URLs implements Serializable {
     public final static String ATTACHMENT_LIST_HTTP = URL_API_HOST + "api/companyId/projects/projectId/attachments";
     public final static String ATTACHMENT_COMMENT_COUNT_HTTP = URL_API_HOST + "api/companyId/projects/projectId/attachments/comment/count/attachmentId";
     public final static String DOCUMENT__LIST_HTTP = URL_API_HOST + "api/company/companyId/project/projectId/documents";
+    public final static String TODOLIST__LIST_HTTP = URL_API_HOST + "api/company/companyId/project/projectId/todolists";
     public final static String DISCUSSION__LIST_HTTP = URL_API_HOST + "api/company/companyId/project/projectId/discussions";
     public final static String ACTIVITY__LIST_HTTP = URL_API_HOST + "api/company/companyId/project/projectId/activities";
     public final static String DISCUSSION_HTTP_STRING = URL_API_HOST + "api/company/companyId/project/projectId/discussions/discussionId";

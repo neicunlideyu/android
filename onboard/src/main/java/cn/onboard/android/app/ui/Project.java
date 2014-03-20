@@ -69,7 +69,16 @@ public class Project extends SlidingFragmentActivity {
             menu.add(createString).setOnMenuItemClickListener(popupListener).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);;
         return super.onCreateOptionsMenu(menu);
     }
-	
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getSlidingMenu().showContent();
+                break;
+        }
+        return true;
+    }
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);

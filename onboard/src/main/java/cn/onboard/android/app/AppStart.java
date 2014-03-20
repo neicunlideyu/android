@@ -8,7 +8,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 
-import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.Login;
 
 /**

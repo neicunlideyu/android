@@ -16,13 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.res.Resources;
@@ -45,7 +38,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
-import com.onboard.domain.model.Todo;
+import com.onboard.api.dto.Todo;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;

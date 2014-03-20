@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.domain.model.Activity;
+import com.onboard.api.dto.Activity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.NewDiscussion;
 import cn.onboard.android.app.ui.Project;
-import cn.onboard.android.app.widget.PullToRefreshListView;
+import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 public class ActivityFragment extends Fragment implements
 		OnMenuItemClickListener {
@@ -344,13 +344,12 @@ public class ActivityFragment extends Fragment implements
 			// listItemView.face.setOnClickListener(faceClickListener);
 			listItemView.face.setTag(activity);
 
-			listItemView.title.setText(activity.getSubject());
+			listItemView.title.setText(activity.getSubject() + " " + activity.getTarget());
 			listItemView.title.setTag(activity);// 设置隐藏参数(实体类)
 			listItemView.author.setText(activity.getCreatorName());
 			listItemView.date.setText(new SimpleDateFormat("yyyy-MM-dd")
 					.format(activity.getCreated()));
-			int commentCount = 10;
-			listItemView.count.setText(commentCount + "回复");
+			listItemView.count.setVisibility(0);
 
 			return convertView;
 		}

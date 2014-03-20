@@ -16,19 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
@@ -50,7 +37,20 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.SearchView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+
 import cn.onboard.android.app.R;
+
+import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 
 
 public class Utils {

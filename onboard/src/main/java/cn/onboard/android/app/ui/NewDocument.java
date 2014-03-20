@@ -13,7 +13,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.plugin.wiki.model.Document;
+import com.onboard.api.dto.Document;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;

@@ -16,9 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.format.Time;
@@ -29,6 +26,9 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import cn.onboard.android.app.R;
 

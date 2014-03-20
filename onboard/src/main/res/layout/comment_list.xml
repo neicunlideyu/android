@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.onboard.app.widget.PullToRefreshListView
+    <cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView
         android:id="@+id/frame_listview_tweet"
         style="@style/widget_listview" />
 

@@ -1,9 +1,5 @@
 package cn.onboard.android.app.ui;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -17,12 +13,15 @@ import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.onboard.domain.model.User;
+import com.onboard.api.dto.User;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.ui.BaseActivity;
 import cn.onboard.android.app.widget.calendar.CalendarController;
 
 public class EditTodo extends BaseActivity implements CalendarController.EventHandler {

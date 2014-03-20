@@ -3,20 +3,18 @@ package cn.onboard.android.app.api;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-
-import com.onboard.domain.model.Activity;
-import com.onboard.domain.model.Attachment;
-import com.onboard.domain.model.Comment;
-import com.onboard.domain.model.Company;
-import com.onboard.domain.model.Discussion;
-import com.onboard.domain.model.Project;
-import com.onboard.domain.model.Todo;
-import com.onboard.domain.model.Todolist;
-import com.onboard.domain.model.Topic;
-import com.onboard.domain.model.User;
-import com.onboard.plugin.upload.model.Upload;
-import com.onboard.plugin.wiki.model.Document;
-import com.onboard.plugin.wiki.utils.Repository;
+import com.onboard.api.dto.Activity;
+import com.onboard.api.dto.Attachment;
+import com.onboard.api.dto.Comment;
+import com.onboard.api.dto.Company;
+import com.onboard.api.dto.Discussion;
+import com.onboard.api.dto.Document;
+import com.onboard.api.dto.Project;
+import com.onboard.api.dto.Todo;
+import com.onboard.api.dto.Todolist;
+import com.onboard.api.dto.Topic;
+import com.onboard.api.dto.Upload;
+import com.onboard.api.dto.User;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -544,10 +542,24 @@ public class ApiClient {
 				throw (AppException) e;
 			throw AppException.network(e);
 		}
-
 	}
 
-	public static Discussion getDiscussionById(AppContext appContext,
+    public static List<Todolist> getTodolistsByProjectId(AppContext appContext,
+                                                         int companyId, int projectId) throws AppException {
+        String newUrl = URLs.TODOLIST__LIST_HTTP.replaceAll("companyId",
+                companyId + "").replaceAll("projectId", projectId + "");
+        try {
+            return HttpStreamToObject.inputStreamToObject(
+                    new TypeReference<List<Todolist>>() {
+                    }, http_get(appContext, newUrl));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+    }
+
+    public static Discussion getDiscussionById(AppContext appContext,
 			int companyId, int projectId, int discussionId) throws AppException {
 		String newUrl = URLs.DISCUSSION_HTTP_STRING
 				.replaceAll("companyId", companyId + "")
@@ -615,22 +627,22 @@ public class ApiClient {
 		}
 	}
 
-	public static List<Repository> getRepositoryByProjectId(
-			AppContext appContext, int companyId, int projectId)
-			throws AppException {
-		String newUrl = URLs.REPOSITY__LIST_HTTP.replaceAll("companyId",
-				companyId + "").replaceAll("projectId", projectId + "");
-		try {
-			return HttpStreamToObject.inputStreamToObject(
-					new TypeReference<List<Repository>>() {
-					}, http_get(appContext, newUrl));
-		} catch (Exception e) {
-			if (e instanceof AppException)
-				throw (AppException) e;
-			throw AppException.network(e);
-		}
-
-	}
+//	public static List<Repository> getRepositoryByProjectId(
+//			AppContext appContext, int companyId, int projectId)
+//			throws AppException {
+//		String newUrl = URLs.REPOSITY__LIST_HTTP.replaceAll("companyId",
+//				companyId + "").replaceAll("projectId", projectId + "");
+//		try {
+//			return HttpStreamToObject.inputStreamToObject(
+//					new TypeReference<List<Repository>>() {
+//					}, http_get(appContext, newUrl));
+//		} catch (Exception e) {
+//			if (e instanceof AppException)
+//				throw (AppException) e;
+//			throw AppException.network(e);
+//		}
+//
+//	}
 
 	public static List<Upload> getUploadByProjectId(AppContext appContext,
 			int companyId, int projectId) throws AppException {

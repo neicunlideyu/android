@@ -16,12 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map.Entry;
-import java.util.WeakHashMap;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
@@ -38,6 +32,12 @@ import android.provider.CalendarContract.Calendars;
 import android.text.format.Time;
 import android.util.Log;
 import android.util.Pair;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 public class CalendarController {
     private static final boolean DEBUG = false;

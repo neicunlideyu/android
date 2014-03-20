@@ -16,14 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -48,6 +40,14 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import cn.onboard.android.app.R;
 

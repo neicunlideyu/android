@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -14,7 +13,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.domain.model.Discussion;
+import com.onboard.api.dto.Discussion;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;

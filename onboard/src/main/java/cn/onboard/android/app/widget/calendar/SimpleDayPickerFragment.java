@@ -16,11 +16,6 @@
 
 package cn.onboard.android.app.widget.calendar;
 
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
@@ -40,6 +35,11 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Locale;
 
 import cn.onboard.android.app.R;
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.onboard.domain.model.Project;
+import com.onboard.api.dto.Project;
 
 import java.util.List;
 

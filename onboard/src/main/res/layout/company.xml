@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         layout="@layout/company_header" />
 
-    <com.onboard.app.widget.ScrollLayout
+    <cn.onboard.android.app.widget.scroll.ScrollLayout
         android:id="@+id/company_scrolllayout"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -22,8 +22,7 @@
         <include layout="@layout/frame_everyone" />
 
         <include layout="@layout/frame_me" />
-    </com.onboard.app.widget.ScrollLayout>
-
+    </cn.onboard.android.app.widget.scroll.ScrollLayout>
     <include layout="@layout/company_footer" />
 
 </LinearLayout>

@@ -1,17 +1,11 @@
 package cn.onboard.android.app.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -24,8 +18,11 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.domain.model.Comment;
-import com.onboard.plugin.wiki.model.Document;
+import com.onboard.api.dto.Comment;
+import com.onboard.api.dto.Document;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -78,7 +75,10 @@ public class DocumentDetail extends SherlockActivity {
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			Intent intent = new Intent(getApplicationContext(), CommentList.class);
-			CommentList.identifiable = document;
+            CommentList.companyId = document.getCompanyId();
+            CommentList.projectId = document.getProjectId();
+            CommentList.attachId=document.getId();
+            CommentList.attachType = "document";
 			if(document.getComments()!=null)
 				CommentList.comments =document.getComments();
 			else {

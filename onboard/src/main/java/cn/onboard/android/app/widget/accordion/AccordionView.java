@@ -3,9 +3,6 @@
  */
 package cn.onboard.android.app.widget.accordion;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.onboard.android.app.R;
 

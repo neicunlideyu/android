@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.onboard.domain.model.Attachment;
+import com.onboard.api.dto.Attachment;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

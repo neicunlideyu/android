@@ -1,15 +1,13 @@
 package cn.onboard.android.app.bean;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-
+import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-
-import android.util.Xml;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.common.StringUtils;

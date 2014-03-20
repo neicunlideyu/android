@@ -1,7 +1,5 @@
 package cn.onboard.android.app.ui;
 
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -18,17 +16,19 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.util.List;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.GridViewProjectAdapter;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.widget.ScrollLayout;
 import cn.onboard.android.app.widget.calendar.CalendarController;
 import cn.onboard.android.app.widget.calendar.MonthByWeekFragment;
-import com.onboard.domain.model.Project;
-public abstract class Company extends BaseActivity implements CalendarController.EventHandler {
+import cn.onboard.android.app.widget.scroll.ScrollLayout;
+import com.onboard.api.dto.Project;
+
+public class Company extends BaseActivity implements CalendarController.EventHandler {
 	private int companyId;
 	
 	private ScrollLayout mScrollLayout;
