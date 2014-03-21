@@ -1,12 +1,12 @@
 package cn.onboard.android.app.ui.fragment;
 
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +33,6 @@ import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.NewDiscussion;
-import cn.onboard.android.app.ui.Project;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 public class ActivityFragment extends Fragment implements
@@ -76,12 +75,6 @@ public class ActivityFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		lv = (LinearLayout) inflater.inflate(R.layout.activities, null);
-		Project project = (Project) getActivity();
-
-		project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
-		project.getSupportActionBar().setTitle("活动");
-		project.setCreateString(null);
-		project.invalidateOptionsMenu();
 		initQuestionListView();
 		loadLvQuestionData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
 		return lv;

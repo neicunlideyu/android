@@ -9,12 +9,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.onboard.api.dto.Project;
 
 import java.util.List;
 
@@ -23,12 +26,12 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.GridViewProjectAdapter;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.ui.fragment.ActivityFragment;
 import cn.onboard.android.app.widget.calendar.CalendarController;
 import cn.onboard.android.app.widget.calendar.MonthByWeekFragment;
 import cn.onboard.android.app.widget.scroll.ScrollLayout;
-import com.onboard.api.dto.Project;
 
-public class Company extends BaseActivity implements CalendarController.EventHandler {
+public class Company extends FragmentActivity implements CalendarController.EventHandler {
 	private int companyId;
 	
 	private ScrollLayout mScrollLayout;
@@ -45,6 +48,7 @@ public class Company extends BaseActivity implements CalendarController.EventHan
 	
 	private CalendarController mController;
 	MonthByWeekFragment monthFrag;
+    ActivityFragment activityFragment;
 	Fragment dayFrag;
 	private CalendarController.EventInfo event;
 	private boolean dayView;
@@ -68,7 +72,15 @@ public class Company extends BaseActivity implements CalendarController.EventHan
 		initPageScroll();
 		initProjectFrameView();
 		initCalendarFrameView();
+        initActivityView();
 		initMeFrameView();
+        findViewById(R.id.app_footbar_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Company.this, Person.class);
+                startActivity(intent);
+            }
+        });
 	}
 
 
@@ -86,11 +98,16 @@ public class Company extends BaseActivity implements CalendarController.EventHan
 		monthFrag.setCompanyId(companyId);
         ft.replace(R.id.cal_frame, monthFrag).commit();
         mController.registerEventHandler(R.id.cal_frame, (CalendarController.EventHandler) monthFrag);
-        
         mController.registerFirstEventHandler(0, this);
 
 	}
 
+    private void initActivityView(){
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        activityFragment = new ActivityFragment(companyId,1);
+        ft.replace(R.id.me_frame, activityFragment).commit();
+
+    }
 	private void initMeFrameView(){
 //		FragmentTransaction ft = getFragmentManager().beginTransaction();
 //		

@@ -26,7 +26,6 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.ui.Project;
 
 public class UploadFragment extends Fragment {
 	private int companyId;
@@ -173,12 +172,6 @@ public class UploadFragment extends Fragment {
 				}
 			}
 		};
-		Project project = (Project) getActivity();
-
-		project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
-		project.getSupportActionBar().setTitle("文件");
-		project.setCreateString("上传文件");
-		project.invalidateOptionsMenu();
 		initGetUploadsByProject(handler);
 		return lv;
 	}

@@ -8,6 +8,7 @@ buildscript {
                 name 'Sonatype SNAPSHOTS'
                 url 'https://oss.sonatype.org/content/repositories/snapshots/'
             }
+
         }
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.9.6-SNAPSHOT'
     }
@@ -70,7 +71,6 @@ dependencies {
     compile 'commons-httpclient:commons-httpclient:3.1'
     compile 'joda-time:joda-time:2.3'
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.7.6'
-
     compile('com.onboard:com.onboard.api:2.0.7-SNAPSHOT') {
         transitive = false
     }

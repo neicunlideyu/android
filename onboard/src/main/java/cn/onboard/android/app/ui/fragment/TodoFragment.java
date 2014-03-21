@@ -45,7 +45,6 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.EditTodo;
-import cn.onboard.android.app.ui.Project;
 
 
 public class TodoFragment extends Fragment implements OnClickListener,MenuItem.OnMenuItemClickListener {
@@ -78,13 +77,13 @@ public class TodoFragment extends Fragment implements OnClickListener,MenuItem.O
         idMap.put("projectId", projectId);
         idMap.put("companyId", companyId);
         new InitDataTask().execute(idMap);
-        Project project = (Project) getActivity();
-
-        project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
-        project.getSupportActionBar().setTitle("任务列表");
-        project.setCreateString("新建任务列表");
-        project.setPopupListener(this);
-        project.invalidateOptionsMenu();
+//        Project project = (Project) getActivity();
+//
+//        project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
+//        project.getSupportActionBar().setTitle("任务列表");
+//        project.setCreateString("新建任务列表");
+//        project.setPopupListener(this);
+//        project.invalidateOptionsMenu();
 
         return lv;
 
