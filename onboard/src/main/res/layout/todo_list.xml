@@ -5,6 +5,7 @@
 
     <ListView
         android:id="@+id/todolist"
+        android:layout_marginTop="15.0dip"
         style="@style/widget_listview" />
 
 </LinearLayout>

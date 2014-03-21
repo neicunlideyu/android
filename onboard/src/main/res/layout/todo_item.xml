@@ -15,9 +15,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <CheckBox
+            android:id="@+id/todo_complete_checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/todo_checkBox" />
+            android:layout_gravity="left|center"
+            android:button="@drawable/login_checkbox_selector"
+            android:checked="true"
+            android:paddingLeft="30dip"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_13" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -17,10 +17,9 @@
 package cn.onboard.android.app.ui.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +28,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Todolist;
 
 import java.util.ArrayList;
@@ -43,10 +44,11 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.ui.EditTodo;
+import cn.onboard.android.app.ui.Project;
 
 
-public class TodoFragment extends Fragment implements OnClickListener {
+public class TodoFragment extends Fragment implements OnClickListener,MenuItem.OnMenuItemClickListener {
     private int companyId;
 
     private int projectId;
@@ -68,93 +70,77 @@ public class TodoFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        RelativeLayout v = new RelativeLayout(getActivity());
-//        v.setBackgroundColor(Color.GREEN);
         final LinearLayout lv = (LinearLayout) inflater.inflate(
                 R.layout.todo_list, null);
-//        lv.setBackgroundColor(Color.GREEN);
-//		initializeHeaderAndFooter();
-//		initializeAdapter();
-//		initializePadding();
         data = new ArrayList<Item>();
         listViewNewsAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), data, 0);
-////
-////        lv.setFastScrollEnabled(true);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//            lv.setFastScrollAlwaysVisible(true);
-//        }
-//        //  setListAdapter(new FastScrollAdapter(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1));
         HashMap<String, Integer> idMap = new HashMap<String, Integer>();
         idMap.put("projectId", projectId);
         idMap.put("companyId", companyId);
-//        new InitDataTask().execute(idMap);
-        final Handler handler = new Handler() {
-            public void handleMessage(Message msg) {
-                if (msg.what >= 1) {
-                    List<Item> itemList = new ArrayList<Item>();
-                    List<Todolist> todolists = (List<Todolist>) msg.obj;
-                    int sectionPosition = 0, listPosition = 0;
-                    ListView pinnedSectionListView = (ListView) getActivity().findViewById(
-                            R.id.todolist);
-                    pinnedSectionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> parent,
-                                                View view, int position, long id) {
-                            Item item = (Item) listViewNewsAdapter.getItem(position);
-                            if (item != null) {
-//                                Toast.makeText(getActivity(), item.identifiable.getType(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+        new InitDataTask().execute(idMap);
+        Project project = (Project) getActivity();
 
-                    for (int i = 0; i < todolists.size(); i++) {
-                        Item todolistItem = new Item(todolists.get(i), sectionPosition, listPosition++, todolists.get(i).getName(),Type.TODOLIST.value());
-                        itemList.add(todolistItem);
-                        int num_of_todos = todolists.get(i).getTodos() == null ? 0 : todolists.get(i).getTodos().size();
-                        for (int j = 0; j < num_of_todos; j++) {
-                            Item todoItem = new Item(todolists.get(i).getTodos().get(j), sectionPosition, listPosition++, todolists.get(i).getTodos().get(j).getContent(),Type.TODO.value());
-                            itemList.add(todoItem);
-                        }
-                        sectionPosition++;
-                    }
-                    data.addAll(itemList);
-                    listViewNewsAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), data, todolists.size());
-                    pinnedSectionListView.setAdapter(listViewNewsAdapter);
-                    // listViewNewsAdapter.notifyDataSetChanged();
-                } else if (msg.what == -1) {
-                    UIHelper.ToastMessage(
-                            getActivity().getApplicationContext(),
-                            getString(R.string.get_todo_list_fail));
-                }
-            }
-        };
-        initGetTodolistsByProject(handler);
-//        final LinearLayout lv = (LinearLayout) inflater.inflate(
-//                R.layout.document_list, null);
-//
+        project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
+        project.getSupportActionBar().setTitle("任务列表");
+        project.setCreateString("新建任务列表");
+        project.setPopupListener(this);
+        project.invalidateOptionsMenu();
+
         return lv;
 
 
     }
 
-    void initGetTodolistsByProject(final Handler handler) {
-        new Thread() {
-            public void run() {
-                Message msg = new Message();
-                try {
-                    AppContext ac = (AppContext) getActivity().getApplication();
-                    List<Todolist> todolists = ac
-                            .getTodoListsByProjectId(companyId, projectId);
-                    msg.what = todolists.size();
-                    msg.obj = todolists;
-                } catch (AppException e) {
-                    e.printStackTrace();
-                    msg.what = -1;
-                    msg.obj = e;
-                }
-                handler.sendMessage(msg);
-            }
-        }.start();
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        return true;
+    }
 
+    public class InitDataTask extends AsyncTask<HashMap<String,Integer > ,Void ,List<Todolist>>{
+
+        @Override
+        protected List<Todolist> doInBackground(HashMap<String, Integer>... hashMaps) {
+            AppContext ac = (AppContext) getActivity().getApplication();
+            List<Todolist> todolists = new ArrayList<Todolist>();
+            try {
+                todolists = ac
+                        .getTodoListsByProjectId(companyId, projectId);
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+            return todolists;
+        }
+
+        @Override
+        protected  void onPostExecute (List<Todolist> todolists){
+            List<Item> itemList = new ArrayList<Item>();
+            int sectionPosition = 0, listPosition = 0;
+            ListView pinnedSectionListView = (ListView) getActivity().findViewById(
+                    R.id.todolist);
+            pinnedSectionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent,
+                                        View view, int position, long id) {
+                    Item item = (Item) listViewNewsAdapter.getItem(position);
+                    if (item != null) {
+//                                Toast.makeText(getActivity(), item.identifiable.getType(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            for (int i = 0; i < todolists.size(); i++) {
+                Item todolistItem = new Item(todolists.get(i), sectionPosition, listPosition++, todolists.get(i).getName(),Type.TODOLIST.value());
+                itemList.add(todolistItem);
+                int num_of_todos = todolists.get(i).getTodos() == null ? 0 : todolists.get(i).getTodos().size();
+                for (int j = 0; j < num_of_todos; j++) {
+                    Item todoItem = new Item(todolists.get(i).getTodos().get(j), sectionPosition, listPosition++, todolists.get(i).getTodos().get(j).getContent(),Type.TODO.value());
+                    itemList.add(todoItem);
+                }
+                sectionPosition++;
+            }
+            data.addAll(itemList);
+            listViewNewsAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), data, todolists.size());
+            pinnedSectionListView.setAdapter(listViewNewsAdapter);
+        }
     }
 
     @Override
@@ -249,16 +235,36 @@ public class TodoFragment extends Fragment implements OnClickListener {
                 if (item.getType()== Type.TODOLIST.value()) {
                     convertView = listContainer
                             .inflate(R.layout.todolist_item, null);
-                    listItemView.name = (TextView) convertView.findViewById(R.id.todolist_listitem_title);
-                    convertView.setBackgroundColor(Color.GREEN);
+                    listItemView.name = (TextView) convertView.findViewById(R.id.todolist_titile);
+                    listItemView.newTodo = (ImageView) convertView.findViewById(R.id.new_todo_button);
+                    listItemView.newTodo.setOnClickListener(new View.OnClickListener(){
+
+                        @Override
+                        public void onClick(View view) {
+                            Context context = view.getContext();
+                            Intent intent = new Intent(context,
+                                    EditTodo.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+
+                        }
+                    });
+
                     convertView.setAlpha(1);
-                    listItemView.name.setAlpha(1);
+
 
                 } else if (item.getType()==Type.TODO.value()) {
                     convertView = listContainer
                             .inflate(R.layout.todo_item, null);
                     listItemView.name = (TextView) convertView.findViewById(R.id.todo_text);
-                    listItemView.completeTodo = (CheckBox) convertView.findViewById(R.id.todo_checkBox);
+                    listItemView.completeTodo = (CheckBox) convertView.findViewById(R.id.todo_complete_checkBox);
+                    listItemView.completeTodo.setOnClickListener(new View.OnClickListener(){
+
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
                 }
                 // 设置控件集到convertView
                 convertView.setTag(listItemView);
@@ -272,6 +278,7 @@ public class TodoFragment extends Fragment implements OnClickListener {
         static class ListItemView { // 自定义控件集合
             public TextView name;
             public CheckBox completeTodo;
+            public ImageView newTodo;
         }
     }
 
