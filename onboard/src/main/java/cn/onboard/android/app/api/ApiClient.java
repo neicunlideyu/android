@@ -658,6 +658,19 @@ public class ApiClient {
 			throw AppException.network(e);
 		}
 	}
+
+    public static Upload getUploadById(AppContext appContext, int companyId, int projectId, int uploadId) throws AppException {
+        String newUrl = URLs.UPLOAD_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "")
+                .replaceAll("uploadId", uploadId + "");
+        try {
+            return HttpStreamToObject.inputStreamToObject(new TypeReference<Upload>() {
+            }, http_get(appContext, newUrl));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+    }
 	
 	public static List<Attachment> getAttachmentsByProjectId(AppContext appContext,
 			int companyId, int projectId) throws AppException {
@@ -749,4 +762,17 @@ public class ApiClient {
 		}
 		
 	}
+
+    public static Todo getTodoById(AppContext appContext, int companyId, int projectId, int todoId) throws AppException {
+        String newUrl = URLs.CALENDAR_TODO_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "")
+                .replaceAll("todoId", todoId + "");
+        try {
+            return HttpStreamToObject.inputStreamToObject(new TypeReference<Todo>() {
+            }, http_get(appContext, newUrl));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+    }
 }

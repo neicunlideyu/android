@@ -17,7 +17,8 @@
     <string name="pull_to_refresh_refreshing_label">加载中...</string>
     <string name="pull_to_refresh_tap_label">下拉可以刷新</string>
     <string name="pull_to_refresh_update">最近更新：</string>
-    
+    <string name="download">下载</string>
+
     <string name="setting_head_title">系统设置</string>
 
     <string-array name="accordion_sections">

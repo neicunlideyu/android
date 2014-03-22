@@ -2,6 +2,7 @@ package cn.onboard.android.app;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -10,6 +11,8 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.util.Log;
 
 import com.onboard.api.dto.Activity;
 import com.onboard.api.dto.Attachment;
@@ -40,6 +43,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import cn.onboard.android.app.api.ApiClient;
+import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.StringUtils;
 
 /**
@@ -781,12 +785,28 @@ public class AppContext extends Application {
 
     }
 
+    public Upload getUploadById(int companyId, int projectId, int uploadId) throws AppException {
+        return ApiClient.getUploadById(this, companyId, projectId, uploadId);
+    }
+
     public List<Attachment> getAttachmentsByProjectId(int companyId,
                                                       int projectId) throws AppException {
         List<Attachment> attachments = new ArrayList<Attachment>();
         attachments = ApiClient.getAttachmentsByProjectId(this, companyId, projectId);
         return attachments;
 
+    }
+
+    public void downloadAttachmentByAttachmentId(int attachmentId, int companyId, int projectId) {
+        DownloadManager downloadManager = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
+        String newUrl = URLs.ATTACHMENT_DOWNLOWD_HTTP.replaceAll("attachmentId", attachmentId + "")
+                .replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "");
+
+        Uri uri = Uri.parse(newUrl);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setTitle("onboard附件");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        downloadManager.enqueue(request);
     }
 
     public List<User> getUsersByProjectId(int companyId, int projectId) throws AppException {
@@ -811,5 +831,9 @@ public class AppContext extends Application {
 
     public List<Todo> getCalendarTodos(int companyId, long startTime, long endTime) throws AppException {
         return ApiClient.getCalendarTodos(this, companyId, startTime, endTime);
+    }
+
+    public Todo getTodoById(int companyId, int projectId, int todoId) throws AppException {
+        return ApiClient.getTodoById(this, companyId, projectId, todoId);
     }
 }

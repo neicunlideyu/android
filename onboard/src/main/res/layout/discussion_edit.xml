@@ -57,6 +57,20 @@
                 android:minLines="5"
                 android:scrollbars="horizontal|vertical" />
 
+            <TextView
+                android:id="@+id/discussion_assignee_label"
+                style="@style/HeaderTitleText"
+                android:paddingTop="5dp"
+                android:text="选择想要提醒的人" />
+
+            <TextView
+                android:id="@+id/discussion_assignee_name"
+                style="@style/FormalMultiLineEditText"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text" />
+
         </LinearLayout>
     </ScrollView>
 
