@@ -38,7 +38,7 @@ public class ProjectMenuFragment extends SherlockListFragment {
 		Project project = (Project) getActivity();
 		switch (position) {
 		case 0:
-			newContent = new ActivityFragment(project.getCompanyId(),project.getProjectId());
+			newContent = new RepositoryFragment(project.getCompanyId(),project.getProjectId());
 			break;
 		case 1:
 			newContent = new RepositoryFragment(project.getCompanyId(),project.getProjectId());

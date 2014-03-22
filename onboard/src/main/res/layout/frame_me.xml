@@ -3,7 +3,12 @@
     android:orientation="vertical" 
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent">
-	<LinearLayout 
+    <FrameLayout android:id="@+id/me_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+<!--
+    <LinearLayout
 		android:layout_width="fill_parent" 
 		android:layout_height="35.0dip"
 		android:orientation="horizontal" 
@@ -23,4 +28,5 @@
      		style="@style/frame_button"
          	android:text="文件"/>
     </LinearLayout>
+-->
 </LinearLayout>
