@@ -18,12 +18,18 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.onboard.api.dto.Project;
+import com.onboard.api.dto.User;
+import com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView;
+import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleArrayAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.adapter.EveryoneAdapter;
 import cn.onboard.android.app.adapter.GridViewProjectAdapter;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.fragment.ActivityFragment;
@@ -33,6 +39,7 @@ import cn.onboard.android.app.widget.scroll.ScrollLayout;
 
 public class Company extends FragmentActivity implements CalendarController.EventHandler {
 	private int companyId;
+    private int userId;
 	
 	private ScrollLayout mScrollLayout;
 	private RadioButton[] mButtons;
@@ -40,13 +47,13 @@ public class Company extends FragmentActivity implements CalendarController.Even
 	private int mViewCount;
 	private int mCurSel;
 
-
 	private TextView mHeadTitle;
 
 	private GridView projectGridView;
-	
-	
-	private CalendarController mController;
+
+    private StickyGridHeadersGridView everyoneView;
+
+    private CalendarController mController;
 	MonthByWeekFragment monthFrag;
     ActivityFragment activityFragment;
 	Fragment dayFrag;
@@ -72,12 +79,16 @@ public class Company extends FragmentActivity implements CalendarController.Even
 		initPageScroll();
 		initProjectFrameView();
 		initCalendarFrameView();
+        initEveryOneFrameView();
         initActivityView();
 		initMeFrameView();
         findViewById(R.id.app_footbar_setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(Company.this, Person.class);
+                intent.putExtra("companyId", companyId);
+                intent.putExtra("userId", userId);
                 startActivity(intent);
             }
         });
@@ -102,6 +113,11 @@ public class Company extends FragmentActivity implements CalendarController.Even
 
 	}
 
+    private void initEveryOneFrameView() {
+        everyoneView = (StickyGridHeadersGridView) findViewById(R.id.everyone_grid);
+        getDepartmentNameUserMap(this);
+    }
+
     private void initActivityView(){
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         activityFragment = new ActivityFragment(companyId,1);
@@ -115,6 +131,40 @@ public class Company extends FragmentActivity implements CalendarController.Even
 //        ft.replace(R.id.frame_me, tabNavigation).commit();
 
 	}
+
+    private void getDepartmentNameUserMap(final Context context) {
+        final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what >= 1) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, List<User>> departmentUserMap = (Map<String, List<User>>) msg.obj;
+                    everyoneView.setAdapter(new EveryoneAdapter(getApplicationContext(), departmentUserMap, R.layout.everyone_header, R.layout.everyone_item));
+                    //projectGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+
+
+                } else if (msg.what == -1) {
+                    UIHelper.ToastMessage(Company.this,
+                            getString(R.string.get_department_name_user_map_fail));
+                }
+            }
+        };
+        new Thread() {
+            public void run() {
+                Message msg = new Message();
+                try {
+                    AppContext ac = (AppContext) getApplication();
+                    Map<String, List<User>> departmentNameUserMap = ac.getDepartmentNameUserMapByCompanyId(companyId);
+                    msg.what = departmentNameUserMap.size();
+                    msg.obj = departmentNameUserMap;
+                } catch (AppException e) {
+                    e.printStackTrace();
+                    msg.what = -1;
+                    msg.obj = e;
+                }
+                handler.sendMessage(msg);
+            }
+        }.start();
+    }
 	@SuppressLint("HandlerLeak")
 	private void getProjectList(final Context context) {
 		final Handler handler = new Handler() {

@@ -8,9 +8,11 @@ import java.io.Serializable;
 public class URLs implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public final static String IMAGE_HOST = "teamforge.b0.upaiyun.com";
     
-    public final static String HOST = "10.202.11.2:8080";
-    
+    public final static String HOST = "192.168.100.31:8080";
+
     public final static String HTTP = "http://";
     
     public final static String HTTPS = "https://";
@@ -27,6 +29,7 @@ public class URLs implements Serializable {
     public final static String UPLOAD__LIST_HTTP = URL_API_HOST + "api/company/companyId/project/projectId/uploads";
     public final static String UPLOAD_HTTP = URL_API_HOST + "api/company/companyId/project/projectId/uploads/uploadId";
     public final static String USERS__LIST_HTTP = URL_API_HOST + "api/company/companyId/project/projectId/users";
+    public final static String DEPARTMENT_NAME_USER_MAP_HTTP = URL_API_HOST + "api/company/companyId/users";
     public final static String ATTACHMENT_LIST_HTTP = URL_API_HOST + "api/companyId/projects/projectId/attachments";
     public final static String ATTACHMENT_COMMENT_COUNT_HTTP = URL_API_HOST
             + "api/companyId/projects/projectId/attachments/comment/count/attachmentId";
@@ -44,6 +47,6 @@ public class URLs implements Serializable {
     public final static String CALENDAR_EVENT_HTTP = URLs.URL_API_HOST+"api/company/companyId/events/from/startTime/to/endTime";    
     public final static String UPDATE_VERSION = URL_API_HOST+"MobileAppVersion.xml";
     public final static String TODO_HTTP = URL_API_HOST + "api/{companyId}/projects/{projectId}/todos/{todoId}";
-
+    public final static String USER_FACE_HTTP = HTTP + IMAGE_HOST;
 
 }

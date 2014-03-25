@@ -702,6 +702,19 @@ public class ApiClient {
 		}
 	}
 
+    public static Map<String, List<User>> getDepartmentNameUserMapByCompanyId(AppContext appContext, int companyId) throws AppException {
+        String newUrl = URLs.DEPARTMENT_NAME_USER_MAP_HTTP.replaceAll("companyId", companyId + "");
+        try {
+            return HttpStreamToObject.inputStreamToObject(
+                    new TypeReference<Map<String, List<User>>>() {
+                    }, http_get(appContext, newUrl));
+        } catch (Exception e) {
+                if (e instanceof AppException)
+                    throw (AppException) e;
+                throw AppException.network(e);
+            }
+    }
+
 	public static Comment publishComment(AppContext appContext, Comment comment)
 			throws AppException {
 		String url = URLs.PUBLISH_COMMENT_HTTP.replaceAll("companyId", comment.getCompanyId()+"").replaceAll("projectId", comment.getProjectId()+"").replaceAll("attachType", comment.getAttachType()).replaceAll("attachId", comment.getAttachId()+"");

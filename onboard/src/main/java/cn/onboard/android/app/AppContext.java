@@ -39,6 +39,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -813,6 +814,12 @@ public class AppContext extends Application {
         List<User> users = new ArrayList<User>();
         users = ApiClient.getUsersByProjectId(this, companyId, projectId);
         return users;
+    }
+
+    public Map<String, List<User>> getDepartmentNameUserMapByCompanyId(int companyId) throws AppException {
+        Map<String, List<User>> departmentNameUserMap = ApiClient.getDepartmentNameUserMapByCompanyId(this, companyId);
+
+        return departmentNameUserMap;
     }
 
     public Comment publishComment(Comment comment) throws AppException {
