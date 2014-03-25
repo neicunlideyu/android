@@ -27,6 +27,7 @@ import com.onboard.api.dto.Attachment;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
@@ -35,9 +36,9 @@ import cn.onboard.android.app.ui.TodoDetail;
 import cn.onboard.android.app.ui.UploadDetail;
 
 public class UploadFragment extends Fragment {
-    private int companyId;
+    private static int companyId;
 
-    private int projectId;
+    private static int projectId;
 
     private static String cookie;
 
@@ -136,12 +137,12 @@ public class UploadFragment extends Fragment {
             }
 
             // 设置文字和图片
-            String faceURL = "http://onboard.cn/" + attachment.getCompanyId() + "/projects/" + attachment.getProjectId()
-                    + "/attachments/image/" + attachment.getId();
+            String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;
+            attachmentImageURL = attachmentImageURL.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "").replaceAll("attachmentId", attachment.getId() + "");
             if (!attachment.getContentType().contains("image")) {
-                faceURL = "http://onboard.cn/static/img/attachment-icon/default.png";
+                attachmentImageURL = "http://onboard.cn/static/img/attachment-icon/default.png";
             }
-            bmpManager.loadBitmap(faceURL, listItemView.face);
+            bmpManager.loadBitmap(attachmentImageURL, listItemView.face);
             // }
             // listItemView.face.setOnClickListener(faceClickListener);
             listItemView.face.setTag(attachment);
@@ -220,7 +221,7 @@ public class UploadFragment extends Fragment {
                     });
 
                 } else if (msg.what == -1) {
-                    UIHelper.ToastMessage(getActivity().getApplicationContext(), getString(R.string.get_todo_list_fail));
+                    UIHelper.ToastMessage(getActivity().getApplicationContext(), "获取文件失败");
                 }
             }
         };

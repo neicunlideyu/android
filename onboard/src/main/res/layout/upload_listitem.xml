@@ -7,14 +7,18 @@
     android:paddingLeft="6dip"
     android:paddingRight="6dip"
     android:paddingTop="10dip"
-    android:paddingBottom="9dip">   
+    android:paddingBottom="9dip">
 
-    <ImageView 
+
+
+    <ImageView
     	android:id="@+id/question_listitem_userface"
       	style="@style/user_face_image"/>
 
+
+
 	<LinearLayout
-    	android:layout_width="fill_parent" 
+    	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:orientation="vertical"
     	android:layout_marginLeft="6dip"> 
@@ -27,9 +31,9 @@
      		android:textSize="@dimen/text_size_15"
 	     	android:textColor="@color/listitem_black"
 	     	android:maxLines="2"
-	    	android:ellipsize="end"/> 	
-	
-	    <LinearLayout 
+	    	android:ellipsize="end"/>
+
+	    <LinearLayout
 	    	android:orientation="horizontal" 
 	        android:layout_width="fill_parent"  
 	        android:layout_height="wrap_content"
@@ -47,13 +51,6 @@
 	           	android:layout_marginLeft="10dip"
 	           	android:textSize="@dimen/text_size_10"
 	            android:textColor="@color/listitem_gray"/>
-	            
-		    <ImageView 
-		      	android:layout_width="wrap_content" 
-		        android:layout_height="wrap_content"
-		        android:layout_marginLeft="10dip"
-		        android:layout_gravity="center_vertical"
-		        android:src="@drawable/widget_comment_count_icon"/>
 		        
 	       	<TextView android:id="@+id/question_listitem_count"  
 	    		android:layout_width="wrap_content" 
@@ -64,14 +61,19 @@
 
 
        	</LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right" >
+
         <Button
             android:id="@+id/button_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_20"
-            android:layout_marginLeft="6dip"
-            android:text="@string/download"
-            android:layout_gravity="right" />
+            android:textSize="@dimen/text_size_10"
+            android:text="@string/download" />
+
     </LinearLayout>
 
 </LinearLayout>
