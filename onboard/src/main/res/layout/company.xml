@@ -5,10 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <include
-        android:layout_width="match_parent"
-        layout="@layout/company_header" />
-
     <cn.onboard.android.app.widget.scroll.ScrollLayout
         android:id="@+id/company_scrolllayout"
         android:layout_width="fill_parent"

@@ -18,10 +18,10 @@
                 style="@style/HeaderTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="主题" />
+                android:text="任务名称" />
 
             <EditText
-                android:id="@+id/discussion_title"
+                android:id="@+id/todo_title"
                 style="@style/FormalSingleLineEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -51,6 +51,7 @@
                     android:id="@+id/tv_assignee_name"
                     style="@style/ListSubtitleText"
                     android:singleLine="true"
+                    android:text="无"
                     android:textColor="@color/text" />
             </LinearLayout>
 
@@ -77,6 +78,8 @@
                 <TextView
                     style="@style/ListSubtitleText"
                     android:singleLine="true"
+                    android:text="无"
+                    android:id="@+id/tv_assignee_date"
                     android:textColor="@color/text" />
             </LinearLayout>
         </LinearLayout>

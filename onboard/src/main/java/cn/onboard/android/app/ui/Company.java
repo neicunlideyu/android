@@ -40,9 +40,6 @@ public class Company extends FragmentActivity implements CalendarController.Even
 	private int mViewCount;
 	private int mCurSel;
 
-
-	private TextView mHeadTitle;
-
 	private GridView projectGridView;
 	
 	
@@ -68,7 +65,6 @@ public class Company extends FragmentActivity implements CalendarController.Even
 		    StrictMode.setThreadPolicy(policy);
 		}
 		companyId = getIntent().getIntExtra("companyId", 0);
-		mHeadTitle = (TextView) findViewById(R.id.company_head_title);
 		initPageScroll();
 		initProjectFrameView();
 		initCalendarFrameView();
@@ -78,6 +74,9 @@ public class Company extends FragmentActivity implements CalendarController.Even
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Company.this, Person.class);
+                AppContext ac = (AppContext) getApplication();
+                intent.putExtra("userId",ac.getLoginInfo().getId());
+                intent.putExtra("companyId",companyId);
                 startActivity(intent);
             }
         });
@@ -104,7 +103,7 @@ public class Company extends FragmentActivity implements CalendarController.Even
 
     private void initActivityView(){
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        activityFragment = new ActivityFragment(companyId,1);
+        activityFragment = new ActivityFragment(companyId,null);
         ft.replace(R.id.me_frame, activityFragment).commit();
 
     }
@@ -175,9 +174,10 @@ public class Company extends FragmentActivity implements CalendarController.Even
 	}
 
 	private void initPageScroll() {
-		mHeadTitles = getResources()
+        mHeadTitles = getResources()
 				.getStringArray(R.array.company_head_titles);
-		mScrollLayout = (ScrollLayout) findViewById(R.id.company_scrolllayout);
+        getActionBar().setTitle(mHeadTitles[0]);
+        mScrollLayout = (ScrollLayout) findViewById(R.id.company_scrolllayout);
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.company_linearlayout_footer);
 		mHeadTitles = getResources()
 				.getStringArray(R.array.company_head_titles);
@@ -205,7 +205,7 @@ public class Company extends FragmentActivity implements CalendarController.Even
 							return;
 						mButtons[mCurSel].setChecked(false);
 						mButtons[viewIndex].setChecked(true);
-						mHeadTitle.setText(mHeadTitles[viewIndex]);
+                        getActionBar().setTitle(mHeadTitles[viewIndex]);
 						mCurSel = viewIndex;
 					}
 				});

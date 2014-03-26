@@ -1,9 +1,6 @@
 
 package cn.onboard.android.app.ui.fragment;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -22,7 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -30,14 +32,15 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
-import cn.onboard.android.app.ui.Project;
 import cn.onboard.android.app.ui.TodoDetail;
 import cn.onboard.android.app.ui.UploadDetail;
 
-public class UploadFragment extends Fragment {
-    private int companyId;
+public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
+    private Integer companyId;
 
-    private int projectId;
+    private Integer projectId;
+
+    private Integer userId;
 
     private static String cookie;
 
@@ -49,10 +52,16 @@ public class UploadFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public UploadFragment(int companyId, int projectId) {
+    public UploadFragment(Integer companyId, Integer projectId,Integer userId) {
         this();
         this.companyId = companyId;
         this.projectId = projectId;
+        this.userId = userId;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        return false;
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
@@ -224,12 +233,6 @@ public class UploadFragment extends Fragment {
                 }
             }
         };
-        Project project = (Project) getActivity();
-
-        project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
-        project.getSupportActionBar().setTitle("文件");
-        project.setCreateString("上传文件");
-        project.invalidateOptionsMenu();
         initGetUploadsByProject(handler);
         return lv;
     }
@@ -240,7 +243,11 @@ public class UploadFragment extends Fragment {
                 Message msg = new Message();
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
-                    List<Attachment> attachments = ac.getAttachmentsByProjectId(companyId, projectId);
+                    List<Attachment> attachments =new ArrayList<Attachment>();
+                    if(projectId!=null)
+                        attachments= ac.getAttachmentsByProjectId(companyId, projectId);
+                    else if(userId!=null)
+                        attachments = ac.getAttachmentsByCompanyIdByUserId(companyId, userId);
                     msg.what = attachments.size();
                     msg.obj = attachments;
                 } catch (AppException e) {

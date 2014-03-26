@@ -1,9 +1,9 @@
 package cn.onboard.android.app.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,22 +16,19 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.api.dto.Comment;
 import com.onboard.api.dto.Discussion;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 
-public class DiscussionDetail extends SherlockActivity {
+public class DiscussionDetail extends SherlockFragmentActivity {
 	private FrameLayout mHeader;
 	private LinearLayout mFooter;
 	private ImageView mRefresh;
@@ -80,30 +77,30 @@ public class DiscussionDetail extends SherlockActivity {
 
 	}
 
-	private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
-		@Override
-		public boolean onMenuItemClick(MenuItem item) {
-			Intent intent = new Intent(getApplicationContext(), CommentList.class);
-			CommentList.companyId = discussion.getCompanyId();
-            CommentList.projectId = discussion.getProjectId();
-            CommentList.attachId=discussion.getId();
-            CommentList.attachType = "discussion";
-
-            if(discussion.getComments()!=null)
-				CommentList.comments =discussion.getComments();
-			else {
-				CommentList.comments = new ArrayList<Comment>();
-			}
-			DiscussionDetail.this.startActivity(intent);
-			return true;
-		}
-	};
+//	private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
+//		@Override
+//		public boolean onMenuItemClick(MenuItem item) {
+//			Intent intent = new Intent(getApplicationContext(), CommentList.class);
+//			CommentList.companyId = discussion.getCompanyId();
+//            CommentList.projectId = discussion.getProjectId();
+//            CommentList.attachId=discussion.getId();
+//            CommentList.attachType = "discussion";
+//
+//            if(discussion.getComments()!=null)
+//				CommentList.comments =discussion.getComments();
+//			else {
+//				CommentList.comments = new ArrayList<Comment>();
+//			}
+//			DiscussionDetail.this.startActivity(intent);
+//			return true;
+//		}
+//	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		menu.add("评论").setOnMenuItemClickListener(popupListener)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add("评论").setOnMenuItemClickListener(popupListener)
+//				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
@@ -135,6 +132,11 @@ public class DiscussionDetail extends SherlockActivity {
 		mWebView.getSettings().setSupportZoom(true);
 		mWebView.getSettings().setBuiltInZoomControls(true);
 		mWebView.getSettings().setDefaultFontSize(15);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CommentList commentList = new CommentList(companyId,projectId,"discussions",discussionId);
+        ft.replace(R.id.comment_list, commentList).commit();
+
 	}
 
 	// 初始化控件数据

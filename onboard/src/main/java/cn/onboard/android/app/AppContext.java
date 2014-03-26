@@ -12,7 +12,6 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.util.Log;
 
 import com.onboard.api.dto.Activity;
 import com.onboard.api.dto.Attachment;
@@ -713,6 +712,15 @@ public class AppContext extends Application {
 
     }
 
+    public List<Todolist> getTodoListsByUserId(int companyId, int userId)
+            throws AppException {
+        List<Todolist> todolists = new ArrayList<Todolist>();
+        todolists = ApiClient
+                .getTodoListByProjectId(this, companyId, userId);
+        return todolists;
+
+    }
+
     public List<Topic> getTopicsByProjectId(int companyId, int projectId)
             throws AppException {
         List<Topic> topicList = new ArrayList<Topic>();
@@ -730,14 +738,6 @@ public class AppContext extends Application {
 
     }
 
-    public List<Todolist> getTodolistssByProjectId(int companyId, int projectId)
-            throws AppException {
-        List<Todolist> todolists = new ArrayList<Todolist>();
-        todolists = ApiClient.getTodolistsByProjectId(this, companyId,
-                projectId);
-        return todolists;
-
-    }
 
     public Discussion getDiscussionById(int companyId, int projectId,
                                         int discussionId) throws AppException {
@@ -762,11 +762,18 @@ public class AppContext extends Application {
 
     }
 
-    public List<Activity> getActivitiesByProjectId(int companyId, int projectId, int page) throws AppException {
+    public List<Activity> getActivitiesByCompanyId(int companyId, int page) throws AppException {
         List<Activity> activities = new ArrayList<Activity>();
-        activities = ApiClient.getActivitiesByProjectId(this, companyId, projectId, page);
+        activities = ApiClient.getActivitiesByCompanyId(this, companyId, page);
         return activities;
     }
+
+    public List<Activity> getActivitiesByCompanyIdByUserId(int companyId,int userId, int page) throws AppException {
+        List<Activity> activities = new ArrayList<Activity>();
+        activities = ApiClient.getActivitiesByCompanyIdByUserId(this, companyId, userId, page);
+        return activities;
+    }
+
 
 //    public List<Repository> getRepositorysByProjectId(int companyId,
 //                                                      int projectId) throws AppException {
@@ -797,6 +804,14 @@ public class AppContext extends Application {
 
     }
 
+    public List<Attachment> getAttachmentsByCompanyIdByUserId(int companyId,
+                                                      int userId) throws AppException {
+        List<Attachment> attachments = new ArrayList<Attachment>();
+        attachments = ApiClient.getAttachmentsByCompanyIdByUserId(this, companyId, userId);
+        return attachments;
+
+    }
+
     public void downloadAttachmentByAttachmentId(int attachmentId, int companyId, int projectId) {
         DownloadManager downloadManager = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
         String newUrl = URLs.ATTACHMENT_DOWNLOWD_HTTP.replaceAll("attachmentId", attachmentId + "")
@@ -819,7 +834,17 @@ public class AppContext extends Application {
         return ApiClient.publishComment(this, comment);
     }
 
+    public Todo createTodo(Todo todo) throws  AppException{
+        return ApiClient.createTodo(this,todo);
+    }
 
+    public Todo updateTodo(Todo todo) throws  AppException{
+        return ApiClient.updateTodo(this,todo);
+    }
+
+    public Todolist createTodolist(Todolist todolist) throws  AppException {
+        return ApiClient.createTodolist(this, todolist);
+    }
     public Discussion createDiscussion(Discussion discussion) throws AppException {
         return ApiClient.createDiscussion(this, discussion);
     }

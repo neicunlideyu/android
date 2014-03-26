@@ -61,6 +61,11 @@ public class Project extends SlidingFragmentActivity {
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
 
+//        getSupportActionBar().setLogo(R.drawable.actionbar_discussion);
+//        getSupportActionBar().setTitle("讨论");
+//        setCreateString("新建讨论");
+//        setPopupListener((DisscussionFragment) mContent);
+//        invalidateOptionsMenu();
 //		 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 

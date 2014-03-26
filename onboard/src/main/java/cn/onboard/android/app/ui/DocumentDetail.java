@@ -1,9 +1,9 @@
 package cn.onboard.android.app.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.webkit.WebView;
@@ -14,22 +14,19 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.api.dto.Comment;
 import com.onboard.api.dto.Document;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 
-public class DocumentDetail extends SherlockActivity {
+public class DocumentDetail extends SherlockFragmentActivity {
 	private FrameLayout mHeader;
 	private LinearLayout mFooter;
 	private ImageView mRefresh;
@@ -71,29 +68,29 @@ public class DocumentDetail extends SherlockActivity {
 
 	}
 
-	private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
-		@Override
-		public boolean onMenuItemClick(MenuItem item) {
-			Intent intent = new Intent(getApplicationContext(), CommentList.class);
-            CommentList.companyId = document.getCompanyId();
-            CommentList.projectId = document.getProjectId();
-            CommentList.attachId=document.getId();
-            CommentList.attachType = "document";
-			if(document.getComments()!=null)
-				CommentList.comments =document.getComments();
-			else {
-				CommentList.comments = new ArrayList<Comment>();
-			}
-			DocumentDetail.this.startActivity(intent);
-			return true;
-		}
-	};
+//	private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
+//		@Override
+//		public boolean onMenuItemClick(MenuItem item) {
+//			Intent intent = new Intent(getApplicationContext(), CommentList.class);
+//            CommentList.companyId = document.getCompanyId();
+//            CommentList.projectId = document.getProjectId();
+//            CommentList.attachId=document.getId();
+//            CommentList.attachType = "document";
+//			if(document.getComments()!=null)
+//				CommentList.comments =document.getComments();
+//			else {
+//				CommentList.comments = new ArrayList<Comment>();
+//			}
+//			DocumentDetail.this.startActivity(intent);
+//			return true;
+//		}
+//	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		menu.add("评论").setOnMenuItemClickListener(popupListener)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add("评论").setOnMenuItemClickListener(popupListener)
+//				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
@@ -125,7 +122,12 @@ public class DocumentDetail extends SherlockActivity {
 		mWebView.getSettings().setSupportZoom(true);
 		mWebView.getSettings().setBuiltInZoomControls(true);
 		mWebView.getSettings().setDefaultFontSize(15);
-	}
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CommentList commentList = new CommentList(companyId,projectId,"documents",documentId);
+        ft.replace(R.id.comment_list, commentList).commit();
+
+    }
 
 	// 初始化控件数据
 	private void initData() {

@@ -2,9 +2,11 @@ package cn.onboard.android.app.ui;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.onboard.api.dto.Comment;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +28,7 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.api.ApiClient;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
@@ -41,69 +41,55 @@ import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
  * @version 1.0
  * @created 2012-9-18
  */
-public class CommentList extends SherlockActivity {
+public class CommentList extends Fragment {
 
-	private ListViewTweetAdapter lvCommentAdapter;
+	private ListViewAdapter lvCommentAdapter;
 	private PullToRefreshListView lvComment;
-	static public List<Comment> comments = new ArrayList<Comment>();
-	static public int companyId;
-    static public int projectId;
-    static public String attachType;
-    static public int attachId;
+	private List<Comment> comments = new ArrayList<Comment>();
+	private int companyId;
+    private int projectId;
+    private String attachType;
+    private int attachId;
 
     private InputMethodManager imm;
 	private EditText commentContent;
 	private Button commentPublish;
 	private Comment comment;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.comment_list);
-		// comments = new ArrayList<Comment>();
-		// List<Comment> commentList = (ArrayList<Comment>) getIntent()
-		// .getSerializableExtra("comments");
-		// if (commentList != null)
-		// comments = commentList;
-		// Discussion d= (Discussion)
-		// getIntent().getSerializableExtra("discussion");
-		// Discussion discussion = (Discussion)
-		// getIntent().getSerializableExtra("discussion");
-		// Test test = (Test)getIntent().getSerializableExtra("test");
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.head_back);
-		getSupportActionBar().setTitle("评论");
-		initCommentListView();
-	}
+    public CommentList(int companyId,int projectId,String attachType,int attachId){
+        this.companyId=companyId;
+        this.projectId=projectId;
+        this.attachType=attachType;
+        this.attachId=attachId;
+        comments=new ArrayList<Comment>();
+    }
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			break;
-		}
-		return true;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+//		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		//setContentView(R.layout.comment_list);
+        lvComment = (PullToRefreshListView) inflater.inflate(R.layout.comment_list, null);
+//		getSupportActionBar().setHomeButtonEnabled(true);
+//		getSupportActionBar().setIcon(R.drawable.head_back);
+//		getSupportActionBar().setTitle("评论");
+		initCommentListView();
+        return lvComment;
 	}
+
 
 	/**
 	 * 初始化动弹列表
 	 */
 	private void initCommentListView() {
-		imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-		commentContent = (EditText) findViewById(R.id.comment_foot_editer);
-		commentPublish = (Button) findViewById(R.id.comment_foot_pubcomment);
+		imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		commentContent = (EditText) getActivity().findViewById(R.id.comment_foot_editer);
+		commentPublish = (Button) getActivity().findViewById(R.id.comment_foot_pubcomment);
 		commentPublish.setOnClickListener(publishClickListener);
-		lvCommentAdapter = new ListViewTweetAdapter(this, comments,
+		lvCommentAdapter = new ListViewAdapter(getActivity(), comments,
 				R.layout.tweet_listitem);
-		// lvComment_footer = getLayoutInflater().inflate(
-		// R.layout.listview_footer, null);
-		// lvComment_foot_more = (TextView) lvComment_footer
-		// .findViewById(R.id.listview_foot_more);
-		// lvComment_foot_progress = (ProgressBar) lvComment_footer
-		// .findViewById(R.id.listview_foot_progress);
-		lvComment = (PullToRefreshListView) findViewById(R.id.frame_listview_tweet);
+		lvComment = (PullToRefreshListView) getActivity().findViewById(R.id.frame_listview_tweet);
 		// lvComment.addFooterView(lvComment_footer);// 添加底部视图 必须在setAdapter前
 		lvComment.setAdapter(lvCommentAdapter);
 		lvComment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -129,114 +115,9 @@ public class CommentList extends SherlockActivity {
 				// UIHelper.showTweetDetail(view.getContext(), comment.getId());
 			}
 		});
-		// lvComment.setOnScrollListener(new AbsListView.OnScrollListener() {
-		// public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// lvComment.onScrollStateChanged(view, scrollState);
-		//
-		// // 数据为空--不用继续下面代码了
-		// if (comments.isEmpty())
-		// return;
-		//
-		// // 判断是否滚动到底部
-		// boolean scrollEnd = false;
-		// try {
-		// if (view.getPositionForView(lvComment_footer) == view
-		// .getLastVisiblePosition())
-		// scrollEnd = true;
-		// } catch (Exception e) {
-		// scrollEnd = false;
-		// }
-		//
-		// int lvDataState = StringUtils.toInt(lvComment.getTag());
-		// if (scrollEnd && lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
-		// lvComment.setTag(UIHelper.LISTVIEW_DATA_LOADING);
-		// lvComment_foot_more.setText(R.string.load_ing);
-		// lvComment_foot_progress.setVisibility(View.VISIBLE);
-		// // 当前pageIndex
-		// int pageIndex = lvTweetSumData / AppContext.PAGE_SIZE;
-		// loadLvTweetData(curTweetCatalog, pageIndex, lvTweetHandler,
-		// UIHelper.LISTVIEW_ACTION_SCROLL);
-		// }
-		// }
-		//
-		// public void onScroll(AbsListView view, int firstVisibleItem,
-		// int visibleItemCount, int totalItemCount) {
-		// lvComment.onScroll(view, firstVisibleItem, visibleItemCount,
-		// totalItemCount);
-		// }
-		// });
-		// lvComment.setOnItemLongClickListener(new
-		// AdapterView.OnItemLongClickListener() {
-		// public boolean onItemLongClick(AdapterView<?> parent, View view,
-		// int position, long id) {
-		// // 点击头部、底部栏无效
-		// if (position == 0 || view == lvComment_footer)
-		// return false;
-		//
-		// Tweet _tweet = null;
-		// // 判断是否是TextView
-		// if (view instanceof TextView) {
-		// _tweet = (Tweet) view.getTag();
-		// } else {
-		// TextView tv = (TextView) view
-		// .findViewById(R.id.tweet_listitem_username);
-		// _tweet = (Tweet) tv.getTag();
-		// }
-		// if (_tweet == null)
-		// return false;
-		//
-		// final Tweet tweet = _tweet;
-		//
-		// // 删除操作
-		// // if(appContext.getLoginUid() == tweet.getAuthorId()) {
-		// final Handler handler = new Handler() {
-		// public void handleMessage(Message msg) {
-		// if (msg.what == 1) {
-		// Result res = (Result) msg.obj;
-		// if (res.OK()) {
-		// comments.remove(tweet);
-		// lvCommentAdapter.notifyDataSetChanged();
-		// }
-		// UIHelper.ToastMessage(Main.this,
-		// res.getErrorMessage());
-		// } else {
-		// ((AppException) msg.obj).makeToast(Main.this);
-		// }
-		// }
-		// };
-		// Thread thread = new Thread() {
-		// public void run() {
-		// Message msg = new Message();
-		// try {
-		// Result res = appContext.delTweet(
-		// appContext.getLoginUid(), tweet.getId());
-		// msg.what = 1;
-		// msg.obj = res;
-		// } catch (AppException e) {
-		// e.printStackTrace();
-		// msg.what = -1;
-		// msg.obj = e;
-		// }
-		// handler.sendMessage(msg);
-		// }
-		// };
-		// UIHelper.showTweetOptionDialog(Main.this, thread);
-		// // } else {
-		// // UIHelper.showTweetOptionDialog(Main.this, null);
-		// // }
-		// return true;
-		// }
-		// });
-		// lvComment.setOnRefreshListener(new
-		// PullToRefreshListView.OnRefreshListener() {
-		// public void onRefresh() {
-		// loadLvTweetData(curTweetCatalog, 0, lvTweetHandler,
-		// UIHelper.LISTVIEW_ACTION_REFRESH);
-		// }
-		// });
 	}
 
-	public static class ListViewTweetAdapter extends BaseAdapter {
+	public static class ListViewAdapter extends BaseAdapter {
 		private Context context;// 运行上下文
 		private List<Comment> listItems;// 数据集合
 		private LayoutInflater listContainer;// 视图容器
@@ -260,8 +141,8 @@ public class CommentList extends SherlockActivity {
 		 * @param data
 		 * @param resource
 		 */
-		public ListViewTweetAdapter(Context context, List<Comment> data,
-				int resource) {
+		public ListViewAdapter(Context context, List<Comment> data,
+                               int resource) {
 			this.context = context;
 			this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
 			this.itemViewResource = resource;
@@ -342,40 +223,8 @@ public class CommentList extends SherlockActivity {
 			// listItemView.userface.setImageResource(R.drawable.widget_dface);
 			// }else{
 			bmpManager.loadBitmap(faceURL, listItemView.userface);
-			// }
-			// listItemView.userface.setOnClickListener(faceClickListener);
-			// listItemView.userface.setTag(comment);
-			//
-			// String imgSmall = comment.getImgSmall();
-			// if(!StringUtils.isEmpty(imgSmall)) {
-			// bmpManager.loadBitmap(imgSmall, listItemView.image,
-			// BitmapFactory.decodeResource(context.getResources(),
-			// R.drawable.image_loading));
-			// listItemView.image.setOnClickListener(imageClickListener);
-			// listItemView.image.setTag(comment.getImgBig());
-			// listItemView.image.setVisibility(ImageView.VISIBLE);
-			// }else{
-			// listItemView.image.setVisibility(ImageView.GONE);
-			// }
-
 			return convertView;
 		}
-
-		// private View.OnClickListener faceClickListener = new
-		// View.OnClickListener(){
-		// public void onClick(View v) {
-		// Comment comment = (Comment)v.getTag();
-		// UIHelper.showUserCenter(v.getContext(), comment.getAuthorId(),
-		// comment.getAuthor());
-		// }
-		// };
-
-		// private View.OnClickListener imageClickListener = new
-		// View.OnClickListener(){
-		// public void onClick(View v) {
-		// UIHelper.showImageDialog(v.getContext(), (String)v.getTag());
-		// }
-		// };
 
 	}
 
@@ -383,22 +232,14 @@ public class CommentList extends SherlockActivity {
 		public void onClick(View v) {
 			// 隐藏软键盘
 			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-			setSupportProgressBarIndeterminateVisibility(true);
+//			setSupportProgressBarIndeterminateVisibility(true);
 			String commentString = commentContent.getText().toString();
 			if (StringUtils.isEmpty(commentString)) {
 				UIHelper.ToastMessage(v.getContext(), "请输入评论内容");
 				return;
 			}
 
-			final AppContext ac = (AppContext) getApplication();
-			// if (!ac.isLogin()) {
-			// UIHelper.showLoginDialog(QuestionPub.this);
-			// return;
-			// }
-			//
-			// mProgress = ProgressDialog.show(v.getContext(), null, "发布中···",
-			// true, true);
-
+			final AppContext ac = (AppContext) getActivity().getApplication();
 			comment = new Comment();
 
 			comment.setAttachType(attachType);
@@ -411,14 +252,14 @@ public class CommentList extends SherlockActivity {
 			final Handler handler = new Handler() {
 				public void handleMessage(Message msg) {
 
-					setSupportProgressBarIndeterminateVisibility(false);
+//					setSupportProgressBarIndeterminateVisibility(false);
 					if (msg.what == 1) {
 						commentContent.setText("");
 						comments.add(comment);
 						lvCommentAdapter.notifyDataSetChanged();
 						return;
 					} else {
-						UIHelper.ToastMessage(CommentList.this, "评论失败");
+						UIHelper.ToastMessage(getActivity(), "评论失败");
 					}
 				}
 			};
@@ -439,5 +280,28 @@ public class CommentList extends SherlockActivity {
 			}.start();
 		}
 	};
+
+    public class GetCommentsTask extends AsyncTask<Void, Void, List<Comment>> {
+
+        @Override
+        protected List<Comment> doInBackground(Void... voids) {
+            AppContext ac = (AppContext) getActivity().getApplication();
+            List<Comment> commentList = new ArrayList<Comment>();
+            try {
+                commentList = ApiClient
+                        .getCommentsByCommentable(ac,companyId, projectId, attachType, attachId);
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+            return commentList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Comment> commentList) {
+            comments.clear();
+            comments.addAll(commentList);
+            lvCommentAdapter.notifyDataSetChanged();
+        }
+    }
 
 }

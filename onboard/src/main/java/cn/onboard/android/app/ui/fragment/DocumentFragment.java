@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Document;
 
 import java.text.SimpleDateFormat;
@@ -28,9 +29,9 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DocumentDetail;
-import cn.onboard.android.app.ui.Project;
+import cn.onboard.android.app.ui.NewDiscussion;
 
-public class DocumentFragment extends Fragment {
+public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
 
 	private int projectId;
 
@@ -99,12 +100,6 @@ public class DocumentFragment extends Fragment {
 				}
 			}
 		};
-		Project project = (Project) getActivity();
-
-		project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
-		project.getSupportActionBar().setTitle("文档");
-		project.setCreateString("新建文档");
-		project.invalidateOptionsMenu();
 
 		initGetDocumentsByProject(handler);
 		return lv;
@@ -115,7 +110,16 @@ public class DocumentFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 	}
 
-	private void initGetDocumentsByProject(final Handler handler) {
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        Intent intent = new Intent(getActivity().getApplicationContext(), NewDiscussion.class);
+        intent.putExtra("companyId", companyId);
+        intent.putExtra("projectId", projectId);
+        startActivity(intent);
+        return true;
+    }
+
+    private void initGetDocumentsByProject(final Handler handler) {
 		new Thread() {
 			public void run() {
 				Message msg = new Message();
@@ -226,4 +230,5 @@ public class DocumentFragment extends Fragment {
 			return convertView;
 		}
 	}
+
 }

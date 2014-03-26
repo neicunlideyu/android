@@ -31,7 +31,6 @@ import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
 import cn.onboard.android.app.ui.NewDiscussion;
-import cn.onboard.android.app.ui.Project;
 
 public class DisscussionFragment extends Fragment implements OnMenuItemClickListener {
 	private int companyId;
@@ -100,13 +99,6 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
 				}
 			}
 		};
-		Project project = (Project) getActivity();
-
-		project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
-		project.getSupportActionBar().setTitle("讨论");
-		project.setCreateString("新建讨论");
-		project.setPopupListener(this);
-		project.invalidateOptionsMenu();
 		initGetDiscussionsByProject(handler);
 		return lv;
 	}
