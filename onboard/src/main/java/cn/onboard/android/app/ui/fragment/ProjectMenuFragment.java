@@ -48,7 +48,7 @@ public class ProjectMenuFragment extends SherlockListFragment {
             project.setPopupListener((DisscussionFragment) newContent);
             break;
 		case 2:
-			newContent = new TodoFragment(project.getCompanyId(),project.getProjectId());
+			newContent = new TodoFragment(project.getCompanyId(),project.getProjectId(),null);
             project.getSupportActionBar().setLogo(R.drawable.actionbar_todo);
             project.getSupportActionBar().setTitle("任务");
             project.setCreateString("新建任务列表");
@@ -62,7 +62,7 @@ public class ProjectMenuFragment extends SherlockListFragment {
             project.setPopupListener((DocumentFragment) newContent);
             break;
 		case 4:
-			newContent = new UploadFragment(project.getCompanyId(),project.getProjectId());
+			newContent = new UploadFragment(project.getCompanyId(),project.getProjectId(),null);
             project.getSupportActionBar().setLogo(R.drawable.actionbar_upload);
             project.getSupportActionBar().setTitle("文件");
             project.setCreateString("上传文件");

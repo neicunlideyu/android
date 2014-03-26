@@ -1,81 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:accordion="http://schemas.android.com/apk/res-auto/com.sentaca.android.accordion"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@android:color/white"
     android:orientation="vertical"
-    tools:ignore="ResAuto" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <cn.onboard.android.app.widget.accordion.AccordionView
-            android:id="@+id/accordion_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            accordion:header_layout_fold_button_id="@id/foldButton"
-            accordion:header_layout_id="@layout/accordion_header"
-            accordion:header_layout_label_id="@id/foldText"
-            accordion:section_bottom="@layout/accordion_footer"
-            accordion:section_container="@layout/accordion_section"
-            accordion:section_container_parent="@id/section_content"
-            accordion:section_headers="@array/accordion_sections"
-            accordion:section_visibility="@array/accordion_visibility"
-            android:background="#fff5f5f5"
-            android:orientation="vertical" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="大师兄" />
-
-            <LinearLayout
-                android:id="@+id/example_get_by_id"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="苟哥" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="罗总" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="刑亮" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="苟哥" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="罗总" />
-            </LinearLayout>
-        </cn.onboard.android.app.widget.accordion.AccordionView>
-    </ScrollView>
+    <com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/everyone_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:columnWidth="100dip"
+        android:numColumns="auto_fit"
+        android:padding="16dp" />
 
 </LinearLayout>

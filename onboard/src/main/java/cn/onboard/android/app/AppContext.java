@@ -38,6 +38,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -805,7 +806,7 @@ public class AppContext extends Application {
     }
 
     public List<Attachment> getAttachmentsByCompanyIdByUserId(int companyId,
-                                                      int userId) throws AppException {
+                                                              int userId) throws AppException {
         List<Attachment> attachments = new ArrayList<Attachment>();
         attachments = ApiClient.getAttachmentsByCompanyIdByUserId(this, companyId, userId);
         return attachments;
@@ -861,4 +862,11 @@ public class AppContext extends Application {
     public Todo getTodoById(int companyId, int projectId, int todoId) throws AppException {
         return ApiClient.getTodoById(this, companyId, projectId, todoId);
     }
+
+    public Map<String, List<User>> getDepartmentNameUserMapByCompanyId(int companyId) throws AppException {
+        Map<String, List<User>> departmentNameUserMap = ApiClient.getDepartmentNameUserMapByCompanyId(this, companyId);
+
+        return departmentNameUserMap;
+    }
+
 }

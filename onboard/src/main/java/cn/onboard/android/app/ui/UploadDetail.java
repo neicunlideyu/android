@@ -1,12 +1,9 @@
 package cn.onboard.android.app.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -20,19 +17,18 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.api.dto.Comment;
 import com.onboard.api.dto.Upload;
+
+import java.text.SimpleDateFormat;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 
-public class UploadDetail extends SherlockActivity {
+public class UploadDetail extends SherlockFragmentActivity {
     private FrameLayout mHeader;
     private LinearLayout mFooter;
     private ImageView mRefresh;
@@ -80,30 +76,7 @@ public class UploadDetail extends SherlockActivity {
 
     }
 
-    private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            Intent intent = new Intent(getApplicationContext(), CommentList.class);
-            CommentList.companyId = upload.getCompanyId();
-            CommentList.projectId = upload.getProjectId();
-            CommentList.attachId = upload.getId();
-            CommentList.attachType = "upload";
-            if (upload.getComments() != null)
-                CommentList.comments = upload.getComments();
-            else {
-                CommentList.comments = new ArrayList<Comment>();
-            }
-            UploadDetail.this.startActivity(intent);
-            return true;
-        }
-    };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        menu.add("评论").setOnMenuItemClickListener(popupListener).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -133,6 +106,11 @@ public class UploadDetail extends SherlockActivity {
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setDefaultFontSize(15);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CommentList commentList = new CommentList(companyId,projectId,"uploads",uploadId);
+        ft.replace(R.id.comment_list, commentList).commit();
+
     }
 
     // 初始化控件数据

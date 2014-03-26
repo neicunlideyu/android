@@ -1,12 +1,9 @@
 package cn.onboard.android.app.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,19 +16,18 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.api.dto.Comment;
 import com.onboard.api.dto.Todo;
+
+import java.text.SimpleDateFormat;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 
-public class TodoDetail extends SherlockActivity {
+public class TodoDetail extends SherlockFragmentActivity {
     private FrameLayout mHeader;
     private LinearLayout mFooter;
     private ImageView mRefresh;
@@ -78,30 +74,7 @@ public class TodoDetail extends SherlockActivity {
 
     }
 
-    private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            Intent intent = new Intent(getApplicationContext(), CommentList.class);
-            CommentList.companyId = todo.getCompanyId();
-            CommentList.projectId = todo.getProjectId();
-            CommentList.attachId = todo.getId();
-            CommentList.attachType = "todo";
-            if (todo.getComments() != null)
-                CommentList.comments = todo.getComments();
-            else {
-                CommentList.comments = new ArrayList<Comment>();
-            }
-            TodoDetail.this.startActivity(intent);
-            return true;
-        }
-    };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        menu.add("评论").setOnMenuItemClickListener(popupListener).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -131,6 +104,10 @@ public class TodoDetail extends SherlockActivity {
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setDefaultFontSize(15);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CommentList commentList = new CommentList(companyId,projectId,"todos",todoId);
+        ft.replace(R.id.comment_list, commentList).commit();
+
     }
 
     // 初始化控件数据
