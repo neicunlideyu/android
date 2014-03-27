@@ -20,7 +20,7 @@ import java.util.Map;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
-import cn.onboard.android.app.ui.EditTodo;
+import cn.onboard.android.app.ui.Person;
 
 /**
  * Created by xingliang on 14-3-24.
@@ -49,6 +49,7 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
     private BitmapManager bmpManager;
 
     public EveryoneAdapter(Context context, Map<String, List<User>> departmentNameUserMap, int companyId,int mHeaderResId, int mItemResId) {
+        this.companyId = companyId;
         this.mHeaderResId = mHeaderResId;
         this.mItemResId = mItemResId;
         this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
@@ -109,8 +110,9 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
             public void onClick(View view) {
                 Context context = view.getContext();
                 Intent intent = new Intent(context,
-                        EditTodo.class);
+                        Person.class);
                 intent.putExtra("userId",item.userId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 intent.putExtra("companyId",companyId);
                 context.startActivity(intent);

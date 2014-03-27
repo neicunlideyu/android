@@ -66,7 +66,6 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                              Bundle savedInstanceState) {
         final LinearLayout lv = (LinearLayout) inflater.inflate(
                 R.layout.document_list, null);
-
         final Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what >= 1) {
@@ -132,11 +131,15 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                         }
                     });
 
-                } else if (msg.what == -1) {
+                } else if(msg.what==0){
+                   getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
+                }  else if (msg.what == -1) {
                     UIHelper.ToastMessage(
                             getActivity().getApplicationContext(),
                             getString(R.string.get_todo_list_fail));
                 }
+                getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+
             }
         };
         initGetTopicByProject(handler);

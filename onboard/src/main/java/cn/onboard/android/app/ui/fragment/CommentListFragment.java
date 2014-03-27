@@ -228,7 +228,8 @@ public class CommentListFragment extends Fragment {
 						comments.add(comment);
 						lvCommentAdapter.notifyDataSetChanged();
                         setListViewHeightBasedOnChildren(lvComment);
-						return;
+                        getActivity().findViewById(R.id.data_empty).setVisibility(View.GONE);
+                        return;
 					} else {
 						UIHelper.ToastMessage(getActivity(), "评论失败");
 					}
@@ -276,6 +277,8 @@ public class CommentListFragment extends Fragment {
             // lvComment.addFooterView(lvComment_footer);// 添加底部视图 必须在setAdapter前
             lvComment.setAdapter(lvCommentAdapter);
             setListViewHeightBasedOnChildren(lvComment);
+            if(comments.size()==0)
+                getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
         }
     }
 

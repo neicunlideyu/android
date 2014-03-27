@@ -93,12 +93,16 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 						}
 					});
 
-				} else if (msg.what == -1) {
+				} else if(msg.what==0){
+                    getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
+                } else if (msg.what == -1) {
 					UIHelper.ToastMessage(
                             getActivity().getApplicationContext(),
                             getString(R.string.get_todo_list_fail));
 				}
-			}
+                getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+
+            }
 		};
 
 		initGetDocumentsByProject(handler);
@@ -125,7 +129,7 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 				Message msg = new Message();
 				try {
 					AppContext ac = (AppContext) getActivity().getApplication();
-					List<Document> documents = ac.getDocumentsByProjectId(
+                    List<Document> documents = ac.getDocumentsByProjectId(
 							companyId, projectId);
 					msg.what = documents.size();
 					msg.obj = documents;

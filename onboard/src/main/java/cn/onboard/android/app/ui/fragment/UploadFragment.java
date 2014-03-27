@@ -270,9 +270,13 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                         }
                     });
 
-                } else if (msg.what == -1) {
+                } else if(msg.what==0){
+                    getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
+                }  else if (msg.what == -1) {
                     UIHelper.ToastMessage(getActivity().getApplicationContext(), "获取文件失败");
                 }
+                getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+
             }
         };
         initGetUploadsByProject(handler);

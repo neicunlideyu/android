@@ -17,6 +17,8 @@
 
     <View style="@style/detail_cut_line" />
 
+    <include layout="@layout/data_empty_tip" />
+
     <ListView
         android:id="@+id/frame_listview_comment"
         style="@style/widget_listview" />

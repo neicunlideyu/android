@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.onboard.api.dto.User;
@@ -12,7 +11,6 @@ import com.onboard.api.dto.User;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.ui.fragment.ActivityFragment;
 import cn.onboard.android.app.ui.fragment.TodoFragment;
@@ -58,6 +56,7 @@ public class Person extends SherlockFragmentActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.me, new UploadFragment(companyId, null, userId)).commit();
             }
         });
+        new GetUserTask().execute(userId);
     }
 
     public class GetUserTask extends AsyncTask<Integer, Void, User> {
@@ -77,8 +76,8 @@ public class Person extends SherlockFragmentActivity {
         @Override
         protected void onPostExecute(User user) {
             getSupportActionBar().setTitle("成员/"+user.getName());
-            String faceURL = URLs.USER_FACE_HTTP + user.getAvatar();
-            bitmapManager.loadBitmap(faceURL, (ImageView) findViewById(R.id.homeAsUp));
+//            String faceURL = URLs.USER_FACE_HTTP + user.getAvatar();
+//            bitmapManager.loadBitmap(faceURL, (ImageView) findViewById(R.id.homeAsUp));
         }
     }
 

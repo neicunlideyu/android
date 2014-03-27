@@ -529,8 +529,14 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                 }
             });
             data.addAll(handleData(todolists));
+            if(data.size()==0)
+            {
+                getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
+            }
             listViewAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), data, todolists.size());
             pinnedSectionListView.setAdapter(listViewAdapter);
+            getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
+
         }
     }
 }

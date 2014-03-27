@@ -1,6 +1,5 @@
 package cn.onboard.android.app.ui.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,7 +27,6 @@ public class RepositoryFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		RelativeLayout v = new RelativeLayout(getActivity());
-		v.setBackgroundColor(Color.GREEN);
 		return v;
 	}
 
