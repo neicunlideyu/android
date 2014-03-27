@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
+    android:id="@+id/comment_footer"
     android:orientation="horizontal" >
 
     <LinearLayout

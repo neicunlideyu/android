@@ -33,6 +33,7 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
@@ -118,7 +119,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                                 intent.putExtra("todoId", topic.getRefId());
                                 intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
                                 context.startActivity(intent);
-                            } else if (topic.getRefType().equals("upload")){
+                            } else if (topic.getRefType().equals("upload")) {
                                 intent = new Intent(context,
                                         UploadDetail.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -246,8 +247,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
 
             // 设置文字和图片
             Topic topic = listItems.get(position);
-            String faceURL = "http://teamforge.b0.upaiyun.com/avatar/"
-                    + topic.getLastUpdatorId() + "/avatar.gif";
+            String faceURL = URLs.USER_FACE_HTTP + topic.getLastUpdator().getAvatar();
             bmpManager.loadBitmap(faceURL, listItemView.face);
             // }
             // listItemView.face.setOnClickListener(faceClickListener);
@@ -294,7 +294,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
         topic.setCreated(discussion.getCreated());
         topic.setTitle(discussion.getSubject());
         topic.setExcerpt(discussion.getContent());
-        topicList.add(0,topic);
+        topicList.add(0, topic);
         lvca.notifyDataSetChanged();
     }
 

@@ -190,7 +190,7 @@ public class Company extends FragmentActivity implements CalendarController.Even
                 if (msg.what >= 1) {
                     @SuppressWarnings("unchecked")
                     Map<String, List<User>> departmentUserMap = (Map<String, List<User>>) msg.obj;
-                    everyoneView.setAdapter(new EveryoneAdapter(getApplicationContext(), departmentUserMap, R.layout.everyone_header, R.layout.everyone_item));
+                    everyoneView.setAdapter(new EveryoneAdapter(getApplicationContext(), departmentUserMap,companyId, R.layout.everyone_header, R.layout.everyone_item));
                     //projectGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
 

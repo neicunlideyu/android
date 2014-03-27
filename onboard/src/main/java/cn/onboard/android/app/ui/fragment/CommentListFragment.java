@@ -31,6 +31,7 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.api.ApiClient;
+import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
@@ -186,8 +187,7 @@ public class CommentListFragment extends Fragment {
 			else
 				listItemView.client.setVisibility(View.VISIBLE);
 
-			String faceURL = "http://teamforge.b0.upaiyun.com/avatar/"
-					+ comment.getCreatorId() + "/avatar.gif!avatar40";
+            String faceURL = URLs.USER_FACE_HTTP + comment.getCreator().getAvatar();
 			// if(faceURL.endsWith("portrait.gif") ||
 			// StringUtils.isEmpty(faceURL)){
 			// listItemView.userface.setImageResource(R.drawable.widget_dface);

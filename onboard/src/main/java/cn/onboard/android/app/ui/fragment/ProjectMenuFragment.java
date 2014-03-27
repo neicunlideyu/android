@@ -48,7 +48,7 @@ public class ProjectMenuFragment extends SherlockListFragment {
             project.setPopupListener((DisscussionFragment) newContent);
             break;
 		case 2:
-			newContent = new TodoFragment(project.getCompanyId(),project.getProjectId(),null);
+			newContent = new TodoFragment(project.getCompanyId(),project.getProjectId(),null,null);
             project.getSupportActionBar().setLogo(R.drawable.actionbar_todo);
             project.getSupportActionBar().setTitle("任务");
             project.setCreateString("新建任务列表");

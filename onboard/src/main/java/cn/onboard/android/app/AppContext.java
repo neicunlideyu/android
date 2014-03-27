@@ -36,6 +36,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -718,6 +719,15 @@ public class AppContext extends Application {
         List<Todolist> todolists = new ArrayList<Todolist>();
         todolists = ApiClient
                 .getTodoListByCompanyIdByUserId(this, companyId, userId);
+        return todolists;
+
+    }
+
+    public List<Todolist> getTodoListsByDate(int companyId, Date date)
+            throws AppException {
+        List<Todolist> todolists = new ArrayList<Todolist>();
+        todolists = ApiClient
+                .getTodoListByCompanyIdByDate(this, companyId, date);
         return todolists;
 
     }
