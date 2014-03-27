@@ -51,7 +51,11 @@ public class AttachmentType {
         return DEFAULT;
     }
 
-    public static int getAttachmentTypeIconResourceId(Attachment attachment) {
+    public static int getAttachmentTypeIconResourceId(String attachmentName, String attachmentContentType) {
+        Attachment attachment = new Attachment();
+        attachment.setName(attachmentName);
+        attachment.setContentType(attachmentContentType);
+
         String attachmentType = getAttachmentType(attachment);
         if (attachmentType.contains("ppt")) {
             return R.drawable.powerpoint;
