@@ -82,7 +82,7 @@ public class SelectCompany extends SherlockActivity {
                 if (view instanceof TextView) {
                     company = (Company) view.getTag();
                 } else {
-                    TextView tv = (TextView) view.findViewById(R.id.company_listitem_title);
+                    TextView tv = (TextView) view.findViewById(R.id.company_item_title);
                     company = (Company) tv.getTag();
                 }
                 if (company == null)
@@ -121,6 +121,7 @@ public class SelectCompany extends SherlockActivity {
 
         static class ListItemView{				//自定义控件集合
             public TextView title;
+            public TextView description;
         }
 
         public ListViewCompanyAdapter(Context context, List<Company> listItems,
@@ -155,8 +156,8 @@ public class SelectCompany extends SherlockActivity {
 
                 listItemView = new ListItemView();
                 //获取控件对象
-                listItemView.title = (TextView)convertView.findViewById(R.id.company_listitem_title);
-
+                listItemView.title = (TextView)convertView.findViewById(R.id.company_item_title);
+                listItemView.description = (TextView) convertView.findViewById(R.id.company_item_description);
                 //设置控件集到convertView
                 convertView.setTag(listItemView);
             }else {
@@ -167,6 +168,7 @@ public class SelectCompany extends SherlockActivity {
             Company company = listItems.get(position);
 
             listItemView.title.setText(company.getName());
+            listItemView.description.setText(company.getDescription());
             listItemView.title.setTag(company);//设置隐藏参数(实体类)
             return convertView;
 

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="公司列表"
-        android:textColor="#ffffff"
+        android:textColor="#e8f8ff"
         android:textSize="25dp" />
 
 </LinearLayout>
