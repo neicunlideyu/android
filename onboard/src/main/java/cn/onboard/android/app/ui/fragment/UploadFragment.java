@@ -1,6 +1,10 @@
 
 package cn.onboard.android.app.ui.fragment;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -8,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,26 +27,26 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.bean.AttachmentType;
+import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
 import cn.onboard.android.app.ui.DocumentDetail;
 import cn.onboard.android.app.ui.EditTodo;
+import cn.onboard.android.app.ui.Project;
 import cn.onboard.android.app.ui.UploadDetail;
 
+
 public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
-    private Integer companyId;
+    private static Integer companyId;
 
-    private Integer projectId;
+    private static Integer projectId;
 
-    private Integer userId;
+    private static Integer userId;
 
     private static String cookie;
 
@@ -53,16 +58,16 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
         setRetainInstance(true);
     }
 
-    public UploadFragment(Integer companyId, Integer projectId,Integer userId) {
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        return false;
+    }
+
+    public UploadFragment(Integer companyId, Integer projectId, Integer userId) {
         this();
         this.companyId = companyId;
         this.projectId = projectId;
         this.userId = userId;
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        return false;
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
@@ -146,12 +151,15 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
             }
 
             // 设置文字和图片
-            String faceURL = "http://onboard.cn/" + attachment.getCompanyId() + "/projects/" + attachment.getProjectId()
-                    + "/attachments/image/" + attachment.getId();
-            if (!attachment.getContentType().contains("image")) {
-                faceURL = "http://onboard.cn/static/img/attachment-icon/default.png";
+            if (attachment.getContentType().contains("image")) {
+                String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;
+                attachmentImageURL = attachmentImageURL.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "").replaceAll("attachmentId", attachment.getId() + "");
+                bmpManager.loadBitmap(attachmentImageURL, listItemView.face);
             }
-            bmpManager.loadBitmap(faceURL, listItemView.face);
+            else {
+                listItemView.face.setImageDrawable(convertView.getResources().getDrawable(AttachmentType.getAttachmentTypeIconResourceId(attachment)));
+            }
+
             // }
             // listItemView.face.setOnClickListener(faceClickListener);
             listItemView.face.setTag(attachment);
@@ -175,12 +183,12 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
     }
 
     void startTodoDetailActivityForAttachment(int targetTodoId, String TodoTitle) {
-//        Intent intent = new Intent(getActivity().getApplicationContext(), TodoDetail.class);
-//        intent.putExtra("companyId", companyId);
-//        intent.putExtra("projectId", projectId);
-//        intent.putExtra("todoId", targetTodoId);
-//        intent.putExtra("todoTitle", TodoTitle);
-//        startActivity(intent);
+        /*Intent intent = new Intent(getActivity().getApplicationContext(), TodoDetail.class);
+        intent.putExtra("companyId", companyId);
+        intent.putExtra("projectId", projectId);
+        intent.putExtra("todoId", targetTodoId);
+        intent.putExtra("todoTitle", TodoTitle);
+        startActivity(intent);*/
     }
 
     void startDiscussionDetailActivityForAttachment(int targetDiscussionId, String discussionTitle) {
@@ -256,15 +264,20 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("uploadId", attachment.getAttachId());
                                 context.startActivity(intent);
                             }
-
                         }
                     });
 
                 } else if (msg.what == -1) {
-                    UIHelper.ToastMessage(getActivity().getApplicationContext(), getString(R.string.get_todo_list_fail));
+                    UIHelper.ToastMessage(getActivity().getApplicationContext(), "获取文件失败");
                 }
             }
         };
+        Project project = (Project) getActivity();
+
+        project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
+        project.getSupportActionBar().setTitle("文件");
+        project.setCreateString("上传文件");
+        project.invalidateOptionsMenu();
         initGetUploadsByProject(handler);
         return lv;
     }
@@ -276,7 +289,7 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
                     List<Attachment> attachments =new ArrayList<Attachment>();
-                    if(projectId!=null)
+                    if(projectId != null)
                         attachments= ac.getAttachmentsByProjectId(companyId, projectId);
                     else if(userId!=null)
                         attachments = ac.getAttachmentsByCompanyIdByUserId(companyId, userId);
