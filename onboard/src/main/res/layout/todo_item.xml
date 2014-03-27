@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
@@ -10,45 +10,102 @@
     android:paddingTop="8dip" >
 
 
+
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:id="@+id/todo_text"-->
+            <!--android:layout_weight="1" />-->
+
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:id="@+id/todo_assign_date"-->
+            <!--android:maxWidth="5dp"-->
+            <!--android:layout_weight="1" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:maxWidth="5dp"-->
+            <!--android:id="@+id/todo_assign_person"-->
+            <!--android:layout_weight="1" />-->
+
+
+    <!--</LinearLayout>-->
+    <CheckBox
+        android:id="@+id/todo_complete_checkBox"
+        android:layout_width="40.0dp"
+        android:layout_height="40.0dp"
+        android:layout_gravity="left|center"
+        android:button="@drawable/login_checkbox_selector"
+        android:checked="false"
+        android:paddingLeft="30dip"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_13" />
+
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <CheckBox
-            android:id="@+id/todo_complete_checkBox"
-            android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="6dip"
+        android:layout_toRightOf="@id/todo_complete_checkBox">
+
+
+        <TextView android:id="@+id/todo_text"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center"
-            android:button="@drawable/login_checkbox_selector"
-            android:checked="false"
-            android:paddingLeft="30dip"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_13" />
+            android:includeFontPadding="false"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_15"
+            android:textColor="@color/listitem_black"
+            android:maxLines="2"
+            android:ellipsize="end"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:id="@+id/todo_text"
-            android:layout_weight="1" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:id="@+id/todo_assign_date"
-            android:maxWidth="5dp"
-            android:layout_weight="1" />
+            android:layout_marginTop="8dip">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="right"
-            android:maxWidth="5dp"
-            android:id="@+id/todo_assign_person"
-            android:layout_weight="1" />
+            <TextView android:id="@+id/todo_assign_person"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/text_size_10"
+                android:textColor="@color/listitem_gray"/>
 
+            <TextView android:id="@+id/question_listitem_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:textSize="@dimen/text_size_10"
+                android:textColor="@color/listitem_gray"/>
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView android:id="@+id/todo_assign_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/text_size_10"
+                android:textColor="@color/listitem_gray"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

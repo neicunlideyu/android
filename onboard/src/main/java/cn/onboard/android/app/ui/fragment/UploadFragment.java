@@ -229,7 +229,7 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 return;
                             Context context = view.getContext();
                             Intent intent = null;
-                            if (attachment.getAttachType().equals("discussion")) {
+                            if (attachment.getTargetType().equals("discussion")) {
                                 intent = new Intent(context,
                                         DiscussionDetail.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -238,7 +238,7 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("projectId", attachment.getProjectId());
                                 context.startActivity(intent);
                             }
-                            else if (attachment.getAttachType().equals("document")){
+                            else if (attachment.getTargetType().equals("document")){
                                 intent = new Intent(context,
                                         DocumentDetail.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -246,7 +246,7 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", attachment.getProjectId());
                                 context.startActivity(intent);
-                            } else if (attachment.getAttachType().equals("todo")){
+                            } else if (attachment.getTargetType().equals("todo")){
                                 intent = new Intent(context,
                                         EditTodo.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -255,16 +255,13 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("todoId", attachment.getAttachId());
                                 intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
                                 context.startActivity(intent);
-                            }else if (attachment.getAttachType().equals("upload")){
+                            }else if (attachment.getTargetType().equals("upload")){
                                 intent = new Intent(context,
                                         UploadDetail.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", attachment.getProjectId());
                                 intent.putExtra("uploadId", attachment.getAttachId());
-                                intent.putExtra("attachmentId", attachment.getId());
-                                intent.putExtra("attachmentName", attachment.getName());
-                                intent.putExtra("attachmentType", attachment.getContentType());
                                 context.startActivity(intent);
                             }
                         }

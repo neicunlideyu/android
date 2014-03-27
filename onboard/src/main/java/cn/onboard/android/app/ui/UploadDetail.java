@@ -1,7 +1,6 @@
 package cn.onboard.android.app.ui;
 
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,8 +23,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Upload;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 
 import cn.onboard.android.app.AppContext;
@@ -34,7 +31,6 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.bean.AttachmentType;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
-import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class UploadDetail extends SherlockFragmentActivity {
@@ -105,10 +101,6 @@ public class UploadDetail extends SherlockFragmentActivity {
         uploadId = getIntent().getIntExtra("uploadId", 0);
         companyId = getIntent().getIntExtra("companyId", 0);
         projectId = getIntent().getIntExtra("projectId", 0);
-        attachmentId = getIntent().getIntExtra("attachmentId", 0);
-        attachmentName = getIntent().getStringExtra("attachmentName");
-        attachmentType = getIntent().getStringExtra("attachmentType");
-
         mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
         bmpManager = new BitmapManager(BitmapFactory.decodeResource(getResources(),
                 R.drawable.widget_dface_loading));
@@ -123,15 +115,6 @@ public class UploadDetail extends SherlockFragmentActivity {
         CommentListFragment commentList = new CommentListFragment(companyId,projectId,"upload",uploadId);
         ft.replace(R.id.discussion_comments, commentList).commit();
 
-        mUploadNameDownload.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                AppContext ac = (AppContext) getApplication();
-                ac.downloadAttachmentByAttachmentId(attachmentId, companyId,
-                        projectId);
-            }
-        });
 
     }
 
@@ -151,6 +134,19 @@ public class UploadDetail extends SherlockFragmentActivity {
                     mAuthor.setText(upload.getCreatorName());
                     mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(upload.getCreated()));
                     mCommentCount.setText((upload.getComments() == null ? 0 : upload.getComments().size()) + "");
+                    attachmentId = upload.getAttachments().get(0).getId();
+                    attachmentName = upload.getAttachments().get(0).getName();
+                    attachmentType = upload.getAttachments().get(0).getContentType();
+                    mUploadNameDownload.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            AppContext ac = (AppContext) getApplication();
+                            ac.downloadAttachmentByAttachmentId(attachmentId, companyId,
+                                    projectId);
+                        }
+                    });
+
                     getSupportActionBar().setTitle("文件/" + upload.getContent());
                     if (attachmentType.contains("image")) {
                         String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;

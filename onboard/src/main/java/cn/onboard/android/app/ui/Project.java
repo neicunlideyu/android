@@ -8,7 +8,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.ui.fragment.DocumentFragment;
+import cn.onboard.android.app.ui.fragment.DisscussionFragment;
 import cn.onboard.android.app.ui.fragment.ProjectMenuFragment;
 import cn.onboard.android.slidingmenu.SlidingMenu;
 import cn.onboard.android.slidingmenu.app.SlidingFragmentActivity;
@@ -41,7 +41,7 @@ public class Project extends SlidingFragmentActivity {
             mContent = getSupportFragmentManager().getFragment(
                     savedInstanceState, "mContent");
         if (mContent == null)
-            mContent = new DocumentFragment(companyId, projectId);
+            mContent = new DisscussionFragment(companyId, projectId);
         popupListener = (OnMenuItemClickListener) mContent;
         // set the Above View
         setContentView(R.layout.content_frame);

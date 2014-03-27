@@ -360,7 +360,7 @@ public class ActivityFragment extends Fragment {
             // listItemView.face.setOnClickListener(faceClickListener);
             listItemView.face.setTag(activity);
 
-            listItemView.title.setText(activity.getSubject() + " " + activity.getTarget());
+            listItemView.title.setText("在项目"+activity.getProjectName() +activity.getSubject() + " " + activity.getTarget());
             listItemView.title.setTag(activity);// 设置隐藏参数(实体类)
             listItemView.author.setText(activity.getCreatorName());
             listItemView.date.setText(new SimpleDateFormat("yyyy-MM-dd")
