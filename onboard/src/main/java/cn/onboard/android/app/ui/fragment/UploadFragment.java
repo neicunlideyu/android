@@ -1,10 +1,6 @@
 
 package cn.onboard.android.app.ui.fragment;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -12,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +22,10 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
@@ -37,7 +36,6 @@ import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
 import cn.onboard.android.app.ui.DocumentDetail;
 import cn.onboard.android.app.ui.EditTodo;
-import cn.onboard.android.app.ui.Project;
 import cn.onboard.android.app.ui.UploadDetail;
 
 
@@ -272,12 +270,6 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                 }
             }
         };
-        Project project = (Project) getActivity();
-
-        project.getSupportActionBar().setLogo(R.drawable.frame_logo_news);
-        project.getSupportActionBar().setTitle("文件");
-        project.setCreateString("上传文件");
-        project.invalidateOptionsMenu();
         initGetUploadsByProject(handler);
         return lv;
     }

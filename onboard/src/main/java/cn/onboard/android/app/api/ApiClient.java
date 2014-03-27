@@ -516,7 +516,7 @@ public class ApiClient {
     }
 
     public static List<Todolist> getTodoListByCompanyIdByUserId(AppContext appContext,
-                                                        Integer companyId, Integer userId) throws AppException {
+                                                                Integer companyId, Integer userId) throws AppException {
         String url = URLs.TODOLIST_LIST_BY_USER_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("userId", userId + "");
         try {
@@ -532,7 +532,7 @@ public class ApiClient {
     }
 
     public static List<Todolist> getTodoListByCompanyIdByDate(AppContext appContext,
-                                                                Integer companyId, Date date) throws AppException {
+                                                              Integer companyId, Date date) throws AppException {
         String url = URLs.TODOLIST_LIST_BY_DATE_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("duedatetime", date.getTime() + "");
         try {
@@ -675,9 +675,9 @@ public class ApiClient {
     }
 
     public static List<Activity> getActivitiesByCompanyIdByUserId(
-            AppContext appContext,int companyId, int userId, int page)
+            AppContext appContext, int companyId, int userId, int page)
             throws AppException {
-        String url = URLs.ACTIVITY_BY_USER_LIST_HTTP.replaceAll("companyId",companyId+"").replaceAll("userId",
+        String url = URLs.ACTIVITY_BY_USER_LIST_HTTP.replaceAll("companyId", companyId + "").replaceAll("userId",
                 userId + "") + "?page=" + page;
         try {
             return HttpStreamToObject.inputStreamToObject(
@@ -764,7 +764,7 @@ public class ApiClient {
     }
 
     public static List<Attachment> getAttachmentsByCompanyIdByUserId(AppContext appContext,
-                                                             int companyId, int userId) throws AppException {
+                                                                     int companyId, int userId) throws AppException {
         String newUrl = URLs.ATTACHMENT_LIST_BY_USER_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("userId", userId + "");
         try {
@@ -785,6 +785,19 @@ public class ApiClient {
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<User>>() {
+                    }, http_get(appContext, newUrl));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+    }
+
+    public static User getUserById(AppContext appContext, int userId) throws AppException {
+        String newUrl = URLs.USER_HTTP.replaceAll("userId",userId + "");
+        try {
+            return HttpStreamToObject.inputStreamToObject(
+                    new TypeReference<User>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
             if (e instanceof AppException)
@@ -840,7 +853,7 @@ public class ApiClient {
     }
 
     public static Todo updateTodo(AppContext appContext, Todo todo) throws AppException {
-        String url = URLs.TODO_HTTP.replaceAll("companyId", todo.getCompanyId() + "").replaceAll("projectId", todo.getProjectId() + "") +"/"+ todo.getId();
+        String url = URLs.TODO_HTTP.replaceAll("companyId", todo.getCompanyId() + "").replaceAll("projectId", todo.getProjectId() + "") + "/" + todo.getId();
         Map<String, Object> params = HttpStreamToObject.objectToMap(todo);
         Object dueTime = params.get("dueDate");
         params.remove("dueDate");
@@ -917,7 +930,7 @@ public class ApiClient {
     }
 
     public static Todo getTodoById(AppContext appContext, int companyId, int projectId, int todoId) throws AppException {
-        String newUrl = URLs.TODO_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId+"")+"/"+todoId;
+        String newUrl = URLs.TODO_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "") + "/" + todoId;
         try {
             return HttpStreamToObject.inputStreamToObject(new TypeReference<Todo>() {
             }, http_get(appContext, newUrl));

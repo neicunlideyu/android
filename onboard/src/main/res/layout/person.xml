@@ -4,28 +4,41 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="35.0dip"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-             <Button
-                 android:id="@+id/frame_btn_me_acivities"
-                 style="@style/frame_button"
-                 android:text="回顾"/>
-             <ImageView android:layout_width="wrap_content" android:layout_height="fill_parent" android:background="@drawable/frame_button_cutline"/>
-             <Button
-                 android:id="@+id/frame_btn_me_todos"
-                 style="@style/frame_button"
-                 android:text="任务"/>
-             <ImageView android:layout_width="wrap_content" android:layout_height="fill_parent" android:background="@drawable/frame_button_cutline"/>
-             <Button
-                 android:id="@+id/frame_btn_me_files"
-                 style="@style/frame_button"
-                 android:text="文件"/>
-        </LinearLayout>
-    <FrameLayout android:id="@+id/me"
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="35.0dip"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/frame_btn_me_acivities"
+            style="@style/frame_button"
+            android:text="回顾" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@drawable/frame_button_cutline" />
+
+        <Button
+            android:id="@+id/frame_btn_me_todos"
+            style="@style/frame_button"
+            android:text="任务" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@drawable/frame_button_cutline" />
+
+        <Button
+            android:id="@+id/frame_btn_me_files"
+            style="@style/frame_button"
+            android:text="文件" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/me"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

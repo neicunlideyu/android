@@ -837,6 +837,11 @@ public class AppContext extends Application {
         return users;
     }
 
+    public User getUserById(int userId) throws AppException {
+        User user = ApiClient.getUserById(this, userId);
+        return user;
+    }
+
     public Comment publishComment(Comment comment) throws AppException {
         return ApiClient.publishComment(this, comment);
     }
