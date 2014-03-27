@@ -2,9 +2,8 @@
 package cn.onboard.android.app.ui.fragment;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
 
 import cn.onboard.android.app.AppContext;
@@ -36,14 +35,18 @@ import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
+import cn.onboard.android.app.ui.DocumentDetail;
+import cn.onboard.android.app.ui.EditTodo;
 import cn.onboard.android.app.ui.Project;
-import cn.onboard.android.app.ui.TodoDetail;
 import cn.onboard.android.app.ui.UploadDetail;
 
-public class UploadFragment extends Fragment {
-    private static int companyId;
 
-    private static int projectId;
+public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
+    private static Integer companyId;
+
+    private static Integer projectId;
+
+    private static Integer userId;
 
     private static String cookie;
 
@@ -55,10 +58,16 @@ public class UploadFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public UploadFragment(int companyId, int projectId) {
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        return false;
+    }
+
+    public UploadFragment(Integer companyId, Integer projectId, Integer userId) {
         this();
         this.companyId = companyId;
         this.projectId = projectId;
+        this.userId = userId;
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
@@ -174,12 +183,12 @@ public class UploadFragment extends Fragment {
     }
 
     void startTodoDetailActivityForAttachment(int targetTodoId, String TodoTitle) {
-        Intent intent = new Intent(getActivity().getApplicationContext(), TodoDetail.class);
+        /*Intent intent = new Intent(getActivity().getApplicationContext(), TodoDetail.class);
         intent.putExtra("companyId", companyId);
         intent.putExtra("projectId", projectId);
         intent.putExtra("todoId", targetTodoId);
         intent.putExtra("todoTitle", TodoTitle);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
     void startDiscussionDetailActivityForAttachment(int targetDiscussionId, String discussionTitle) {
@@ -218,12 +227,42 @@ public class UploadFragment extends Fragment {
                             }
                             if (attachment == null)
                                 return;
-                            if (attachment.getAttachType().equals(DISCUSSION_TYPE_NAME)) {
-                                startDiscussionDetailActivityForAttachment(attachment.getTargetId(), attachment.getName());
-                            } else if (attachment.getAttachType().equals(UPLOAD_TYPE_NAME)) {
-                                startUploadDetailActivityForAttachment(attachment.getTargetId(), attachment.getName());
-                            } else if (attachment.getAttachType().equals(TODO_TYPE_NAME)) {
-                                startTodoDetailActivityForAttachment(attachment.getTargetId(), attachment.getName());
+                            Context context = view.getContext();
+                            Intent intent = null;
+                            if (attachment.getAttachType().equals("discussion")) {
+                                intent = new Intent(context,
+                                        DiscussionDetail.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("discussionId", attachment.getAttachId());
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
+                                context.startActivity(intent);
+                            }
+                            else if (attachment.getAttachType().equals("document")){
+                                intent = new Intent(context,
+                                        DocumentDetail.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("documentId", attachment.getAttachId());
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
+                                context.startActivity(intent);
+                            } else if (attachment.getAttachType().equals("todo")){
+                                intent = new Intent(context,
+                                        EditTodo.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
+                                intent.putExtra("todoId", attachment.getAttachId());
+                                intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
+                                context.startActivity(intent);
+                            }else if (attachment.getAttachType().equals("upload")){
+                                intent = new Intent(context,
+                                        UploadDetail.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
+                                intent.putExtra("uploadId", attachment.getAttachId());
+                                context.startActivity(intent);
                             }
                         }
                     });
@@ -249,7 +288,11 @@ public class UploadFragment extends Fragment {
                 Message msg = new Message();
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
-                    List<Attachment> attachments = ac.getAttachmentsByProjectId(companyId, projectId);
+                    List<Attachment> attachments =new ArrayList<Attachment>();
+                    if(projectId != null)
+                        attachments= ac.getAttachmentsByProjectId(companyId, projectId);
+                    else if(userId!=null)
+                        attachments = ac.getAttachmentsByCompanyIdByUserId(companyId, userId);
                     msg.what = attachments.size();
                     msg.obj = attachments;
                 } catch (AppException e) {
