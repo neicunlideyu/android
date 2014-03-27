@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView
-        android:id="@+id/frame_listview_tweet"
+    <TextView
+        android:layout_marginTop="20.0dp"
+        android:layout_marginLeft="10.0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_13"
+        android:textColor="@color/author_text"
+        android:text="评论" />
+
+    <View style="@style/detail_cut_line" />
+
+    <ListView
+        android:id="@+id/frame_listview_comment"
         style="@style/widget_listview" />
-
-    <include layout="@layout/comment_footer" />
 
 </LinearLayout>

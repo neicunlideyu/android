@@ -717,7 +717,7 @@ public class AppContext extends Application {
             throws AppException {
         List<Todolist> todolists = new ArrayList<Todolist>();
         todolists = ApiClient
-                .getTodoListByProjectId(this, companyId, userId);
+                .getTodoListByCompanyIdByUserId(this, companyId, userId);
         return todolists;
 
     }
@@ -776,14 +776,6 @@ public class AppContext extends Application {
     }
 
 
-//    public List<Repository> getRepositorysByProjectId(int companyId,
-//                                                      int projectId) throws AppException {
-//        List<Repository> repositoryList = new ArrayList<Repository>();
-//        repositoryList = ApiClient.getRepositoryByProjectId(this, companyId,
-//                projectId);
-//        return repositoryList;
-//
-//    }
 
     public List<Upload> getUploadsByProjectId(int companyId, int projectId)
             throws AppException {
@@ -795,6 +787,10 @@ public class AppContext extends Application {
 
     public Upload getUploadById(int companyId, int projectId, int uploadId) throws AppException {
         return ApiClient.getUploadById(this, companyId, projectId, uploadId);
+    }
+
+    public Todolist getTodolistById(int companyId, int projectId, int todolistId) throws AppException {
+        return ApiClient.getTodolistById(this, companyId, projectId, todolistId);
     }
 
     public List<Attachment> getAttachmentsByProjectId(int companyId,

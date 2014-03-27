@@ -306,7 +306,18 @@
        	<item name="android:fadingEdge">none</item>
        	<item name="android:scrollingCache">false</item>
     </style>
-    
+
+    <style name="comment_listview">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:listSelector">@drawable/listview_item_selector</item>
+        <item name="android:divider">@drawable/listview_divider_line</item>
+        <item name="android:dividerHeight">1.0dip</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:scrollingCache">false</item>
+    </style>
+
     <style name="detail_head_title">
         <item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>

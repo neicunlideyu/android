@@ -1,4 +1,4 @@
-package cn.onboard.android.app.ui;
+package cn.onboard.android.app.ui.fragment;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.onboard.api.dto.Comment;
@@ -32,7 +34,6 @@ import cn.onboard.android.app.api.ApiClient;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 /**
  * 应用程序Activity的基类
@@ -41,10 +42,10 @@ import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
  * @version 1.0
  * @created 2012-9-18
  */
-public class CommentList extends Fragment {
+public class CommentListFragment extends Fragment {
 
 	private ListViewAdapter lvCommentAdapter;
-	private PullToRefreshListView lvComment;
+	private ListView lvComment;
 	private List<Comment> comments = new ArrayList<Comment>();
 	private int companyId;
     private int projectId;
@@ -56,7 +57,12 @@ public class CommentList extends Fragment {
 	private Button commentPublish;
 	private Comment comment;
 
-    public CommentList(int companyId,int projectId,String attachType,int attachId){
+    public CommentListFragment() {
+        setRetainInstance(true);
+    }
+
+    public CommentListFragment(int companyId,int projectId,String attachType,int attachId){
+        this();
         this.companyId=companyId;
         this.projectId=projectId;
         this.attachType=attachType;
@@ -67,55 +73,19 @@ public class CommentList extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 //		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		//setContentView(R.layout.comment_list);
-        lvComment = (PullToRefreshListView) inflater.inflate(R.layout.comment_list, null);
-//		getSupportActionBar().setHomeButtonEnabled(true);
-//		getSupportActionBar().setIcon(R.drawable.head_back);
-//		getSupportActionBar().setTitle("评论");
-		initCommentListView();
-        return lvComment;
+        final LinearLayout lv = (LinearLayout) inflater.inflate(R.layout.comment_list, null);
+        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        commentContent = (EditText) getActivity().findViewById(R.id.comment_foot_editer);
+        commentPublish = (Button) getActivity().findViewById(R.id.comment_foot_pubcomment);
+        commentPublish.setOnClickListener(publishClickListener);
+        lvComment = (ListView) lv.findViewById(R.id.frame_listview_comment);
+        new GetCommentsTask().execute();
+        return lv;
 	}
 
 
-	/**
-	 * 初始化动弹列表
-	 */
-	private void initCommentListView() {
-		imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		commentContent = (EditText) getActivity().findViewById(R.id.comment_foot_editer);
-		commentPublish = (Button) getActivity().findViewById(R.id.comment_foot_pubcomment);
-		commentPublish.setOnClickListener(publishClickListener);
-		lvCommentAdapter = new ListViewAdapter(getActivity(), comments,
-				R.layout.tweet_listitem);
-		lvComment = (PullToRefreshListView) getActivity().findViewById(R.id.frame_listview_tweet);
-		// lvComment.addFooterView(lvComment_footer);// 添加底部视图 必须在setAdapter前
-		lvComment.setAdapter(lvCommentAdapter);
-		lvComment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// // 点击头部、底部栏无效
-				// if (position == 0 || view == lvComment_footer)
-				// return;
-
-				Comment comment = null;
-				// 判断是否是TextView
-				if (view instanceof TextView) {
-					comment = (Comment) view.getTag();
-				} else {
-					TextView tv = (TextView) view
-							.findViewById(R.id.tweet_listitem_username);
-					comment = (Comment) tv.getTag();
-				}
-				if (comment == null)
-					return;
-
-				// 跳转到动弹详情&评论页面
-				// UIHelper.showTweetDetail(view.getContext(), comment.getId());
-			}
-		});
-	}
 
 	public static class ListViewAdapter extends BaseAdapter {
 		private Context context;// 运行上下文
@@ -257,6 +227,7 @@ public class CommentList extends Fragment {
 						commentContent.setText("");
 						comments.add(comment);
 						lvCommentAdapter.notifyDataSetChanged();
+                        setListViewHeightBasedOnChildren(lvComment);
 						return;
 					} else {
 						UIHelper.ToastMessage(getActivity(), "评论失败");
@@ -300,8 +271,34 @@ public class CommentList extends Fragment {
         protected void onPostExecute(List<Comment> commentList) {
             comments.clear();
             comments.addAll(commentList);
-            lvCommentAdapter.notifyDataSetChanged();
+            lvCommentAdapter = new ListViewAdapter(getActivity(), comments,
+                    R.layout.tweet_listitem);
+            // lvComment.addFooterView(lvComment_footer);// 添加底部视图 必须在setAdapter前
+            lvComment.setAdapter(lvCommentAdapter);
+            setListViewHeightBasedOnChildren(lvComment);
         }
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 
 }

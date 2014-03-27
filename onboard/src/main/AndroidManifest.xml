@@ -57,19 +57,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
         <activity
-            android:name=".ui.CommentList"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
-        <activity
             android:name=".ui.EditTodo"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
-        
-        <activity
-            android:name=".ui.TodoDetail"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
-        
+
         <activity
             android:name=".ui.UploadDetail"
             android:screenOrientation="portrait"

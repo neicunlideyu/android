@@ -27,9 +27,28 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/todo_text"
             android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:id="@+id/todo_assign_date"
+            android:text="2013-4-13"
+            android:maxWidth="5dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:maxWidth="5dp"
+            android:text="许辰"
+            android:id="@+id/todo_assign_person"
+            android:layout_weight="1" />
+
 
     </LinearLayout>
 

@@ -27,6 +27,7 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class DiscussionDetail extends SherlockFragmentActivity {
 	private FrameLayout mHeader;
@@ -47,7 +48,6 @@ public class DiscussionDetail extends SherlockFragmentActivity {
 	private int discussionId;
 	private int companyId;
 	private int projectId;
-	private String discussionTitle;
 
 	private final static int DATA_LOAD_ING = 0x001;
 	private final static int DATA_LOAD_COMPLETE = 0x002;
@@ -72,8 +72,7 @@ public class DiscussionDetail extends SherlockFragmentActivity {
 		// 注册双击全屏事件
 		this.regOnDoubleEvent();
 		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setTitle(discussionTitle);
-		getSupportActionBar().setIcon(R.drawable.head_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
 
@@ -118,7 +117,6 @@ public class DiscussionDetail extends SherlockFragmentActivity {
 		discussionId = getIntent().getIntExtra("discussionId", 0);
 		companyId = getIntent().getIntExtra("companyId", 0);
 		projectId = getIntent().getIntExtra("projectId", 0);
-		discussionTitle = getIntent().getStringExtra("discussionTitle");
 		mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
 
 		mAuthor = (TextView) findViewById(R.id.blog_detail_author);
@@ -134,8 +132,8 @@ public class DiscussionDetail extends SherlockFragmentActivity {
 		mWebView.getSettings().setDefaultFontSize(15);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        CommentList commentList = new CommentList(companyId,projectId,"discussions",discussionId);
-        ft.replace(R.id.comment_list, commentList).commit();
+        CommentListFragment commentList = new CommentListFragment(companyId,projectId,"discussion",discussionId);
+        ft.replace(R.id.discussion_comments, commentList).commit();
 
 	}
 
@@ -156,6 +154,7 @@ public class DiscussionDetail extends SherlockFragmentActivity {
 					mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd")
 							.format(discussion.getCreated()));
 					mCommentCount.setText((discussion.getComments()==null?0:discussion.getComments().size())+"");
+                    getSupportActionBar().setTitle("讨论/"+discussion.getSubject());
 
 					// //是否收藏
 					// if(discussion.getFavorite() == 1)

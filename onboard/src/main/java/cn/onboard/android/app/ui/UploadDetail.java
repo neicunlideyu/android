@@ -27,6 +27,7 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class UploadDetail extends SherlockFragmentActivity {
     private FrameLayout mHeader;
@@ -46,7 +47,6 @@ public class UploadDetail extends SherlockFragmentActivity {
     private int uploadId;
     private int companyId;
     private int projectId;
-    private String uploadTitle;
 
     private final static int DATA_LOAD_ING = 0x001;
     private final static int DATA_LOAD_COMPLETE = 0x002;
@@ -71,7 +71,6 @@ public class UploadDetail extends SherlockFragmentActivity {
         // 注册双击全屏事件
         this.regOnDoubleEvent();
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(uploadTitle);
         getSupportActionBar().setIcon(R.drawable.head_back);
 
     }
@@ -92,7 +91,6 @@ public class UploadDetail extends SherlockFragmentActivity {
         uploadId = getIntent().getIntExtra("uploadId", 0);
         companyId = getIntent().getIntExtra("companyId", 0);
         projectId = getIntent().getIntExtra("projectId", 0);
-        uploadTitle = getIntent().getStringExtra("uploadTitle");
         mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
 
         mAuthor = (TextView) findViewById(R.id.blog_detail_author);
@@ -108,8 +106,8 @@ public class UploadDetail extends SherlockFragmentActivity {
         mWebView.getSettings().setDefaultFontSize(15);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        CommentList commentList = new CommentList(companyId,projectId,"uploads",uploadId);
-        ft.replace(R.id.comment_list, commentList).commit();
+        CommentListFragment commentList = new CommentListFragment(companyId,projectId,"upload",uploadId);
+        ft.replace(R.id.discussion_comments, commentList).commit();
 
     }
 
@@ -129,7 +127,7 @@ public class UploadDetail extends SherlockFragmentActivity {
                     mAuthor.setText(upload.getCreatorName());
                     mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(upload.getCreated()));
                     mCommentCount.setText((upload.getComments() == null ? 0 : upload.getComments().size()) + "");
-
+                    getSupportActionBar().setTitle("文件/"+upload.getContent());
                     // //是否收藏
                     // if(discussion.getFavorite() == 1)
                     // mFavorite.setImageResource(R.drawable.widget_bar_favorite2);

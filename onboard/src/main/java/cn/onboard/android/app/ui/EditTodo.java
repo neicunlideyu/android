@@ -10,22 +10,28 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Todo;
 import com.onboard.api.dto.Todolist;
 import com.onboard.api.dto.User;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -33,20 +39,18 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class EditTodo extends SherlockActivity {
+public class EditTodo extends SherlockFragmentActivity {
 
-    public static Todolist todolist;
-    public static Todo todo;
-    private MenuItem.OnMenuItemClickListener saveTodoListener = new MenuItem.OnMenuItemClickListener() {
+    private Todolist todolist;
+    private Todo todo;
+    private int todolistId;
+    private EditType editType;
+    private int todoId;
+    private int companyId;
+    private int projectId;
 
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            new SaveTodoaTask().execute(todo);
-            return true;
-        }
-    };
-    public static EditType editType;
     List<User> assigneesList;
     private TextView assigneeText;
     private TextView assigneeDateText;
@@ -56,22 +60,31 @@ public class EditTodo extends SherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todo_edit);
-        todo.setProjectId(todolist.getProjectId());
-        todo.setCompanyId(todolist.getCompanyId());
-        todo.setTodolistId(todolist.getId());
-        todo.setPosition((double)todolist.getTodos().size());
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         assigneeText = (TextView) findViewById(R.id.tv_assignee_name);
         assigneeDateText = (TextView) findViewById(R.id.tv_assignee_date);
         todoContent = (EditText) findViewById(R.id.todo_title);
-        if (todo.getDueDate() != null)
-            assigneeDateText.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(todo.getDueDate().getTime()));
-        if (todo.getContent() != null)
-            todoContent.setText(todo.getContent());
-        getActionBar().setTitle("任务列表/" + todolist.getName());
+        companyId = getIntent().getIntExtra("companyId", -1);
+        projectId = getIntent().getIntExtra("projectId", -1);
+        todolistId = getIntent().getIntExtra("todolistId", -1);
+        todoId = getIntent().getIntExtra("todoId", -1);
+        editType = EditType.valueOf(getIntent().getIntExtra("editType", EditType.CREATE.value));
+        initView();
+        initData();
+
+    }
+
+    private MenuItem.OnMenuItemClickListener saveTodoListener = new MenuItem.OnMenuItemClickListener() {
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            new SaveTodoaTask().execute(todo);
+            return true;
+        }
+    };
+
+    void initView() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        getAssigeesList();
-
         findViewById(R.id.ll_assignee).setOnClickListener(
                 new OnClickListener() {
 
@@ -98,7 +111,17 @@ public class EditTodo extends SherlockActivity {
                 dateDialog.show();
             }
         });
+        if(editType.equals(EditType.UPDATE)){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            CommentListFragment commentList = new CommentListFragment(companyId,projectId,"todo",todoId);
+            ft.replace(R.id.todo_comments, commentList).commit();
 
+        }
+    }
+
+    void initData() {
+        todo = new Todo();
+        getAssigeesList();
     }
 
     @Override
@@ -136,14 +159,11 @@ public class EditTodo extends SherlockActivity {
                 Message msg = new Message();
                 try {
                     final AppContext ac = (AppContext) getApplication();
-                    assigneesList = ac.getUsersByProjectId(todolist.getCompanyId(), todolist.getProjectId());
-                    if (editType.equals(EditType.UPDATE)) {
-                        for (User user : assigneesList) {
-                            if (user.getId().equals(todo.getAssigneeId()))
-                                assigneeText.setText(user.getName());
-                        }
-                    }
-
+                    assigneesList = ac.getUsersByProjectId(companyId, projectId);
+                    if (editType.equals(EditType.UPDATE))
+                        new GetTodoTask().execute();
+                    if (editType.equals(EditType.CREATE))
+                        new GetTodolistTask().execute();
                     msg.what = 1;
                 } catch (AppException e) {
                     e.printStackTrace();
@@ -185,13 +205,22 @@ public class EditTodo extends SherlockActivity {
         @Override
         protected Todo doInBackground(Todo... todo) {
             Todo t = todo[0];
-            t.setContent(todoContent.getText()+"");
+            t.setContent(todoContent.getText() + "");
             AppContext ac = (AppContext) getApplication();
             try {
                 if (editType.equals(EditType.CREATE))
                     t = ac.createTodo(t);
-                else
-                    t = ac.updateTodo(t);
+                else{
+                    Todo sample = new Todo();
+                    sample.setId(t.getId());
+                    sample.setContent(t.getContent());
+                    sample.setAssigneeId(t.getAssigneeId());
+                    sample.setDueDate(t.getDueDate());
+                    sample.setCompanyId(t.getCompanyId());
+                    sample.setProjectId(t.getProjectId());
+                    sample.setTodolistId(t.getTodolistId());
+                    t = ac.updateTodo(sample);
+                }
             } catch (AppException e) {
                 e.printStackTrace();
             }
@@ -200,10 +229,80 @@ public class EditTodo extends SherlockActivity {
 
         @Override
         protected void onPostExecute(Todo todo) {
-            Intent intent = new Intent();
-            intent.putExtra("todo", todo);
-            setResult(Activity.RESULT_OK, intent);
+            Intent intent = getIntent();
+            ObjectMapper m = new ObjectMapper();
+            m.configure(SerializationConfig.Feature.WRITE_NULL_PROPERTIES, false);
+
+            ObjectWriter ow = m.writer().withDefaultPrettyPrinter();
+            try {
+                String todojson = ow.writeValueAsString(todo);
+                intent.putExtra("todo",todojson);
+                setResult(Activity.RESULT_OK, intent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             finish();//结束之后会将结果传回From
+        }
+    }
+
+    public class GetTodolistTask extends AsyncTask<Void, Void, Todolist> {
+
+        @Override
+        protected Todolist doInBackground(Void... params) {
+            Todolist t = new Todolist();
+            AppContext ac = (AppContext) getApplication();
+            try {
+                t = ac.getTodolistById(companyId, projectId, todolistId);
+                todo.setProjectId(t.getProjectId());
+                todo.setCompanyId(t.getCompanyId());
+                todo.setTodolistId(t.getId());
+                todo.setDeleted(false);
+                todo.setPosition((double) t.getTodos().size()*100);
+
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+            return t;
+        }
+
+        @Override
+        protected void onPostExecute(Todolist t) {
+            todolist = t;
+            getSupportActionBar().setTitle("任务列表/" + todolist.getName());
+        }
+    }
+
+
+    public class GetTodoTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Todo t = new Todo();
+            AppContext ac = (AppContext) getApplication();
+            try {
+                t = ac.getTodoById(companyId, projectId, todoId);
+                todo = t;
+                todolistId = todo.getTodolistId();
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected  void onPostExecute(Void params){
+            new GetTodolistTask().execute();
+            if (todo.getDueDate() != null)
+                assigneeDateText.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(todo.getDueDate().getTime()));
+            if (todo.getContent() != null)
+                todoContent.setText(todo.getContent());
+            if (todo.getAssigneeId() != null) {
+                for (User user : assigneesList) {
+                    if (user.getId().equals(todo.getAssigneeId()))
+                        assigneeText.setText(user.getName());
+                }
+            }
+
         }
     }
 

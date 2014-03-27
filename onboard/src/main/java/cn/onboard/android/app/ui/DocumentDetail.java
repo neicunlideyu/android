@@ -25,6 +25,7 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class DocumentDetail extends SherlockFragmentActivity {
 	private FrameLayout mHeader;
@@ -45,7 +46,6 @@ public class DocumentDetail extends SherlockFragmentActivity {
 	private int documentId;
 	private int companyId;
 	private int projectId;
-	private String documentTitle;
 
 
 	private GestureDetector gd;
@@ -63,8 +63,8 @@ public class DocumentDetail extends SherlockFragmentActivity {
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_bg_black));
 
 		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setTitle(documentTitle);
 		getSupportActionBar().setIcon(R.drawable.head_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
 
@@ -108,7 +108,6 @@ public class DocumentDetail extends SherlockFragmentActivity {
 		documentId = getIntent().getIntExtra("documentId", 0);
 		companyId = getIntent().getIntExtra("companyId", 0);
 		projectId = getIntent().getIntExtra("projectId", 0);
-		documentTitle = getIntent().getStringExtra("documentTitle");
 		mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
 
 		mAuthor = (TextView) findViewById(R.id.blog_detail_author);
@@ -124,8 +123,8 @@ public class DocumentDetail extends SherlockFragmentActivity {
 		mWebView.getSettings().setDefaultFontSize(15);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        CommentList commentList = new CommentList(companyId,projectId,"documents",documentId);
-        ft.replace(R.id.comment_list, commentList).commit();
+        CommentListFragment commentList = new CommentListFragment(companyId,projectId,"document",documentId);
+        ft.replace(R.id.discussion_comments, commentList).commit();
 
     }
 
@@ -146,6 +145,7 @@ public class DocumentDetail extends SherlockFragmentActivity {
 					mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd")
 							.format(document.getCreated()));
 					mCommentCount.setText((document.getComments()==null?0:document.getComments().size())+"");
+                    getSupportActionBar().setTitle("文档/"+document.getTitle());
 
 					// //是否收藏
 					// if(discussion.getFavorite() == 1)

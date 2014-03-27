@@ -70,7 +70,7 @@
         <Button
             android:id="@+id/button_download"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30.0dp"
             android:textSize="@dimen/text_size_10"
             android:text="@string/download" />
 

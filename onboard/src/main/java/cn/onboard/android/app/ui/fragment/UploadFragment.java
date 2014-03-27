@@ -32,7 +32,8 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
-import cn.onboard.android.app.ui.TodoDetail;
+import cn.onboard.android.app.ui.DocumentDetail;
+import cn.onboard.android.app.ui.EditTodo;
 import cn.onboard.android.app.ui.UploadDetail;
 
 public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
@@ -174,12 +175,12 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
     }
 
     void startTodoDetailActivityForAttachment(int targetTodoId, String TodoTitle) {
-        Intent intent = new Intent(getActivity().getApplicationContext(), TodoDetail.class);
-        intent.putExtra("companyId", companyId);
-        intent.putExtra("projectId", projectId);
-        intent.putExtra("todoId", targetTodoId);
-        intent.putExtra("todoTitle", TodoTitle);
-        startActivity(intent);
+//        Intent intent = new Intent(getActivity().getApplicationContext(), TodoDetail.class);
+//        intent.putExtra("companyId", companyId);
+//        intent.putExtra("projectId", projectId);
+//        intent.putExtra("todoId", targetTodoId);
+//        intent.putExtra("todoTitle", TodoTitle);
+//        startActivity(intent);
     }
 
     void startDiscussionDetailActivityForAttachment(int targetDiscussionId, String discussionTitle) {
@@ -218,13 +219,41 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                             }
                             if (attachment == null)
                                 return;
-                            if (attachment.getAttachType().equals(DISCUSSION_TYPE_NAME)) {
-                                startDiscussionDetailActivityForAttachment(attachment.getTargetId(), attachment.getName());
-                            } else if (attachment.getAttachType().equals(UPLOAD_TYPE_NAME)) {
-                                startUploadDetailActivityForAttachment(attachment.getTargetId(), attachment.getName());
-                            } else if (attachment.getAttachType().equals(TODO_TYPE_NAME)) {
-                                startTodoDetailActivityForAttachment(attachment.getTargetId(), attachment.getName());
+                            Context context = view.getContext();
+                            Intent intent = null;
+                            if (attachment.getAttachType().equals("discussion")) {
+                                intent = new Intent(context,
+                                        DiscussionDetail.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("discussionId", attachment.getAttachId());
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
                             }
+                            else if (attachment.getAttachType().equals("document")){
+                                intent = new Intent(context,
+                                        DocumentDetail.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("documentId", attachment.getAttachId());
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
+                            } else if (attachment.getAttachType().equals("todo")){
+                                intent = new Intent(context,
+                                        EditTodo.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
+                                intent.putExtra("todoId", attachment.getAttachId());
+                                intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
+                            }else if (attachment.getAttachType().equals("upload")){
+                                intent = new Intent(context,
+                                        UploadDetail.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("companyId", companyId);
+                                intent.putExtra("projectId", attachment.getProjectId());
+                                intent.putExtra("uploadId", attachment.getAttachId());
+                            }
+                            context.startActivity(intent);
+
                         }
                     });
 

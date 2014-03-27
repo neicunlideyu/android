@@ -30,11 +30,11 @@ public class Person extends FragmentActivity {
         meFileButton = (Button) findViewById(R.id.frame_btn_me_files);
         final Integer companyId = getIntent().getIntExtra("companyId", 0);
         final Integer userId = getIntent().getIntExtra("userId", 0);
-        getSupportFragmentManager().beginTransaction().replace(R.id.me, new ActivityFragment(null, userId)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.me, new ActivityFragment(companyId, userId)).commit();
         meActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.me, new ActivityFragment(null, userId)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.me, new ActivityFragment(companyId, userId)).commit();
             }
         });
         meTodoButton.setOnClickListener(new View.OnClickListener() {
