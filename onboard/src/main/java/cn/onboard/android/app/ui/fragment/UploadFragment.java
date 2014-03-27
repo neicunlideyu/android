@@ -157,7 +157,9 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                 bmpManager.loadBitmap(attachmentImageURL, listItemView.face);
             }
             else {
-                listItemView.face.setImageDrawable(convertView.getResources().getDrawable(AttachmentType.getAttachmentTypeIconResourceId(attachment)));
+                listItemView.face.setImageDrawable(convertView.getResources()
+                        .getDrawable(AttachmentType.getAttachmentTypeIconResourceId(attachment.getName(),
+                                attachment.getContentType())));
             }
 
             // }
@@ -262,6 +264,9 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", attachment.getProjectId());
                                 intent.putExtra("uploadId", attachment.getAttachId());
+                                intent.putExtra("attachmentId", attachment.getId());
+                                intent.putExtra("attachmentName", attachment.getName());
+                                intent.putExtra("attachmentType", attachment.getContentType());
                                 context.startActivity(intent);
                             }
                         }

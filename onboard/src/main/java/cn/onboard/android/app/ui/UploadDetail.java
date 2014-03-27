@@ -1,5 +1,7 @@
 package cn.onboard.android.app.ui;
 
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,15 +24,21 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Upload;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.bean.AttachmentType;
+import cn.onboard.android.app.bean.URLs;
+import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class UploadDetail extends SherlockFragmentActivity {
+    private BitmapManager bmpManager;
     private FrameLayout mHeader;
     private LinearLayout mFooter;
     private ImageView mRefresh;
@@ -43,10 +52,15 @@ public class UploadDetail extends SherlockFragmentActivity {
     private WebView mWebView;
     private Handler mHandler;
     private Upload upload;
+    private Button mUploadNameDownload;
+    private ImageView mAttachmentTypeIcon;
 
     private int uploadId;
     private int companyId;
     private int projectId;
+    private int attachmentId;
+    private String attachmentName;
+    private String attachmentType;
 
     private final static int DATA_LOAD_ING = 0x001;
     private final static int DATA_LOAD_COMPLETE = 0x002;
@@ -58,7 +72,7 @@ public class UploadDetail extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.blog_detail);
+        setContentView(R.layout.upload_detail);
         Log.d("initData", "started");
         this.initView();
         Log.d("initView", "finished");
@@ -91,23 +105,33 @@ public class UploadDetail extends SherlockFragmentActivity {
         uploadId = getIntent().getIntExtra("uploadId", 0);
         companyId = getIntent().getIntExtra("companyId", 0);
         projectId = getIntent().getIntExtra("projectId", 0);
+        attachmentId = getIntent().getIntExtra("attachmentId", 0);
+        attachmentName = getIntent().getStringExtra("attachmentName");
+        attachmentType = getIntent().getStringExtra("attachmentType");
+
         mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
+        bmpManager = new BitmapManager(BitmapFactory.decodeResource(getResources(),
+                R.drawable.widget_dface_loading));
 
         mAuthor = (TextView) findViewById(R.id.blog_detail_author);
         mPubDate = (TextView) findViewById(R.id.blog_detail_date);
         mCommentCount = (TextView) findViewById(R.id.blog_detail_commentcount);
-
-        // mDetail.setEnabled(false);
-
-        mWebView = (WebView) findViewById(R.id.blog_detail_webview);
-        mWebView.getSettings().setJavaScriptEnabled(false);
-        mWebView.getSettings().setSupportZoom(true);
-        mWebView.getSettings().setBuiltInZoomControls(true);
-        mWebView.getSettings().setDefaultFontSize(15);
+        mUploadNameDownload = (Button) findViewById(R.id.upload_name_download);
+        mAttachmentTypeIcon = (ImageView) findViewById(R.id.attachment_type_icon);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         CommentListFragment commentList = new CommentListFragment(companyId,projectId,"upload",uploadId);
         ft.replace(R.id.discussion_comments, commentList).commit();
+
+        mUploadNameDownload.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AppContext ac = (AppContext) getApplication();
+                ac.downloadAttachmentByAttachmentId(attachmentId, companyId,
+                        projectId);
+            }
+        });
 
     }
 
@@ -127,45 +151,21 @@ public class UploadDetail extends SherlockFragmentActivity {
                     mAuthor.setText(upload.getCreatorName());
                     mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(upload.getCreated()));
                     mCommentCount.setText((upload.getComments() == null ? 0 : upload.getComments().size()) + "");
-                    getSupportActionBar().setTitle("文件/"+upload.getContent());
-                    // //是否收藏
-                    // if(discussion.getFavorite() == 1)
-                    // mFavorite.setImageResource(R.drawable.widget_bar_favorite2);
-                    // else
-                    // mFavorite.setImageResource(R.drawable.widget_bar_favorite);
-
-                    // 显示评论数
-                    // if(discussion.getCommentCount() > 0){
-                    // bv_comment.setText(discussion.getCommentCount()+"");
-                    // bv_comment.show();
-                    // }else{
-                    // bv_comment.setText("");
-                    // bv_comment.hide();
-                    // }
-
-                    String body = UIHelper.WEB_STYLE + upload.getContent() + "<div style=\"margin-bottom: 80px\" />";
-                    // 读取用户设置：是否加载文章图片--默认有wifi下始终加载图片
-                    boolean isLoadImage;
-                    AppContext ac = (AppContext) getApplication();
-                    if (AppContext.NETTYPE_WIFI == ac.getNetworkType()) {
-                        isLoadImage = true;
-                    } else {
-                        isLoadImage = ac.isLoadImage();
+                    getSupportActionBar().setTitle("文件/" + upload.getContent());
+                    if (attachmentType.contains("image")) {
+                        String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;
+                        attachmentImageURL = attachmentImageURL.replaceAll("companyId", companyId + "")
+                                .replaceAll("projectId", projectId + "")
+                                .replaceAll("attachmentId", attachmentId + "");
+                        bmpManager.loadBitmap(attachmentImageURL, mAttachmentTypeIcon);
                     }
-                    if (isLoadImage) {
-                        body = body.replaceAll("(<img[^>]*?)\\s+width\\s*=\\s*\\S+", "$1");
-                        body = body.replaceAll("(<img[^>]*?)\\s+height\\s*=\\s*\\S+", "$1");
-                    } else {
-                        body = body.replaceAll("<\\s*img\\s+([^>]*)\\s*>", "");
+                    else {
+                        mAttachmentTypeIcon.setImageDrawable(getResources()
+                                .getDrawable(AttachmentType.getAttachmentTypeIconResourceId(attachmentName,
+                                        attachmentType)));
                     }
+                    mUploadNameDownload.setText(attachmentName + "(点击下载)");
 
-                    mWebView.loadDataWithBaseURL(null, body, "text/html", "utf-8", null);
-                    mWebView.setWebViewClient(UIHelper.getWebViewClient());
-
-                    // //发送通知广播
-                    // if(msg.obj != null){
-                    // UIHelper.sendBroadCast(BlogDetail.this, (Notice)msg.obj);
-                    // }
                 } else if (msg.what == 0) {
                     // headButtonSwitch(DATA_LOAD_FAIL);
                     //
