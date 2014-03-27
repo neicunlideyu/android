@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center"
             android:button="@drawable/login_checkbox_selector"
-            android:checked="true"
+            android:checked="false"
             android:paddingLeft="30dip"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_13" />
@@ -36,7 +36,6 @@
             android:layout_height="fill_parent"
             android:layout_gravity="right"
             android:id="@+id/todo_assign_date"
-            android:text="2013-4-13"
             android:maxWidth="5dp"
             android:layout_weight="1" />
 
@@ -45,7 +44,6 @@
             android:layout_height="fill_parent"
             android:layout_gravity="right"
             android:maxWidth="5dp"
-            android:text="许辰"
             android:id="@+id/todo_assign_person"
             android:layout_weight="1" />
 

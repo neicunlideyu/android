@@ -125,6 +125,7 @@ public class ActivityFragment extends Fragment {
                             intent.putExtra("discussionId", activity.getAttachId());
                             intent.putExtra("companyId", companyId);
                             intent.putExtra("projectId", activity.getProjectId());
+                            context.startActivity(intent);
                         }
                         else if (activity.getAttachType().equals("document")){
                             intent = new Intent(context,
@@ -133,6 +134,7 @@ public class ActivityFragment extends Fragment {
                             intent.putExtra("documentId", activity.getAttachId());
                             intent.putExtra("companyId", companyId);
                             intent.putExtra("projectId", activity.getProjectId());
+                            context.startActivity(intent);
                         } else if (activity.getAttachType().equals("todo")){
                             intent = new Intent(context,
                                     EditTodo.class);
@@ -141,6 +143,7 @@ public class ActivityFragment extends Fragment {
                             intent.putExtra("projectId", activity.getProjectId());
                             intent.putExtra("todoId", activity.getAttachId());
                             intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
+                            context.startActivity(intent);
                         } else if (activity.getAttachType().equals("upload")){
                             intent = new Intent(context,
                                     UploadDetail.class);
@@ -148,8 +151,8 @@ public class ActivityFragment extends Fragment {
                             intent.putExtra("companyId", companyId);
                             intent.putExtra("projectId", activity.getProjectId());
                             intent.putExtra("uploadId", activity.getAttachId());
+                            context.startActivity(intent);
                         }
-                        context.startActivity(intent);
                     }
                 });
         activiPullToRefreshListView

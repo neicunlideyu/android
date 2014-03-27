@@ -1,9 +1,11 @@
 package cn.onboard.android.app.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +22,11 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.onboard.api.dto.Discussion;
 import com.onboard.api.dto.User;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.map.SerializationConfig;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,13 +162,18 @@ public class NewDiscussion extends SherlockActivity {
 
                     setSupportProgressBarIndeterminateVisibility(false);
                     if (msg.what == 1) {
-                        /*
-                         * Context context = getApplicationContext(); Intent intent = new Intent(context,
-                         * com.onboard.app.ui.DiscussionDetail.class); intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                         * intent.putExtra("discussionId", discussion.getId()); intent.putExtra("companyId", companyId);
-                         * intent.putExtra("projectId", projectId); intent.putExtra("discussionTitle", discussion.getSubject());
-                         * context.startActivity(intent);
-                         */
+                        Intent intent = getIntent();
+                        ObjectMapper m = new ObjectMapper();
+                        m.configure(SerializationConfig.Feature.WRITE_NULL_PROPERTIES, false);
+                        ObjectWriter ow = m.writer().withDefaultPrettyPrinter();
+                        try {
+                            String discussionJson = ow.writeValueAsString(discussion);
+                            intent.putExtra("discussion",discussionJson);
+                            setResult(Activity.RESULT_OK, intent);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        finish();//结束之后会将结果传回From
                         return;
                     } else {
                         UIHelper.ToastMessage(NewDiscussion.this, "创建讨论失败");

@@ -228,6 +228,7 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("discussionId", attachment.getAttachId());
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", attachment.getProjectId());
+                                context.startActivity(intent);
                             }
                             else if (attachment.getAttachType().equals("document")){
                                 intent = new Intent(context,
@@ -236,6 +237,7 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("documentId", attachment.getAttachId());
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", attachment.getProjectId());
+                                context.startActivity(intent);
                             } else if (attachment.getAttachType().equals("todo")){
                                 intent = new Intent(context,
                                         EditTodo.class);
@@ -244,6 +246,7 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("projectId", attachment.getProjectId());
                                 intent.putExtra("todoId", attachment.getAttachId());
                                 intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
+                                context.startActivity(intent);
                             }else if (attachment.getAttachType().equals("upload")){
                                 intent = new Intent(context,
                                         UploadDetail.class);
@@ -251,8 +254,8 @@ public class UploadFragment extends Fragment implements MenuItem.OnMenuItemClick
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", attachment.getProjectId());
                                 intent.putExtra("uploadId", attachment.getAttachId());
+                                context.startActivity(intent);
                             }
-                            context.startActivity(intent);
 
                         }
                     });

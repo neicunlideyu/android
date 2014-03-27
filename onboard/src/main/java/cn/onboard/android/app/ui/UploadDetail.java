@@ -71,7 +71,7 @@ public class UploadDetail extends SherlockFragmentActivity {
         // 注册双击全屏事件
         this.regOnDoubleEvent();
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.head_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 

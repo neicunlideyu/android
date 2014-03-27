@@ -337,7 +337,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                     listItemView.completeTodo.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                           new CompleteTodolistTask().equals(((Todo) item.identifiable).getId());
+                           new CompleteTodolistTask().execute(((Todo) item.identifiable).getId());
                         }
                     });
                 }
@@ -437,6 +437,8 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         protected Todo doInBackground(Integer... todoId) {
             Todo todo = new Todo();
             todo.setId(todoId[0]);
+            todo.setCompanyId(companyId);
+            todo.setProjectId(projectId);
             todo.setCompleted(true);
             AppContext ac = (AppContext) getActivity().getApplication();
             try {

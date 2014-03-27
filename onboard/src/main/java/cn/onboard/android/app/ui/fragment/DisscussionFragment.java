@@ -1,5 +1,6 @@
 package cn.onboard.android.app.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -19,8 +20,13 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.onboard.api.dto.Discussion;
 import com.onboard.api.dto.Topic;
 
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -40,9 +46,13 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
 
     private int projectId;
 
+    private List<Topic> topicList;
+
     public DisscussionFragment() {
         setRetainInstance(true);
     }
+
+    public ListViewNewsAdapter lvca;
 
     public DisscussionFragment(int companyId, int projectId) {
         this();
@@ -59,9 +69,8 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
         final Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what >= 1) {
-                    @SuppressWarnings("unchecked")
-                    List<Topic> topicList = (List<Topic>) msg.obj;
-                    ListViewNewsAdapter lvca = new ListViewNewsAdapter(
+                    topicList = (List<Topic>) msg.obj;
+                    lvca = new ListViewNewsAdapter(
                             getActivity().getApplicationContext(), topicList,
                             R.layout.question_listitem);
                     ListView listView = (ListView) getActivity().findViewById(
@@ -91,6 +100,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                                 intent.putExtra("discussionId", topic.getRefId());
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", topic.getProjectId());
+                                context.startActivity(intent);
                             } else if (topic.getRefType().equals("document")) {
                                 intent = new Intent(context,
                                         DocumentDetail.class);
@@ -98,6 +108,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                                 intent.putExtra("documentId", topic.getRefId());
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", topic.getProjectId());
+                                context.startActivity(intent);
                             } else if (topic.getRefType().equals("todo")) {
                                 intent = new Intent(context,
                                         EditTodo.class);
@@ -106,6 +117,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                                 intent.putExtra("projectId", topic.getProjectId());
                                 intent.putExtra("todoId", topic.getRefId());
                                 intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
+                                context.startActivity(intent);
                             } else if (topic.getRefType().equals("upload")){
                                 intent = new Intent(context,
                                         UploadDetail.class);
@@ -113,8 +125,8 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                                 intent.putExtra("companyId", companyId);
                                 intent.putExtra("projectId", topic.getProjectId());
                                 intent.putExtra("uploadId", topic.getRefId());
+                                context.startActivity(intent);
                             }
-                            context.startActivity(intent);
 
                         }
                     });
@@ -255,8 +267,35 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
         Intent intent = new Intent(getActivity().getApplicationContext(), NewDiscussion.class);
         intent.putExtra("companyId", companyId);
         intent.putExtra("projectId", projectId);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode != Activity.RESULT_OK)
+            return;
+        String discussionJson = intent.getExtras().getString("discussion");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Discussion discussion = new Discussion();
+        try {
+            discussion = mapper.readValue(discussionJson, Discussion.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<Topic> tempTopicList = topicList;
+        Topic topic = new Topic();
+        topic.setProjectId(discussion.getProjectId());
+        topic.setCompanyId(discussion.getCompanyId());
+        topic.setRefType("discussion");
+        topic.setRefId(discussion.getId());
+        topic.setLastUpdatorId(discussion.getCreatorId());
+        topic.setCreated(discussion.getCreated());
+        topic.setTitle(discussion.getSubject());
+        topic.setExcerpt(discussion.getContent());
+        topicList.add(0,topic);
+        lvca.notifyDataSetChanged();
     }
 
 }
