@@ -301,8 +301,8 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                             Context context = view.getContext();
                             Intent intent = new Intent(context,
                                     EditTodo.class);
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", projectId);
+                            intent.putExtra("companyId", item.todolist.getCompanyId());
+                            intent.putExtra("projectId", item.todolist.getProjectId());
                             intent.putExtra("todolistId", item.todolist.getId());
                             intent.putExtra("editType", EditTodo.EditType.CREATE);
                             startActivityForResult(intent, EditTodo.EditType.CREATE.value());
@@ -331,8 +331,8 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                             Context context = view.getContext();
                             Intent intent = new Intent(context,
                                     EditTodo.class);
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", projectId);
+                            intent.putExtra("companyId", item.todolist.getCompanyId());
+                            intent.putExtra("projectId", item.todolist.getProjectId());
                             intent.putExtra("todolistId", item.todolist.getId());
                             intent.putExtra("todoId", ((Todo) item.identifiable).getId());
                             intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
