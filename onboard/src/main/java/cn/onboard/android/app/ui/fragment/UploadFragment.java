@@ -2,7 +2,9 @@
 package cn.onboard.android.app.ui.fragment;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,11 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.onboard.api.dto.Attachment;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.bean.AttachmentType;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
@@ -137,12 +142,15 @@ public class UploadFragment extends Fragment {
             }
 
             // 设置文字和图片
-            String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;
-            attachmentImageURL = attachmentImageURL.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "").replaceAll("attachmentId", attachment.getId() + "");
-            if (!attachment.getContentType().contains("image")) {
-                attachmentImageURL = "http://onboard.cn/static/img/attachment-icon/default.png";
+            if (attachment.getContentType().contains("image")) {
+                String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;
+                attachmentImageURL = attachmentImageURL.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "").replaceAll("attachmentId", attachment.getId() + "");
+                bmpManager.loadBitmap(attachmentImageURL, listItemView.face);
             }
-            bmpManager.loadBitmap(attachmentImageURL, listItemView.face);
+            else {
+                listItemView.face.setImageDrawable(convertView.getResources().getDrawable(AttachmentType.getAttachmentTypeIconResourceId(attachment)));
+            }
+
             // }
             // listItemView.face.setOnClickListener(faceClickListener);
             listItemView.face.setTag(attachment);
