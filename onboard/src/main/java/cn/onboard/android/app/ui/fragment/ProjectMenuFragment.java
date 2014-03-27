@@ -41,23 +41,38 @@ public class ProjectMenuFragment extends SherlockListFragment {
 			newContent = new RepositoryFragment(project.getCompanyId(),project.getProjectId());
 			break;
 		case 1:
-			newContent = new RepositoryFragment(project.getCompanyId(),project.getProjectId());
-			break;
-		case 2:
 			newContent = new DisscussionFragment(project.getCompanyId(),project.getProjectId());
-			break;
+            project.getSupportActionBar().setLogo(R.drawable.actionbar_discussion);
+            project.getSupportActionBar().setTitle("讨论");
+            project.setCreateString("新建讨论");
+            project.setPopupListener((DisscussionFragment) newContent);
+            break;
+		case 2:
+			newContent = new TodoFragment(project.getCompanyId(),project.getProjectId(),null);
+            project.getSupportActionBar().setLogo(R.drawable.actionbar_todo);
+            project.getSupportActionBar().setTitle("任务");
+            project.setCreateString("新建任务列表");
+            project.setPopupListener((TodoFragment) newContent);
+            break;
 		case 3:
-			newContent = new TodoFragment(project.getCompanyId(),project.getProjectId());
-			break;
-		case 4:
 			newContent = new DocumentFragment(project.getCompanyId(),project.getProjectId());
-			break;
-		case 5:
-			newContent = new UploadFragment(project.getCompanyId(),project.getProjectId());
-			break;
+            project.getSupportActionBar().setLogo(R.drawable.actionbar_document);
+            project.getSupportActionBar().setTitle("文档");
+            project.setCreateString("新建文档");
+            project.setPopupListener((DocumentFragment) newContent);
+            break;
+		case 4:
+			newContent = new UploadFragment(project.getCompanyId(),project.getProjectId(),null);
+            project.getSupportActionBar().setLogo(R.drawable.actionbar_upload);
+            project.getSupportActionBar().setTitle("文件");
+            project.setCreateString("上传文件");
+            project.setPopupListener((UploadFragment) newContent);
+            break;
 		}
-		if (newContent != null)
+        if (newContent != null){
 			switchFragment(newContent);
+            project.invalidateOptionsMenu();
+        }
 	}
 
 	// the meat of switching the above fragment

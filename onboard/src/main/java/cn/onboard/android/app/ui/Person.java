@@ -16,6 +16,7 @@ import cn.onboard.android.app.ui.fragment.UploadFragment;
 public class Person extends FragmentActivity {
 
 
+    private final int INVALID_USER_ID = -1;
     private Button meActivityButton;
     private Button meTodoButton;
     private Button meFileButton;
@@ -27,23 +28,25 @@ public class Person extends FragmentActivity {
         meActivityButton = (Button) findViewById(R.id.frame_btn_me_acivities);
         meTodoButton = (Button) findViewById(R.id.frame_btn_me_todos);
         meFileButton = (Button) findViewById(R.id.frame_btn_me_files);
-        getSupportFragmentManager().beginTransaction().replace(R.id.me,new ActivityFragment(1234252,0)).commit();
+        final Integer companyId = getIntent().getIntExtra("companyId", 0);
+        final Integer userId = getIntent().getIntExtra("userId", 0);
+        getSupportFragmentManager().beginTransaction().replace(R.id.me, new ActivityFragment(companyId, userId)).commit();
         meActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.me,new ActivityFragment(1234252,0)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.me, new ActivityFragment(companyId, userId)).commit();
             }
         });
         meTodoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.me, new TodoFragment(1234252, 5532506)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.me, new TodoFragment(companyId, null, userId)).commit();
             }
         });
         meFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.me, new UploadFragment(1234252, 5532506)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.me, new UploadFragment(companyId, null, userId)).commit();
             }
         });
     }

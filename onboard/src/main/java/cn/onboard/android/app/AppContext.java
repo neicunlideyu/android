@@ -12,7 +12,6 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.util.Log;
 
 import com.onboard.api.dto.Activity;
 import com.onboard.api.dto.Attachment;
@@ -714,6 +713,15 @@ public class AppContext extends Application {
 
     }
 
+    public List<Todolist> getTodoListsByUserId(int companyId, int userId)
+            throws AppException {
+        List<Todolist> todolists = new ArrayList<Todolist>();
+        todolists = ApiClient
+                .getTodoListByCompanyIdByUserId(this, companyId, userId);
+        return todolists;
+
+    }
+
     public List<Topic> getTopicsByProjectId(int companyId, int projectId)
             throws AppException {
         List<Topic> topicList = new ArrayList<Topic>();
@@ -731,14 +739,6 @@ public class AppContext extends Application {
 
     }
 
-    public List<Todolist> getTodolistssByProjectId(int companyId, int projectId)
-            throws AppException {
-        List<Todolist> todolists = new ArrayList<Todolist>();
-        todolists = ApiClient.getTodolistsByProjectId(this, companyId,
-                projectId);
-        return todolists;
-
-    }
 
     public Discussion getDiscussionById(int companyId, int projectId,
                                         int discussionId) throws AppException {
@@ -763,20 +763,19 @@ public class AppContext extends Application {
 
     }
 
-    public List<Activity> getActivitiesByProjectId(int companyId, int projectId, int page) throws AppException {
+    public List<Activity> getActivitiesByCompanyId(int companyId, int page) throws AppException {
         List<Activity> activities = new ArrayList<Activity>();
-        activities = ApiClient.getActivitiesByProjectId(this, companyId, projectId, page);
+        activities = ApiClient.getActivitiesByCompanyId(this, companyId, page);
         return activities;
     }
 
-//    public List<Repository> getRepositorysByProjectId(int companyId,
-//                                                      int projectId) throws AppException {
-//        List<Repository> repositoryList = new ArrayList<Repository>();
-//        repositoryList = ApiClient.getRepositoryByProjectId(this, companyId,
-//                projectId);
-//        return repositoryList;
-//
-//    }
+    public List<Activity> getActivitiesByCompanyIdByUserId(int companyId,int userId, int page) throws AppException {
+        List<Activity> activities = new ArrayList<Activity>();
+        activities = ApiClient.getActivitiesByCompanyIdByUserId(this, companyId, userId, page);
+        return activities;
+    }
+
+
 
     public List<Upload> getUploadsByProjectId(int companyId, int projectId)
             throws AppException {
@@ -790,10 +789,22 @@ public class AppContext extends Application {
         return ApiClient.getUploadById(this, companyId, projectId, uploadId);
     }
 
+    public Todolist getTodolistById(int companyId, int projectId, int todolistId) throws AppException {
+        return ApiClient.getTodolistById(this, companyId, projectId, todolistId);
+    }
+
     public List<Attachment> getAttachmentsByProjectId(int companyId,
                                                       int projectId) throws AppException {
         List<Attachment> attachments = new ArrayList<Attachment>();
         attachments = ApiClient.getAttachmentsByProjectId(this, companyId, projectId);
+        return attachments;
+
+    }
+
+    public List<Attachment> getAttachmentsByCompanyIdByUserId(int companyId,
+                                                              int userId) throws AppException {
+        List<Attachment> attachments = new ArrayList<Attachment>();
+        attachments = ApiClient.getAttachmentsByCompanyIdByUserId(this, companyId, userId);
         return attachments;
 
     }
@@ -816,17 +827,21 @@ public class AppContext extends Application {
         return users;
     }
 
-    public Map<String, List<User>> getDepartmentNameUserMapByCompanyId(int companyId) throws AppException {
-        Map<String, List<User>> departmentNameUserMap = ApiClient.getDepartmentNameUserMapByCompanyId(this, companyId);
-
-        return departmentNameUserMap;
-    }
-
     public Comment publishComment(Comment comment) throws AppException {
         return ApiClient.publishComment(this, comment);
     }
 
+    public Todo createTodo(Todo todo) throws  AppException{
+        return ApiClient.createTodo(this,todo);
+    }
 
+    public Todo updateTodo(Todo todo) throws  AppException{
+        return ApiClient.updateTodo(this,todo);
+    }
+
+    public Todolist createTodolist(Todolist todolist) throws  AppException {
+        return ApiClient.createTodolist(this, todolist);
+    }
     public Discussion createDiscussion(Discussion discussion) throws AppException {
         return ApiClient.createDiscussion(this, discussion);
     }
@@ -843,4 +858,11 @@ public class AppContext extends Application {
     public Todo getTodoById(int companyId, int projectId, int todoId) throws AppException {
         return ApiClient.getTodoById(this, companyId, projectId, todoId);
     }
+
+    public Map<String, List<User>> getDepartmentNameUserMapByCompanyId(int companyId) throws AppException {
+        Map<String, List<User>> departmentNameUserMap = ApiClient.getDepartmentNameUserMapByCompanyId(this, companyId);
+
+        return departmentNameUserMap;
+    }
+
 }

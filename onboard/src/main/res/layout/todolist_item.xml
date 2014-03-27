@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="2.40"
-        android:background="@color/abs__background_holo_dark">
+        android:background="@drawable/frame_button_bg">
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="5.0dip"
-            android:src="@drawable/frame_logo_news"/>
+            android:src="@drawable/new_todo_button"/>
 
     </LinearLayout>
 </LinearLayout>

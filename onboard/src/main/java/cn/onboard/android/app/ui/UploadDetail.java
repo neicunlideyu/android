@@ -1,12 +1,9 @@
 package cn.onboard.android.app.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -20,19 +17,19 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.api.dto.Comment;
 import com.onboard.api.dto.Upload;
+
+import java.text.SimpleDateFormat;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class UploadDetail extends SherlockActivity {
+public class UploadDetail extends SherlockFragmentActivity {
     private FrameLayout mHeader;
     private LinearLayout mFooter;
     private ImageView mRefresh;
@@ -50,7 +47,6 @@ public class UploadDetail extends SherlockActivity {
     private int uploadId;
     private int companyId;
     private int projectId;
-    private String uploadTitle;
 
     private final static int DATA_LOAD_ING = 0x001;
     private final static int DATA_LOAD_COMPLETE = 0x002;
@@ -75,35 +71,11 @@ public class UploadDetail extends SherlockActivity {
         // 注册双击全屏事件
         this.regOnDoubleEvent();
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(uploadTitle);
-        getSupportActionBar().setIcon(R.drawable.head_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
-    private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            Intent intent = new Intent(getApplicationContext(), CommentList.class);
-            CommentList.companyId = upload.getCompanyId();
-            CommentList.projectId = upload.getProjectId();
-            CommentList.attachId = upload.getId();
-            CommentList.attachType = "upload";
-            if (upload.getComments() != null)
-                CommentList.comments = upload.getComments();
-            else {
-                CommentList.comments = new ArrayList<Comment>();
-            }
-            UploadDetail.this.startActivity(intent);
-            return true;
-        }
-    };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        menu.add("评论").setOnMenuItemClickListener(popupListener).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -119,7 +91,6 @@ public class UploadDetail extends SherlockActivity {
         uploadId = getIntent().getIntExtra("uploadId", 0);
         companyId = getIntent().getIntExtra("companyId", 0);
         projectId = getIntent().getIntExtra("projectId", 0);
-        uploadTitle = getIntent().getStringExtra("uploadTitle");
         mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
 
         mAuthor = (TextView) findViewById(R.id.blog_detail_author);
@@ -133,6 +104,11 @@ public class UploadDetail extends SherlockActivity {
         mWebView.getSettings().setSupportZoom(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setDefaultFontSize(15);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CommentListFragment commentList = new CommentListFragment(companyId,projectId,"upload",uploadId);
+        ft.replace(R.id.discussion_comments, commentList).commit();
+
     }
 
     // 初始化控件数据
@@ -151,7 +127,7 @@ public class UploadDetail extends SherlockActivity {
                     mAuthor.setText(upload.getCreatorName());
                     mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(upload.getCreated()));
                     mCommentCount.setText((upload.getComments() == null ? 0 : upload.getComments().size()) + "");
-
+                    getSupportActionBar().setTitle("文件/"+upload.getContent());
                     // //是否收藏
                     // if(discussion.getFavorite() == 1)
                     // mFavorite.setImageResource(R.drawable.widget_bar_favorite2);

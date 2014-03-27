@@ -20,9 +20,7 @@ import android.widget.TextView;
 import com.onboard.api.dto.Project;
 import com.onboard.api.dto.User;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView;
-import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleArrayAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +37,12 @@ import cn.onboard.android.app.widget.scroll.ScrollLayout;
 
 public class Company extends FragmentActivity implements CalendarController.EventHandler {
 	private int companyId;
-    private int userId;
 	
 	private ScrollLayout mScrollLayout;
 	private RadioButton[] mButtons;
 	private String[] mHeadTitles;
 	private int mViewCount;
 	private int mCurSel;
-
-	private TextView mHeadTitle;
 
 	private GridView projectGridView;
 
@@ -75,7 +70,6 @@ public class Company extends FragmentActivity implements CalendarController.Even
 		    StrictMode.setThreadPolicy(policy);
 		}
 		companyId = getIntent().getIntExtra("companyId", 0);
-		mHeadTitle = (TextView) findViewById(R.id.company_head_title);
 		initPageScroll();
 		initProjectFrameView();
 		initCalendarFrameView();
@@ -85,10 +79,10 @@ public class Company extends FragmentActivity implements CalendarController.Even
         findViewById(R.id.app_footbar_setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(Company.this, Person.class);
-                intent.putExtra("companyId", companyId);
-                intent.putExtra("userId", userId);
+                AppContext ac = (AppContext) getApplication();
+                intent.putExtra("userId",ac.getLoginInfo().getId());
+                intent.putExtra("companyId",companyId);
                 startActivity(intent);
             }
         });
@@ -99,8 +93,13 @@ public class Company extends FragmentActivity implements CalendarController.Even
 		projectGridView = (GridView) findViewById(R.id.project_grid_list);
 		getProjectList(this);
 	}
-	
-	private void initCalendarFrameView(){
+
+    private void initEveryOneFrameView() {
+        everyoneView = (StickyGridHeadersGridView) findViewById(R.id.everyone_grid);
+        getDepartmentNameUserMap(this);
+    }
+
+    private void initCalendarFrameView(){
 		mController = CalendarController.getInstance(this);
 		//setContentView(R.layout.cal_layout);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -113,14 +112,9 @@ public class Company extends FragmentActivity implements CalendarController.Even
 
 	}
 
-    private void initEveryOneFrameView() {
-        everyoneView = (StickyGridHeadersGridView) findViewById(R.id.everyone_grid);
-        getDepartmentNameUserMap(this);
-    }
-
     private void initActivityView(){
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        activityFragment = new ActivityFragment(companyId,1);
+        activityFragment = new ActivityFragment(companyId,null);
         ft.replace(R.id.me_frame, activityFragment).commit();
 
     }
@@ -131,40 +125,6 @@ public class Company extends FragmentActivity implements CalendarController.Even
 //        ft.replace(R.id.frame_me, tabNavigation).commit();
 
 	}
-
-    private void getDepartmentNameUserMap(final Context context) {
-        final Handler handler = new Handler() {
-            public void handleMessage(Message msg) {
-                if (msg.what >= 1) {
-                    @SuppressWarnings("unchecked")
-                    Map<String, List<User>> departmentUserMap = (Map<String, List<User>>) msg.obj;
-                    everyoneView.setAdapter(new EveryoneAdapter(getApplicationContext(), departmentUserMap, R.layout.everyone_header, R.layout.everyone_item));
-                    //projectGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-
-
-                } else if (msg.what == -1) {
-                    UIHelper.ToastMessage(Company.this,
-                            getString(R.string.get_department_name_user_map_fail));
-                }
-            }
-        };
-        new Thread() {
-            public void run() {
-                Message msg = new Message();
-                try {
-                    AppContext ac = (AppContext) getApplication();
-                    Map<String, List<User>> departmentNameUserMap = ac.getDepartmentNameUserMapByCompanyId(companyId);
-                    msg.what = departmentNameUserMap.size();
-                    msg.obj = departmentNameUserMap;
-                } catch (AppException e) {
-                    e.printStackTrace();
-                    msg.what = -1;
-                    msg.obj = e;
-                }
-                handler.sendMessage(msg);
-            }
-        }.start();
-    }
 	@SuppressLint("HandlerLeak")
 	private void getProjectList(final Context context) {
 		final Handler handler = new Handler() {
@@ -224,10 +184,45 @@ public class Company extends FragmentActivity implements CalendarController.Even
 		}.start();
 	}
 
+    private void getDepartmentNameUserMap(final Context context) {
+        final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what >= 1) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, List<User>> departmentUserMap = (Map<String, List<User>>) msg.obj;
+                    everyoneView.setAdapter(new EveryoneAdapter(getApplicationContext(), departmentUserMap, R.layout.everyone_header, R.layout.everyone_item));
+                    //projectGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+
+
+                } else if (msg.what == -1) {
+                    UIHelper.ToastMessage(Company.this,
+                            getString(R.string.get_department_name_user_map_fail));
+                }
+            }
+        };
+        new Thread() {
+            public void run() {
+                Message msg = new Message();
+                try {
+                    AppContext ac = (AppContext) getApplication();
+                    Map<String, List<User>> departmentNameUserMap = ac.getDepartmentNameUserMapByCompanyId(companyId);
+                    msg.what = departmentNameUserMap.size();
+                    msg.obj = departmentNameUserMap;
+                } catch (AppException e) {
+                    e.printStackTrace();
+                    msg.what = -1;
+                    msg.obj = e;
+                }
+                handler.sendMessage(msg);
+            }
+        }.start();
+    }
+
 	private void initPageScroll() {
-		mHeadTitles = getResources()
+        mHeadTitles = getResources()
 				.getStringArray(R.array.company_head_titles);
-		mScrollLayout = (ScrollLayout) findViewById(R.id.company_scrolllayout);
+        getActionBar().setTitle(mHeadTitles[0]);
+        mScrollLayout = (ScrollLayout) findViewById(R.id.company_scrolllayout);
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.company_linearlayout_footer);
 		mHeadTitles = getResources()
 				.getStringArray(R.array.company_head_titles);
@@ -255,7 +250,7 @@ public class Company extends FragmentActivity implements CalendarController.Even
 							return;
 						mButtons[mCurSel].setChecked(false);
 						mButtons[viewIndex].setChecked(true);
-						mHeadTitle.setText(mHeadTitles[viewIndex]);
+                        getActionBar().setTitle(mHeadTitles[viewIndex]);
 						mCurSel = viewIndex;
 					}
 				});

@@ -5,12 +5,12 @@
     android:layout_height="fill_parent">
 
     <com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/everyone_grid"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:columnWidth="100dip"
-    android:numColumns="auto_fit"
-    android:padding="16dp" />
+        android:id="@+id/everyone_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:columnWidth="100dip"
+        android:numColumns="auto_fit"
+        android:padding="16dp" />
 
 </LinearLayout>

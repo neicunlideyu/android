@@ -1,9 +1,9 @@
 package cn.onboard.android.app.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.webkit.WebView;
@@ -14,22 +14,20 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.api.dto.Comment;
 import com.onboard.api.dto.Document;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class DocumentDetail extends SherlockActivity {
+public class DocumentDetail extends SherlockFragmentActivity {
 	private FrameLayout mHeader;
 	private LinearLayout mFooter;
 	private ImageView mRefresh;
@@ -48,7 +46,6 @@ public class DocumentDetail extends SherlockActivity {
 	private int documentId;
 	private int companyId;
 	private int projectId;
-	private String documentTitle;
 
 
 	private GestureDetector gd;
@@ -66,34 +63,34 @@ public class DocumentDetail extends SherlockActivity {
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_bg_black));
 
 		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setTitle(documentTitle);
 		getSupportActionBar().setIcon(R.drawable.head_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
 
-	private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
-		@Override
-		public boolean onMenuItemClick(MenuItem item) {
-			Intent intent = new Intent(getApplicationContext(), CommentList.class);
-            CommentList.companyId = document.getCompanyId();
-            CommentList.projectId = document.getProjectId();
-            CommentList.attachId=document.getId();
-            CommentList.attachType = "document";
-			if(document.getComments()!=null)
-				CommentList.comments =document.getComments();
-			else {
-				CommentList.comments = new ArrayList<Comment>();
-			}
-			DocumentDetail.this.startActivity(intent);
-			return true;
-		}
-	};
+//	private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
+//		@Override
+//		public boolean onMenuItemClick(MenuItem item) {
+//			Intent intent = new Intent(getApplicationContext(), CommentList.class);
+//            CommentList.companyId = document.getCompanyId();
+//            CommentList.projectId = document.getProjectId();
+//            CommentList.attachId=document.getId();
+//            CommentList.attachType = "document";
+//			if(document.getComments()!=null)
+//				CommentList.comments =document.getComments();
+//			else {
+//				CommentList.comments = new ArrayList<Comment>();
+//			}
+//			DocumentDetail.this.startActivity(intent);
+//			return true;
+//		}
+//	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		menu.add("评论").setOnMenuItemClickListener(popupListener)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add("评论").setOnMenuItemClickListener(popupListener)
+//				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
@@ -111,7 +108,6 @@ public class DocumentDetail extends SherlockActivity {
 		documentId = getIntent().getIntExtra("documentId", 0);
 		companyId = getIntent().getIntExtra("companyId", 0);
 		projectId = getIntent().getIntExtra("projectId", 0);
-		documentTitle = getIntent().getStringExtra("documentTitle");
 		mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
 
 		mAuthor = (TextView) findViewById(R.id.blog_detail_author);
@@ -125,7 +121,12 @@ public class DocumentDetail extends SherlockActivity {
 		mWebView.getSettings().setSupportZoom(true);
 		mWebView.getSettings().setBuiltInZoomControls(true);
 		mWebView.getSettings().setDefaultFontSize(15);
-	}
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CommentListFragment commentList = new CommentListFragment(companyId,projectId,"document",documentId);
+        ft.replace(R.id.discussion_comments, commentList).commit();
+
+    }
 
 	// 初始化控件数据
 	private void initData() {
@@ -144,6 +145,7 @@ public class DocumentDetail extends SherlockActivity {
 					mPubDate.setText(new SimpleDateFormat("yyyy-MM-dd")
 							.format(document.getCreated()));
 					mCommentCount.setText((document.getComments()==null?0:document.getComments().size())+"");
+                    getSupportActionBar().setTitle("文档/"+document.getTitle());
 
 					// //是否收藏
 					// if(discussion.getFavorite() == 1)
