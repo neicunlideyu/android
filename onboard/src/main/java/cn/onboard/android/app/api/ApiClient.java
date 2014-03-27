@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -518,6 +519,22 @@ public class ApiClient {
                                                         Integer companyId, Integer userId) throws AppException {
         String url = URLs.TODOLIST_LIST_BY_USER_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("userId", userId + "");
+        try {
+            return HttpStreamToObject.inputStreamToObject(
+                    new TypeReference<List<Todolist>>() {
+                    }, http_get(appContext, url));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+
+    }
+
+    public static List<Todolist> getTodoListByCompanyIdByDate(AppContext appContext,
+                                                                Integer companyId, Date date) throws AppException {
+        String url = URLs.TODOLIST_LIST_BY_DATE_HTTP.replaceAll("companyId",
+                companyId + "").replaceAll("duedatetime", date.getTime() + "");
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<Todolist>>() {

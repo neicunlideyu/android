@@ -1,6 +1,7 @@
 package cn.onboard.android.app.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import java.util.Map;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
-import cn.onboard.android.app.ui.BaseActivity;
+import cn.onboard.android.app.ui.EditTodo;
 
 /**
  * Created by xingliang on 14-3-24.
@@ -31,7 +32,7 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
         int userId;
         String avatar;
         String departmentName;
-        UserDepartmentName(String departmentName, String username, int userId, String avatar) {
+        UserDepartmentName(String departmentName, String username,int userId, String avatar) {
             this.userName = username;
             this.departmentName = departmentName;
             this.userId = userId;
@@ -40,13 +41,14 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
     }
 
     private List<UserDepartmentName> users;
+    private int companyId;
 
     private int mHeaderResId;
     private LayoutInflater mInflater;
     private int mItemResId;
     private BitmapManager bmpManager;
 
-    public EveryoneAdapter(Context context, Map<String, List<User>> departmentNameUserMap, int mHeaderResId, int mItemResId) {
+    public EveryoneAdapter(Context context, Map<String, List<User>> departmentNameUserMap, int companyId,int mHeaderResId, int mItemResId) {
         this.mHeaderResId = mHeaderResId;
         this.mItemResId = mItemResId;
         this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
@@ -99,9 +101,22 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
         TextView itemView;
         view = mInflater.inflate(mItemResId, viewGroup, false);
         itemView = (TextView) view.findViewById(R.id.user_name);
-        UserDepartmentName item = getItem(i);
+        final UserDepartmentName item = getItem(i);
         itemView.setText(item.userName);
         ImageView face = (ImageView) view.findViewById(R.id.user_face);
+        face.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context,
+                        EditTodo.class);
+                intent.putExtra("userId",item.userId);
+
+                intent.putExtra("companyId",companyId);
+                context.startActivity(intent);
+
+            }
+        });
         String faceURL = URLs.USER_FACE_HTTP + item.avatar;
         bmpManager.loadBitmap(faceURL, face);
 

@@ -27,6 +27,7 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
@@ -353,8 +354,7 @@ public class ActivityFragment extends Fragment {
 
             // 设置文字和图片
             Activity activity = listItems.get(position);
-            String faceURL = "http://teamforge.b0.upaiyun.com/avatar/"
-                    + activity.getCreatorId() + "/avatar.gif";
+            String faceURL = URLs.USER_FACE_HTTP + activity.getCreator().getAvatar();
             bmpManager.loadBitmap(faceURL, listItemView.face);
             // }
             // listItemView.face.setOnClickListener(faceClickListener);

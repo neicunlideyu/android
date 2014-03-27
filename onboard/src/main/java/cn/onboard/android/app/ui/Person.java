@@ -40,7 +40,7 @@ public class Person extends FragmentActivity {
         meTodoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.me, new TodoFragment(companyId, null, userId)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.me, new TodoFragment(companyId, null, userId, null)).commit();
             }
         });
         meFileButton.setOnClickListener(new View.OnClickListener() {

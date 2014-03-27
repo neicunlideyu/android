@@ -21,6 +21,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +50,7 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,6 +67,8 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
 
     private Integer userId;
 
+    private Date date;
+
     private List<Item> data;
 
     private List<Todolist> todolistList;
@@ -73,11 +79,12 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         setRetainInstance(true);
     }
 
-    public TodoFragment(Integer companyId, Integer projectId, Integer userId) {
+    public TodoFragment(Integer companyId, Integer projectId, Integer userId, Date date) {
         this();
         this.companyId = companyId;
         this.projectId = projectId;
         this.userId = userId;
+        this.date = date;
     }
 
     @Override
@@ -334,10 +341,13 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                     });
 
                     listItemView.completeTodo = (CheckBox) convertView.findViewById(R.id.todo_complete_checkBox);
-                    listItemView.completeTodo.setOnClickListener(new View.OnClickListener() {
+                    listItemView.completeTodo.setChecked(false);
+                    listItemView.completeTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
                         @Override
-                        public void onClick(View view) {
-                           new CompleteTodolistTask().execute(((Todo) item.identifiable).getId());
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked)
+                                new CompleteTodolistTask().execute(((Todo) item.identifiable).getId());
                         }
                     });
                 }
@@ -345,6 +355,22 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                 convertView.setTag(listItemView);
             } else {
                 listItemView = (ListItemView) convertView.getTag();
+
+                if (item.getType() == Type.TODO.value()) {
+                    if (((Todo) item.identifiable).getCompleted()) {
+                        listItemView.completeTodo.setChecked(true);
+                        listItemView.completeTodo.setClickable(false);
+                        listItemView.name.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                        listItemView.name.setTextColor(Color.RED);
+                    }
+                    if (((Todo) item.identifiable).getAssigneeId() != null)
+                        listItemView.assigneeName.setText(((Todo) item.identifiable).getAssignee().getName());
+                    if (((Todo) item.identifiable).getDueDate() != null) {
+                        String dateString = DateTimeFormat.forPattern("yyyy-MM-dd").print(((Todo) item.identifiable).getDueDate().getTime());
+                        listItemView.dueDate.setText(dateString);
+                    }
+
+                }
             }
             listItemView.name.setText(item.getText());
             return convertView;
@@ -456,7 +482,8 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                 if (todolist.getId().equals(todo.getTodolistId())) {
                     for (Todo t : todolist.getTodos()) {
                         if (t.getId().equals(todo.getId())) {
-                            todolist.getTodos().remove(t);
+                            t.setCompleted(true);
+                            break;
                         }
                     }
                 }
@@ -479,6 +506,10 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                             .getTodoListsByProjectId(companyId, projectId);
                 } else if (userId != null)
                     todolists = ac.getTodoListsByUserId(companyId, userId);
+                else if (date != null) {
+                    todolists = ac.getTodoListsByDate(companyId, date);
+
+                }
                 todolistList = todolists;
             } catch (AppException e) {
                 e.printStackTrace();

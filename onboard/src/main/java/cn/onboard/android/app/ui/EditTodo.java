@@ -115,8 +115,9 @@ public class EditTodo extends SherlockFragmentActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             CommentListFragment commentList = new CommentListFragment(companyId,projectId,"todo",todoId);
             ft.replace(R.id.todo_comments, commentList).commit();
-
         }
+        else
+            findViewById(R.id.comment_footer).setVisibility(View.GONE);
     }
 
     void initData() {
