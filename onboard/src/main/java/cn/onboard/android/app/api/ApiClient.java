@@ -561,9 +561,9 @@ public class ApiClient {
     }
 
     public static List<Topic> getTopicsByProjectId(AppContext appContext,
-                                                   int companyId, int projectId) throws AppException {
+                                                   int companyId, int projectId,int page) throws AppException {
         String newUrl = URLs.TOPIC_LIST_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("projectId", projectId + "");
+                companyId + "").replaceAll("projectId", projectId + "")+"?page="+page;
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<Topic>>() {

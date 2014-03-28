@@ -732,10 +732,10 @@ public class AppContext extends Application {
 
     }
 
-    public List<Topic> getTopicsByProjectId(int companyId, int projectId)
+    public List<Topic> getTopicsByProjectId(int companyId, int projectId,int page)
             throws AppException {
         List<Topic> topicList = new ArrayList<Topic>();
-        topicList = ApiClient.getTopicsByProjectId(this, companyId, projectId);
+        topicList = ApiClient.getTopicsByProjectId(this, companyId, projectId, page);
         return topicList;
 
     }

@@ -11,23 +11,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.onboard.api.dto.Discussion;
 import com.onboard.api.dto.Topic;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
@@ -35,25 +32,45 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
+import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DiscussionDetail;
 import cn.onboard.android.app.ui.DocumentDetail;
 import cn.onboard.android.app.ui.EditTodo;
 import cn.onboard.android.app.ui.NewDiscussion;
 import cn.onboard.android.app.ui.UploadDetail;
+import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 public class DisscussionFragment extends Fragment implements OnMenuItemClickListener {
     private int companyId;
 
     private int projectId;
 
-    private List<Topic> topicList;
+    private List<Topic> topicList = new ArrayList<Topic>();
+
+    private List<Topic> returnedTopics;
 
     public DisscussionFragment() {
         setRetainInstance(true);
     }
 
     public ListViewNewsAdapter lvca;
+
+    private PullToRefreshListView activiPullToRefreshListView;
+
+    private View lvQuestion_footer;
+
+    private TextView lvQuestion_foot_more;
+
+    private ProgressBar lvQuestion_foot_progress;
+
+    private PullToRefreshListView discussionPullToRefreshView;
+
+    private LinearLayout lv;
+
+    private int sum = 0;
+
+    private Handler handler;
 
     public DisscussionFragment(int companyId, int projectId) {
         this();
@@ -64,103 +81,212 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final LinearLayout lv = (LinearLayout) inflater.inflate(
-                R.layout.document_list, null);
-        final Handler handler = new Handler() {
-            public void handleMessage(Message msg) {
-                if (msg.what >= 1) {
-                    topicList = (List<Topic>) msg.obj;
-                    lvca = new ListViewNewsAdapter(
-                            getActivity().getApplicationContext(), topicList,
-                            R.layout.question_listitem);
-                    ListView listView = (ListView) getActivity().findViewById(
-                            R.id.frame_listview_news);
-                    listView.setAdapter(lvca);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> parent,
-                                                View view, int position, long id) {
-
-                            Topic topic = null;
-                            // 判断是否是TextView
-                            if (view instanceof TextView) {
-                                topic = (Topic) view.getTag();
-                            } else {
-                                TextView tv = (TextView) view
-                                        .findViewById(R.id.question_listitem_title);
-                                topic = (Topic) tv.getTag();
-                            }
-                            if (topic == null)
-                                return;
-                            Context context = view.getContext();
-                            Intent intent = null;
-                            if (topic.getRefType().equals("discussion")) {
-                                intent = new Intent(context,
-                                        DiscussionDetail.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("discussionId", topic.getRefId());
-                                intent.putExtra("companyId", companyId);
-                                intent.putExtra("projectId", topic.getProjectId());
-                                context.startActivity(intent);
-                            } else if (topic.getRefType().equals("document")) {
-                                intent = new Intent(context,
-                                        DocumentDetail.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("documentId", topic.getRefId());
-                                intent.putExtra("companyId", companyId);
-                                intent.putExtra("projectId", topic.getProjectId());
-                                context.startActivity(intent);
-                            } else if (topic.getRefType().equals("todo")) {
-                                intent = new Intent(context,
-                                        EditTodo.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("companyId", companyId);
-                                intent.putExtra("projectId", topic.getProjectId());
-                                intent.putExtra("todoId", topic.getRefId());
-                                intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
-                                context.startActivity(intent);
-                            } else if (topic.getRefType().equals("upload")) {
-                                intent = new Intent(context,
-                                        UploadDetail.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("companyId", companyId);
-                                intent.putExtra("projectId", topic.getProjectId());
-                                intent.putExtra("uploadId", topic.getRefId());
-                                context.startActivity(intent);
-                            }
-
-                        }
-                    });
-
-                } else if(msg.what==0){
-                   getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
-                }  else if (msg.what == -1) {
-                    UIHelper.ToastMessage(
-                            getActivity().getApplicationContext(),
-                            getString(R.string.get_todo_list_fail));
-                }
-                getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
-
-            }
-        };
-        initGetTopicByProject(handler);
+        lv = (LinearLayout) inflater.inflate(
+                R.layout.discussions, null);
+        initTopicView();
+        loadLvQuestionData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
         return lv;
     }
 
-    private void initGetTopicByProject(final Handler handler) {
+
+    void initTopicView() {
+        lvca = new ListViewNewsAdapter(
+                getActivity().getApplicationContext(), topicList,
+                R.layout.question_listitem);
+
+
+        lvQuestion_footer = getActivity().getLayoutInflater().inflate(
+                R.layout.listview_footer, null);
+        lvQuestion_foot_more = (TextView) lvQuestion_footer
+                .findViewById(R.id.listview_foot_more);
+        lvQuestion_foot_progress = (ProgressBar) lvQuestion_footer
+                .findViewById(R.id.listview_foot_progress);
+        activiPullToRefreshListView = (PullToRefreshListView) lv
+                .findViewById(R.id.discussion_list);
+        activiPullToRefreshListView.addFooterView(lvQuestion_footer);// 添加底部视图
+        // 必须在setAdapter前
+        activiPullToRefreshListView.setAdapter(lvca);
+        handler = this.getLvHandler(activiPullToRefreshListView,
+                lvca, lvQuestion_foot_more,
+                lvQuestion_foot_progress, AppContext.PAGE_SIZE);
+
+        activiPullToRefreshListView
+                .setOnScrollListener(new AbsListView.OnScrollListener() {
+                    public void onScrollStateChanged(AbsListView view,
+                                                     int scrollState) {
+                        activiPullToRefreshListView.onScrollStateChanged(view,
+                                scrollState);
+
+                        // 数据为空--不用继续下面代码了
+                        if (topicList.isEmpty())
+                            return;
+
+                        // 判断是否滚动到底部
+                        boolean scrollEnd = false;
+                        try {
+                            if (view.getPositionForView(lvQuestion_footer) == view
+                                    .getLastVisiblePosition())
+                                scrollEnd = true;
+                        } catch (Exception e) {
+                            scrollEnd = false;
+                        }
+
+                        int lvDataState = StringUtils
+                                .toInt(activiPullToRefreshListView.getTag());
+                        if (scrollEnd
+                                && lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
+                            activiPullToRefreshListView
+                                    .setTag(UIHelper.LISTVIEW_DATA_LOADING);
+                            lvQuestion_foot_more.setText(R.string.load_ing);
+                            lvQuestion_foot_progress
+                                    .setVisibility(View.VISIBLE);
+                            // 当前pageIndex
+                            int pageIndex = sum / AppContext.PAGE_SIZE;
+                            loadLvQuestionData(pageIndex, handler,
+                                    UIHelper.LISTVIEW_ACTION_SCROLL);
+                        }
+                    }
+
+                    public void onScroll(AbsListView view,
+                                         int firstVisibleItem, int visibleItemCount,
+                                         int totalItemCount) {
+                        activiPullToRefreshListView.onScroll(view,
+                                firstVisibleItem, visibleItemCount,
+                                totalItemCount);
+                    }
+                });
+        activiPullToRefreshListView
+                .setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+                    public void onRefresh() {
+                        loadLvQuestionData(0, handler,
+                                UIHelper.LISTVIEW_ACTION_REFRESH);
+                    }
+                });
+        activiPullToRefreshListView
+                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        Topic topic = null;
+                        // 判断是否是TextView
+                        if (view instanceof TextView) {
+                            topic = (Topic) view.getTag();
+                        } else {
+                            TextView tv = (TextView) view
+                                    .findViewById(R.id.question_listitem_title);
+                            topic = (Topic) tv.getTag();
+                        }
+                        if (topic == null)
+                            return;
+                        Context context = view.getContext();
+                        Intent intent = null;
+                        if (topic.getRefType().equals("discussion")) {
+                            intent = new Intent(context,
+                                    DiscussionDetail.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("discussionId", topic.getRefId());
+                            intent.putExtra("companyId", companyId);
+                            intent.putExtra("projectId", topic.getProjectId());
+                            context.startActivity(intent);
+                        } else if (topic.getRefType().equals("document")) {
+                            intent = new Intent(context,
+                                    DocumentDetail.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("documentId", topic.getRefId());
+                            intent.putExtra("companyId", companyId);
+                            intent.putExtra("projectId", topic.getProjectId());
+                            context.startActivity(intent);
+                        } else if (topic.getRefType().equals("todo")) {
+                            intent = new Intent(context,
+                                    EditTodo.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("companyId", companyId);
+                            intent.putExtra("projectId", topic.getProjectId());
+                            intent.putExtra("todoId", topic.getRefId());
+                            intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
+                            context.startActivity(intent);
+                        } else if (topic.getRefType().equals("upload")) {
+                            intent = new Intent(context,
+                                    UploadDetail.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("companyId", companyId);
+                            intent.putExtra("projectId", topic.getProjectId());
+                            intent.putExtra("uploadId", topic.getRefId());
+                            context.startActivity(intent);
+                        }
+
+                    }
+                });
+
+
+    }
+
+    private Handler getLvHandler(final PullToRefreshListView lv,
+                                 final BaseAdapter adapter, final TextView more,
+                                 final ProgressBar progress, final int pageSize) {
+        return new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what >= 0) {
+                    // listview数据处理
+                    switch (msg.arg1) {
+                        case UIHelper.LISTVIEW_ACTION_REFRESH:
+                            sum = msg.what;
+                            topicList.clear();
+                            break;
+                        case UIHelper.LISTVIEW_ACTION_SCROLL:
+                            sum += msg.what;
+                    }
+                    if (msg.what < pageSize) {
+                        lv.setTag(UIHelper.LISTVIEW_DATA_FULL);
+                        topicList.addAll(returnedTopics);
+                        lvca.notifyDataSetChanged();
+                        more.setText(R.string.load_full);
+                    } else if (msg.what == pageSize) {
+                        lv.setTag(UIHelper.LISTVIEW_DATA_MORE);
+                        topicList.addAll(returnedTopics);
+                        adapter.notifyDataSetChanged();
+                        more.setText(R.string.load_more);
+
+                    }
+                } else if (msg.what == -1) {
+                    // 有异常--显示加载出错 & 弹出错误消息
+                    lv.setTag(UIHelper.LISTVIEW_DATA_MORE);
+                    more.setText(R.string.load_error);
+                }
+                if (adapter.getCount() == 0) {
+                    lv.setTag(UIHelper.LISTVIEW_DATA_EMPTY);
+                    more.setText(R.string.load_empty);
+                }
+                progress.setVisibility(ProgressBar.GONE);
+                if (msg.arg1 == UIHelper.LISTVIEW_ACTION_REFRESH) {
+                    lv.onRefreshComplete();
+                    lv.setSelection(0);
+
+                }
+            }
+        };
+    }
+
+    private void loadLvQuestionData(final int pageIndex, final Handler handler,
+                                    final int action) {
         new Thread() {
             public void run() {
                 Message msg = new Message();
+                boolean isRefresh = false;
+                if (action == UIHelper.LISTVIEW_ACTION_REFRESH
+                        || action == UIHelper.LISTVIEW_ACTION_SCROLL)
+                    isRefresh = true;
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
-                    List<Topic> topicList = ac
-                            .getTopicsByProjectId(companyId, projectId);
-                    msg.what = topicList.size();
-                    msg.obj = topicList;
+                    returnedTopics = ac
+                            .getTopicsByProjectId(companyId, projectId,pageIndex);
+                    msg.what = returnedTopics.size();
+                    msg.obj = returnedTopics;
                 } catch (AppException e) {
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e;
                 }
+                msg.arg1 = action;
                 handler.sendMessage(msg);
             }
         }.start();
@@ -278,27 +404,31 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != Activity.RESULT_OK)
             return;
-        String discussionJson = intent.getExtras().getString("discussion");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Discussion discussion = new Discussion();
-        try {
-            discussion = mapper.readValue(discussionJson, Discussion.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<Topic> tempTopicList = topicList;
-        Topic topic = new Topic();
-        topic.setProjectId(discussion.getProjectId());
-        topic.setCompanyId(discussion.getCompanyId());
-        topic.setRefType("discussion");
-        topic.setRefId(discussion.getId());
-        topic.setLastUpdatorId(discussion.getCreatorId());
-        topic.setCreated(discussion.getCreated());
-        topic.setTitle(discussion.getSubject());
-        topic.setExcerpt(discussion.getContent());
-        topicList.add(0, topic);
-        lvca.notifyDataSetChanged();
+//        String discussionJson = intent.getExtras().getString("discussion");
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        Discussion discussion = new Discussion();
+//        try {
+//            discussion = mapper.readValue(discussionJson, Discussion.class);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        List<Topic> tempTopicList = topicList;
+//        Topic topic = new Topic();
+//        topic.setProjectId(discussion.getProjectId());
+//        topic.setCompanyId(discussion.getCompanyId());
+//        topic.setRefType("discussion");
+//        topic.setRefId(discussion.getId());
+//        topic.setLastUpdatorId(discussion.getCreatorId());
+//        topic.setLastUpdator(discussion.getcre);
+//        topic.setCreated(discussion.getCreated());
+//        topic.setTitle(discussion.getSubject());
+//        topic.setExcerpt(discussion.getContent());
+//        topicList.add(0, topic);
+//        lvca.notifyDataSetChanged();
+        activiPullToRefreshListView.clickRefresh();
+//        loadLvQuestionData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
+
     }
 
 }

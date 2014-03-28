@@ -248,6 +248,7 @@ public class ActivityFragment extends Fragment {
                     switch (msg.arg1) {
                         case UIHelper.LISTVIEW_ACTION_REFRESH:
                             sum = msg.what;
+                            activities.clear();
                             break;
                         case UIHelper.LISTVIEW_ACTION_SCROLL:
                             sum += msg.what;
