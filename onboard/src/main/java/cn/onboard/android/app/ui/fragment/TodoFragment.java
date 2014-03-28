@@ -172,8 +172,10 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             itemList.add(todolistItem);
             int num_of_todos = todolists.get(i).getTodos() == null ? 0 : todolists.get(i).getTodos().size();
             for (int j = 0; j < num_of_todos; j++) {
-                Item todoItem = new Item(todolists.get(i).getTodos().get(j), todolists.get(i), sectionPosition, listPosition++, todolists.get(i).getTodos().get(j).getContent(), Type.TODO.value());
-                itemList.add(todoItem);
+                if (!(todolists.get(i).getTodos().get(j).getCompleted())&&!(todolists.get(i).getTodos().get(j).getDeleted())) {
+                    Item todoItem = new Item(todolists.get(i).getTodos().get(j), todolists.get(i), sectionPosition, listPosition++, todolists.get(i).getTodos().get(j).getContent(), Type.TODO.value());
+                    itemList.add(todoItem);
+                }
             }
             sectionPosition++;
         }
@@ -287,91 +289,79 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             // 自定义视图
             ListItemView listItemView = null;
 
-            if (convertView == null) {
-                listItemView = new ListItemView();
-                if (item.getType() == Type.TODOLIST.value()) {
-                    convertView = listContainer
-                            .inflate(R.layout.todolist_item, null);
-                    listItemView.name = (TextView) convertView.findViewById(R.id.todolist_titile);
-                    listItemView.newTodo = (ImageView) convertView.findViewById(R.id.new_todo_button);
-                    listItemView.newTodo.setOnClickListener(new View.OnClickListener() {
+//            if (convertView == null) {
+            listItemView = new ListItemView();
+            if (item.getType() == Type.TODOLIST.value()) {
+                convertView = listContainer
+                        .inflate(R.layout.todolist_item, null);
+                listItemView.name = (TextView) convertView.findViewById(R.id.todolist_titile);
+                listItemView.newTodo = (ImageView) convertView.findViewById(R.id.new_todo_button);
+                listItemView.newTodo.setOnClickListener(new View.OnClickListener() {
 
-                        @Override
-                        public void onClick(View view) {
-                            Context context = view.getContext();
-                            Intent intent = new Intent(context,
-                                    EditTodo.class);
-                            intent.putExtra("companyId", item.todolist.getCompanyId());
-                            intent.putExtra("projectId", item.todolist.getProjectId());
-                            intent.putExtra("todolistId", item.todolist.getId());
-                            intent.putExtra("editType", EditTodo.EditType.CREATE);
-                            startActivityForResult(intent, EditTodo.EditType.CREATE.value());
+                    @Override
+                    public void onClick(View view) {
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context,
+                                EditTodo.class);
+                        intent.putExtra("companyId", item.todolist.getCompanyId());
+                        intent.putExtra("projectId", item.todolist.getProjectId());
+                        intent.putExtra("todolistId", item.todolist.getId());
+                        intent.putExtra("editType", EditTodo.EditType.CREATE);
+                        startActivityForResult(intent, EditTodo.EditType.CREATE.value());
 
-                        }
-                    });
-
-                    convertView.setAlpha(1);
-
-
-                } else if (item.getType() == Type.TODO.value()) {
-                    convertView = listContainer
-                            .inflate(R.layout.todo_item, null);
-                    listItemView.name = (TextView) convertView.findViewById(R.id.todo_text);
-                    listItemView.assigneeName = (TextView) convertView.findViewById(R.id.todo_assign_person);
-                    if (((Todo) item.identifiable).getAssigneeId() != null)
-                        listItemView.assigneeName.setText(((Todo) item.identifiable).getAssignee().getName());
-                    listItemView.dueDate = (TextView) convertView.findViewById(R.id.todo_assign_date);
-                    if (((Todo) item.identifiable).getDueDate() != null) {
-                        String dateString = DateTimeFormat.forPattern("yyyy-MM-dd").print(((Todo) item.identifiable).getDueDate().getTime());
-                        listItemView.dueDate.setText(dateString);
                     }
-                    listItemView.name.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Context context = view.getContext();
-                            Intent intent = new Intent(context,
-                                    EditTodo.class);
-                            intent.putExtra("companyId", item.todolist.getCompanyId());
-                            intent.putExtra("projectId", item.todolist.getProjectId());
-                            intent.putExtra("todolistId", item.todolist.getId());
-                            intent.putExtra("todoId", ((Todo) item.identifiable).getId());
-                            intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
-                            startActivityForResult(intent, EditTodo.EditType.UPDATE.value());
-                        }
-                    });
+                });
 
-                    listItemView.completeTodo = (CheckBox) convertView.findViewById(R.id.todo_complete_checkBox);
-                    listItemView.completeTodo.setChecked(false);
-                    listItemView.completeTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                convertView.setAlpha(1);
 
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked)
-                                new CompleteTodolistTask().execute(((Todo) item.identifiable).getId());
-                        }
-                    });
+
+            } else if (item.getType() == Type.TODO.value()) {
+                convertView = listContainer
+                        .inflate(R.layout.todo_item, null);
+                listItemView.name = (TextView) convertView.findViewById(R.id.todo_text);
+                listItemView.assigneeName = (TextView) convertView.findViewById(R.id.todo_assign_person);
+                if (((Todo) item.identifiable).getAssigneeId() != null)
+                    listItemView.assigneeName.setText(((Todo) item.identifiable).getAssignee().getName());
+                listItemView.dueDate = (TextView) convertView.findViewById(R.id.todo_assign_date);
+                if (((Todo) item.identifiable).getDueDate() != null) {
+                    String dateString = DateTimeFormat.forPattern("yyyy-MM-dd").print(((Todo) item.identifiable).getDueDate().getTime());
+                    listItemView.dueDate.setText(dateString);
                 }
-                // 设置控件集到convertView
-                convertView.setTag(listItemView);
-            } else {
-                listItemView = (ListItemView) convertView.getTag();
-
-                if (item.getType() == Type.TODO.value()) {
-                    if (((Todo) item.identifiable).getCompleted()) {
-                        listItemView.completeTodo.setChecked(true);
-                        listItemView.completeTodo.setClickable(false);
-                        listItemView.name.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                        listItemView.name.setTextColor(Color.RED);
+                listItemView.name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context,
+                                EditTodo.class);
+                        intent.putExtra("companyId", item.todolist.getCompanyId());
+                        intent.putExtra("projectId", item.todolist.getProjectId());
+                        intent.putExtra("todolistId", item.todolist.getId());
+                        intent.putExtra("todoId", ((Todo) item.identifiable).getId());
+                        intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
+                        startActivityForResult(intent, EditTodo.EditType.UPDATE.value());
                     }
-                    if (((Todo) item.identifiable).getAssigneeId() != null)
-                        listItemView.assigneeName.setText(((Todo) item.identifiable).getAssignee().getName());
-                    if (((Todo) item.identifiable).getDueDate() != null) {
-                        String dateString = DateTimeFormat.forPattern("yyyy-MM-dd").print(((Todo) item.identifiable).getDueDate().getTime());
-                        listItemView.dueDate.setText(dateString);
-                    }
+                });
 
+                listItemView.completeTodo = (CheckBox) convertView.findViewById(R.id.todo_complete_checkBox);
+                listItemView.completeTodo.setChecked(false);
+                listItemView.completeTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked)
+                            new CompleteTodolistTask().execute(((Todo) item.identifiable).getId());
+                    }
+                });
+                if (((Todo) item.identifiable).getCompleted() != null && ((Todo) item.identifiable).getCompleted()) {
+                    listItemView.completeTodo.setChecked(true);
+                    listItemView.completeTodo.setClickable(false);
+                    listItemView.name.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    listItemView.name.setTextColor(Color.RED);
                 }
+
             }
+            // 设置控件集到convertView
+            convertView.setTag(listItemView);
             listItemView.name.setText(item.getText());
             return convertView;
         }
@@ -450,10 +440,12 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
 
         @Override
         protected void onPostExecute(Todolist todolist) {
+
             todolistList.add(todolist);
             data.clear();
             data.addAll(handleData(todolistList));
             listViewAdapter.notifyDataSetChanged();
+            getActivity().findViewById(R.id.data_empty).setVisibility(View.GONE);
         }
     }
 
@@ -529,8 +521,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                 }
             });
             data.addAll(handleData(todolists));
-            if(data.size()==0)
-            {
+            if (data.size() == 0) {
                 getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
             }
             listViewAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), data, todolists.size());
