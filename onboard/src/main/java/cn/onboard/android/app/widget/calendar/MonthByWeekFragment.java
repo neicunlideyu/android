@@ -107,18 +107,14 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
 					mTempTime.set(todo.getDueDate().getTime());
 					event.startDay = Time.getJulianDay(todo.getDueDate()
 							.getTime(), mTempTime.gmtoff);
-					;
 					event.endDay = event.startDay;
 					if (date.get(todo.getDueDate()) != null)
-						date.put(todo.getDueDate(),
-								date.get(todo.getDueDate()) + 150);
+                        continue;
 					else {
 						date.put(todo.getDueDate(), 0);
 					}
-					event.allDay = false;
+					event.allDay = true;
 					event.color = -9709929;
-					event.startTime= date.get(todo.getDueDate());
-//					event.endTime=event.startTime+100;
 					events.add(event);
 				}
 				 ((MonthByWeekAdapter) mAdapter).setEvents(mFirstLoadedJulianDay,
@@ -393,84 +389,6 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
 
 	private ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
 
-	// @Override
-	// public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-	// synchronized (mUpdateLoader) {
-	// if (Log.isLoggable(TAG, Log.DEBUG)) {
-	// Log.d(TAG, "Found " + data.getCount()
-	// + " cursor entries for uri " + mEventUri);
-	// }
-	// CursorLoader cLoader = (CursorLoader) loader;
-	// if (mEventUri == null) {
-	// mEventUri = cLoader.getUri();
-	// updateLoadedDays();
-	// }
-	// if (cLoader.getUri().compareTo(mEventUri) != 0) {
-	// // We've started a new query since this loader ran so ignore the
-	// // result
-	// return;
-	// }
-	// AppContext ac = (AppContext) getActivity().getApplication();
-	// // List<Todo> todos = ac.getTodoListsByProjectId(companyId,
-	// // projectId)
-	// // Event.buildEventsFromCursor(events, data, mContext,
-	// // mFirstLoadedJulianDay, mLastLoadedJulianDay);
-	// // CalendarEvent event = CalendarEvent.newInstance();
-	// // event.startDay = mFirstLoadedJulianDay + 2;
-	// // event.endDay = event.startDay;
-	// // event.allDay = true;
-	// // event.color = -9709929;
-	// // events.add(event);
-	// try {
-	//
-	// //// logger.info(mFirstLoadedJulianDay);
-	// Date date = new Date(mTempTime.year-1900, mTempTime.month,
-	// mTempTime.monthDay, mTempTime.hour, mTempTime.minute, 0);
-	// //
-	// List<String> pathSegments = mEventUri.getPathSegments();
-	// int size = pathSegments.size();
-	// if (size <= 2) {
-	// return;
-	// }
-	// long first = Long.parseLong(pathSegments.get(size - 2));
-	// long last = Long.parseLong(pathSegments.get(size - 1));
-	//
-	// // logger.info(new SimpleDateFormat("yyyy-MM-dd").format(new
-	// Date(first)));
-	// // logger.info(new SimpleDateFormat("yyyy-MM-dd").format(new
-	// Date(last)));
-	//
-	// List<Todo> todos = ac.getCalendarTodos(companyId,
-	// first, last);
-	// for(Todo todo:todos){
-	// CalendarEvent event = CalendarEvent.newInstance();
-	// logger.info(new
-	// SimpleDateFormat("yyyy-MM-dd").format(todo.getDueDate()));
-	// mTempTime.set(todo.getDueDate().getTime());
-	// logger.info(mTempTime.format2445());
-	// event.startDay=Time.getJulianDay(todo.getDueDate().getTime(),
-	// mTempTime.gmtoff);;
-	// event.endDay=event.startDay;
-	// event.allDay=false;
-	// event.color = -9709929;
-	// events.add(event);
-	// }
-	// } catch (AppException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-//	 ((MonthByWeekAdapter) mAdapter).setEvents(mFirstLoadedJulianDay,
-//	 mLastLoadedJulianDay - mFirstLoadedJulianDay + 1, events);
-	// }
-	// }
-
-	// @Override
-	// public void eventsChanged() {
-	// // TODO remove this after b/3387924 is resolved
-	// if (mLoader != null) {
-	// mLoader.forceLoad();
-	// }
-	// }
 
 	@Override
 	public long getSupportedEventTypes() {
