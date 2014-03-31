@@ -13,8 +13,8 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.ui.fragment.ActivityFragment;
+import cn.onboard.android.app.ui.fragment.AttachmentFragment;
 import cn.onboard.android.app.ui.fragment.TodoFragment;
-import cn.onboard.android.app.ui.fragment.UploadFragment;
 
 /**
  * 用户登录页面
@@ -53,7 +53,7 @@ public class Person extends SherlockFragmentActivity {
         meFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.me, new UploadFragment(companyId, null, userId)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.me, new AttachmentFragment(companyId, null, userId)).commit();
             }
         });
         new GetUserTask().execute(userId);

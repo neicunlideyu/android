@@ -749,9 +749,9 @@ public class ApiClient {
     }
 
     public static List<Attachment> getAttachmentsByProjectId(AppContext appContext,
-                                                             int companyId, int projectId) throws AppException {
+                                                             int companyId, int projectId, int page) throws AppException {
         String newUrl = URLs.ATTACHMENT_LIST_BY_PROJECT_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("projectId", projectId + "");
+                companyId + "").replaceAll("projectId", projectId + "")  + "?page=" + page;;
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<Attachment>>() {
@@ -764,9 +764,9 @@ public class ApiClient {
     }
 
     public static List<Attachment> getAttachmentsByCompanyIdByUserId(AppContext appContext,
-                                                                     int companyId, int userId) throws AppException {
+                                                                     int companyId, int userId, int page) throws AppException {
         String newUrl = URLs.ATTACHMENT_LIST_BY_USER_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("userId", userId + "");
+                companyId + "").replaceAll("userId", userId + "") + "?page=" + page;
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<Attachment>>() {

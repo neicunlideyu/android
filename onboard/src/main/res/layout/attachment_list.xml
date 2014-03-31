@@ -3,13 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    <include layout="@layout/data_empty_tip" />
 
-    <include layout="@layout/progress_bar"/>
-
-    <ListView
+    <cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView
         android:id="@+id/upload_list_view"
         style="@style/widget_listview" />
-
 
 </LinearLayout>

@@ -804,17 +804,17 @@ public class AppContext extends Application {
     }
 
     public List<Attachment> getAttachmentsByProjectId(int companyId,
-                                                      int projectId) throws AppException {
+                                                      int projectId, int page) throws AppException {
         List<Attachment> attachments = new ArrayList<Attachment>();
-        attachments = ApiClient.getAttachmentsByProjectId(this, companyId, projectId);
+        attachments = ApiClient.getAttachmentsByProjectId(this, companyId, projectId, page);
         return attachments;
 
     }
 
     public List<Attachment> getAttachmentsByCompanyIdByUserId(int companyId,
-                                                              int userId) throws AppException {
+                                                              int userId, int page) throws AppException {
         List<Attachment> attachments = new ArrayList<Attachment>();
-        attachments = ApiClient.getAttachmentsByCompanyIdByUserId(this, companyId, userId);
+        attachments = ApiClient.getAttachmentsByCompanyIdByUserId(this, companyId, userId, page);
         return attachments;
 
     }
