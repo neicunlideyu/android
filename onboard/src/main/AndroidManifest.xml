@@ -71,6 +71,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
 
+        <activity
+            android:name=".ui.DayTodo"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
