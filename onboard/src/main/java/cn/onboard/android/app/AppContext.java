@@ -819,14 +819,15 @@ public class AppContext extends Application {
 
     }
 
-    public void downloadAttachmentByAttachmentId(int attachmentId, int companyId, int projectId) {
+    public void downloadAttachmentByAttachmentId(int attachmentId, String attachmentName, int companyId, int projectId) {
         DownloadManager downloadManager = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
         String newUrl = URLs.ATTACHMENT_DOWNLOWD_HTTP.replaceAll("attachmentId", attachmentId + "")
                 .replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "");
 
         Uri uri = Uri.parse(newUrl);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setTitle("onboard附件");
+        request.setTitle(attachmentName);
+        request.setDestinationInExternalFilesDir(this, null, attachmentName);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         downloadManager.enqueue(request);
     }

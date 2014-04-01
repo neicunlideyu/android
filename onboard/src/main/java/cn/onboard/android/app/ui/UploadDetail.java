@@ -142,7 +142,7 @@ public class UploadDetail extends SherlockFragmentActivity {
                         @Override
                         public void onClick(View v) {
                             AppContext ac = (AppContext) getApplication();
-                            ac.downloadAttachmentByAttachmentId(attachmentId, companyId,
+                            ac.downloadAttachmentByAttachmentId(attachmentId, attachmentName, companyId,
                                     projectId);
                         }
                     });

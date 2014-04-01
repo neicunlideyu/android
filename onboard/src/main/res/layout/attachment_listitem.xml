@@ -29,6 +29,7 @@
             android:includeFontPadding="false"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_15"
+            android:maxEms="10"
             android:textColor="@color/listitem_black"
             android:maxLines="2"
             android:ellipsize="end"/>

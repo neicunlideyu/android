@@ -1,9 +1,11 @@
 
 package cn.onboard.android.app.ui.fragment;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -158,9 +160,9 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
                     @Override
                     public void onClick(View v) {
-                        AppContext ac = (AppContext) v.getContext();
-                        ac.downloadAttachmentByAttachmentId(attachment.getId(), attachment.getCompanyId(),
-                                attachment.getProjectId());
+                        AppContext appContext = (AppContext)v.getContext();
+                        appContext.downloadAttachmentByAttachmentId(attachment.getId(),
+                                attachment.getName(), companyId, projectId);
                     }
                 });
 
@@ -197,7 +199,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
     private void initView(LinearLayout lv) {
         attachments = new ArrayList<Attachment>();
-        attachmentAdapter = new ListViewNewsAdapter(getActivity(), attachments,
+        attachmentAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), attachments,
                 R.layout.attachment_listitem);
         attachmentPullToRefreshListView = (PullToRefreshListView)  lv
                 .findViewById(R.id.upload_list_view);
