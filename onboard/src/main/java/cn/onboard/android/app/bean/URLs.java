@@ -27,6 +27,7 @@ public class URLs implements Serializable {
     public final static String TODOLIST_LIST_BY_PROJECT_HTTP = URL_API_HOST + "api/companyId/projects/projectId/todoLists";
     public final static String TODOLIST_LIST_BY_USER_HTTP = URL_API_HOST + "api/companyId/users/userId/todoLists";
     public final static String TODOLIST_LIST_BY_DATE_HTTP = URL_API_HOST + "api/companyId/duedate/duedatetime/todoLists";
+    public final static String TODOLIST_UPDATE_HTTP = URL_API_HOST + "api/companyId/projects/projectId/todoLists/todolistId";
 
     public final static String TODOLIST_LIST_BY_TODOLISTID_HTTP = URL_API_HOST + "api/companyId/projects/projectId/todoLists/todolistId";
 

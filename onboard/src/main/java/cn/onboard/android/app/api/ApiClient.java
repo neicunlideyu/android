@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -861,6 +862,22 @@ public class ApiClient {
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<Todo>() {
+                    }, _post(appContext, url, params, null));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+    }
+
+    public static Todolist updateTodolist(AppContext appContext, Todolist todolist) throws AppException {
+        String url = URLs.TODOLIST_UPDATE_HTTP.replaceAll("companyId", todolist.getCompanyId() + "").replaceAll("projectId", todolist.getProjectId() + "")
+                .replaceAll("todolistId", todolist.getId() + "");
+
+        Map<String, Object> params = HttpStreamToObject.objectToMap(todolist);
+        try {
+            return HttpStreamToObject.inputStreamToObject(
+                    new TypeReference<Todolist>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
             if (e instanceof AppException)

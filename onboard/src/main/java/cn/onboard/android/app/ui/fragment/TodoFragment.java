@@ -58,6 +58,7 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.EditTodo;
+import cn.onboard.android.app.ui.EditTodolist;
 
 
 public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
@@ -123,9 +124,29 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != Activity.RESULT_OK)
             return;
-        String todojson = intent.getExtras().getString("todo");
+        String type = intent.getExtras().getString("type");
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        if (type != null && type.contains("todolist")) {
+            String todolistJson = intent.getExtras().getString("todolist");
+            Todolist todolist = new Todolist();
+            try {
+                todolist = mapper.readValue(todolistJson, Todolist.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            for (Todolist t : todolistList) {
+                if (t.getId().equals(todolist.getId())) {
+                    t.setName(todolist.getName());
+                    data.clear();
+                    data.addAll(handleData(todolistList));
+                    listViewAdapter.notifyDataSetChanged();
+                    return;
+                }
+            }
+        }
+        String todojson = intent.getExtras().getString("todo");
         Todo todo = new Todo();
         try {
             todo = mapper.readValue(todojson, Todo.class);
@@ -159,6 +180,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                     break;
                 }
         }
+
         data.clear();
         data.addAll(handleData(todolistList));
         listViewAdapter.notifyDataSetChanged();
@@ -295,6 +317,21 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                 convertView = listContainer
                         .inflate(R.layout.todolist_item, null);
                 listItemView.name = (TextView) convertView.findViewById(R.id.todolist_titile);
+                listItemView.name.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, EditTodolist.class);
+                        intent.putExtra("companyId",  item.todolist.getCompanyId());
+                        intent.putExtra("projectId",  item.todolist.getProjectId());
+                        intent.putExtra("todolistId",  item.todolist.getId());
+                        intent.putExtra("todolistName",  item.todolist.getName());
+                        startActivityForResult(intent, EditTodo.EditType.CREATE.value());
+
+
+                    }
+                });
                 listItemView.newTodo = (ImageView) convertView.findViewById(R.id.new_todo_button);
                 listItemView.newTodo.setOnClickListener(new View.OnClickListener() {
 
@@ -307,7 +344,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                         intent.putExtra("projectId", item.todolist.getProjectId());
                         intent.putExtra("todolistId", item.todolist.getId());
                         intent.putExtra("editType", EditTodo.EditType.CREATE);
-                        startActivityForResult(intent, EditTodo.EditType.CREATE.value());
+                        startActivityForResult(intent, 0);
 
                     }
                 });

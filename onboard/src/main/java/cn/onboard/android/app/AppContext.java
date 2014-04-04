@@ -858,6 +858,10 @@ public class AppContext extends Application {
     public Todolist createTodolist(Todolist todolist) throws  AppException {
         return ApiClient.createTodolist(this, todolist);
     }
+
+    public Todolist updateTodolist(Todolist todolist) throws AppException {
+        return ApiClient.updateTodolist(this, todolist);
+    }
     public Discussion createDiscussion(Discussion discussion) throws AppException {
         return ApiClient.createDiscussion(this, discussion);
     }
