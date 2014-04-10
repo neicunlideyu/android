@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class URLs implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public final static String HOST = "onboard.cn";
+    public final static String HOST = "192.168.100.31:8080";
 
     public final static String IMAGE_HOST = "teamforge.b0.upaiyun.com";
 
@@ -52,7 +52,7 @@ public class URLs implements Serializable {
     public final static String ATTACHMENT_DOWNLOWD_HTTP = URL_API_HOST
             + "api/companyId/projects/projectId/attachments/attachmentId/download";
     public final static String DOCUMENT_LIST_HTTP = URL_API_HOST + "api/companyId/projects/projectId/documents";
-    public final static String DISCUSSION_LIST_HTTP = URL_API_HOST + "api/companyId/projects/projectId/discussions";
+    public final static String DISCUSSION_LIST_HTTP = URL_API_HOST + "api/companyId/projects/projectId/discussions/new";
     public final static String DISCUSSION_HTTP_STRING = URL_API_HOST + "api/companyId/projects/projectId/discussions/discussionId";
     public final static String DOCUMENT_HTTP_STRING = URL_API_HOST + "api/companyId/projects/projectId/documents/documentId";
     public final static String REPOSITY__LIST_HTTP = URL_API_HOST + "api/companyId/projects/projectId/repositories";

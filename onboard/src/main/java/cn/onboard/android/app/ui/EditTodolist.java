@@ -23,7 +23,6 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
-import cn.onboard.android.app.ui.fragment.TodoFragment;
 
 /**
  * Created by XingLiang on 14-4-4.
@@ -75,7 +74,7 @@ public class EditTodolist extends SherlockFragmentActivity {
     };
 
     void initView() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         CommentListFragment commentList = new CommentListFragment(companyId, projectId, "todolist", todolistId);
         ft.replace(R.id.todolist_comments, commentList).commit();
@@ -93,7 +92,7 @@ public class EditTodolist extends SherlockFragmentActivity {
         @Override
         protected Todolist doInBackground(Todolist... todolist) {
             Todolist t = todolist[0];
-            t.setName(todolistContent.getText() + "");
+            t.setName(todolistContent.getText() +    "");
             AppContext ac = (AppContext) getApplication();
             try {
 

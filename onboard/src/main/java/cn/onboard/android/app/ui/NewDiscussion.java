@@ -155,6 +155,7 @@ public class NewDiscussion extends SherlockActivity {
             discussion.setContent(discussionContent);
             discussion.setCompanyId(companyId);
             discussion.setProjectId(projectId);
+            discussion.setSubscribers(getSubscribes());
 
             // comment.setCompanyId(companyId);
             final Handler handler = new Handler() {
@@ -239,6 +240,7 @@ public class NewDiscussion extends SherlockActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             TextView assignTextView = (TextView) findViewById(R.id.discussion_assignee_name);
                             assignTextView.setText(getAssignNameListString());
+
                         }
                     }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         @Override
@@ -248,6 +250,15 @@ public class NewDiscussion extends SherlockActivity {
             AlertMultiView = thisDialog.getListView();
             return thisDialog;
         }
+    }
+    private List<User> getSubscribes() {
+        List<User> subscribes = new ArrayList<User>();
+        for (int i = 1;i < assigneesList.size() + 1;i++) {
+            if (ifAssigned[i]) {
+                subscribes.add(assigneesList.get(i - 1));
+            }
+        }
+        return subscribes;
     }
 
 }

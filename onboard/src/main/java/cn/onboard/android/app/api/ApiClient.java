@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -904,7 +905,18 @@ public class ApiClient {
     public static Discussion createDiscussion(AppContext appContext, Discussion discussion)
             throws AppException {
         String url = URLs.DISCUSSION_LIST_HTTP.replaceAll("companyId", discussion.getCompanyId() + "").replaceAll("projectId", discussion.getProjectId() + "");
+        List<User> subscribers = discussion.getSubscribers();
+        discussion.setSubscribers(null);
         Map<String, Object> params = HttpStreamToObject.objectToMap(discussion);
+        StringBuilder builder = new StringBuilder();
+        if (subscribers != null) {
+            for (User user : subscribers) {
+                builder.append(user.getId());
+                builder.append(',');
+            }
+        }
+
+        params.put("subscriberIds", builder.toString());
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<Discussion>() {
