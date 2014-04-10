@@ -294,7 +294,7 @@ public class EditTodo extends SherlockFragmentActivity {
 
         @Override
         protected void onPostExecute(Void params) {
-            getSupportActionBar().setTitle("任务列表/" + todo.getTodolistName());
+           // getSupportActionBar().setTitle("任务列表/" + todo.getTodolistName());
             if (todo.getDueDate() != null)
                 assigneeDateText.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(todo.getDueDate().getTime()));
             if (todo.getContent() != null)

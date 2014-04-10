@@ -85,18 +85,10 @@
                 android:layout_marginTop="6.0dip"
                 android:layout_marginLeft="6.0dip"
                 android:layout_marginRight="6.0dip">
-                <ImageView
-                    android:id="@+id/attachment_type_icon"
-                    android:gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/user_face_image"
-                    android:layout_gravity="center_horizontal" />
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6.0dip"
-                    android:id="@+id/upload_name_download"/>
+                <ListView android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/upload_attachment_list" />
+
             </LinearLayout>
             <FrameLayout
                 android:id="@+id/discussion_comments"
