@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.bean.AttachmentType;
+import cn.onboard.android.app.bean.AttachmentIconType;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
@@ -69,6 +69,7 @@ public class UploadDetail extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_detail);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Log.d("initData", "started");
         this.initView();
         Log.d("initView", "finished");
@@ -157,7 +158,7 @@ public class UploadDetail extends SherlockFragmentActivity {
                     }
                     else {
                         mAttachmentTypeIcon.setImageDrawable(getResources()
-                                .getDrawable(AttachmentType.getAttachmentTypeIconResourceId(attachmentName,
+                                .getDrawable(AttachmentIconType.getAttachmentTypeIconResourceId(attachmentName,
                                         attachmentType)));
                     }
                     mUploadNameDownload.setText(attachmentName + "(点击下载)");

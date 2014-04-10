@@ -1,14 +1,21 @@
 
 package cn.onboard.android.app.ui.fragment;
 
-import android.app.DownloadManager;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +31,9 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
+import com.onboard.api.dto.Upload;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,15 +42,12 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.bean.AttachmentType;
+import cn.onboard.android.app.bean.AttachmentIconType;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
+import cn.onboard.android.app.common.ImageUtils;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.ui.DiscussionDetail;
-import cn.onboard.android.app.ui.DocumentDetail;
-import cn.onboard.android.app.ui.EditTodo;
-import cn.onboard.android.app.ui.UploadDetail;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 
@@ -70,19 +76,143 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
     private int sum = 0;
 
-    private static String cookie;
-
-    private final String DISCUSSION_TYPE_NAME = "discussion";
-    private final String UPLOAD_TYPE_NAME = "upload";
-    private final String TODO_TYPE_NAME = "todo";
-
     public AttachmentFragment() {
         setRetainInstance(true);
     }
 
+    private final static String FILE_SAVEPATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/onboard/";
+
+    private Uri origUri;
+    private Uri cropUri;
+    private File protraitFile;
+    private Bitmap protraitBitmap;
+    private String protraitPath;
+    private final static int CROP = 200;
+
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
+        CharSequence[] items = {
+                "手机相册",
+                "手机拍照"
+        };
+        imageChooseItem(items);
+
         return false;
+    }
+
+    /**
+     * 操作选择
+     *
+     * @param items
+     */
+    public void imageChooseItem(CharSequence[] items) {
+        AlertDialog imageDialog = new AlertDialog.Builder(this.getActivity()).setTitle("上传图片").setIcon(android.R.drawable.btn_star).setItems(items,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        //判断是否挂载了SD卡
+                        String storageState = Environment.getExternalStorageState();
+                        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                            File savedir = new File(FILE_SAVEPATH);
+                            if (!savedir.exists()) {
+                                savedir.mkdirs();
+                            }
+                        } else {
+                            UIHelper.ToastMessage(getActivity(), "无法保存上传的头像，请检查SD卡是否挂载");
+                            return;
+                        }
+
+                        //输出裁剪的临时文件
+                        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                        //照片命名
+                        String origFileName = "osc_" + timeStamp + ".jpg";
+                        String cropFileName = "osc_crop_" + timeStamp + ".jpg";
+
+                        //裁剪头像的绝对路径
+                        protraitPath = FILE_SAVEPATH + cropFileName;
+                        protraitFile = new File(protraitPath);
+
+                        origUri = Uri.fromFile(protraitFile);
+
+                        //相册选图
+                        if (item == 0) {
+                            startActionPick(origUri);
+                        }
+                        //手机拍照
+                        else if (item == 1) {
+                            startActionCamera(origUri);
+                        }
+                    }
+                }).create();
+
+        imageDialog.show();
+    }
+
+    /**
+     * 选择图片裁剪
+     *
+     * @param output
+     */
+    private void startActionPick(Uri output) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        intent.putExtra("output", output);
+        startActivityForResult(Intent.createChooser(intent, "选择图片"), ImageUtils.REQUEST_CODE_GETIMAGE_BYSDCARD);
+    }
+
+    /**
+     * 相机拍照
+     *
+     * @param output
+     */
+    private void startActionCamera(Uri output) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+        startActivityForResult(intent, ImageUtils.REQUEST_CODE_GETIMAGE_BYCAMERA);
+    }
+
+    public class UploadImageTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            //获取头像缩略图
+            AppContext ac = (AppContext) getActivity().getApplication();
+            Upload upload = new Upload();
+            upload.setCompanyId(companyId);
+            upload.setProjectId(projectId);
+            try {
+                upload = ac.createUpload(upload, protraitFile);
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            attachmentPullToRefreshListView.clickRefresh();
+        }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode != Activity.RESULT_OK) return;
+        switch (requestCode) {
+            case ImageUtils.REQUEST_CODE_GETIMAGE_BYSDCARD:
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                Cursor cursor = getActivity().getContentResolver().query(
+                        selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String filePath = cursor.getString(columnIndex);
+                cursor.close();
+
+                protraitFile = new File(filePath);
+                break;
+        }
+        new UploadImageTask().execute();
     }
 
     public AttachmentFragment(Integer companyId, Integer projectId, Integer userId) {
@@ -135,6 +265,12 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
             return 0;
         }
 
+        private View.OnClickListener imageClickListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                UIHelper.showImageDialog(v.getContext(), (String) v.getTag());
+            }
+        };
+
         /**
          * ListView Item设置
          */
@@ -160,7 +296,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
                     @Override
                     public void onClick(View v) {
-                        AppContext appContext = (AppContext)v.getContext();
+                        AppContext appContext = (AppContext) v.getContext();
                         appContext.downloadAttachmentByAttachmentId(attachment.getId(),
                                 attachment.getName(), companyId, projectId);
                     }
@@ -177,16 +313,16 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                 String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;
                 attachmentImageURL = attachmentImageURL.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "").replaceAll("attachmentId", attachment.getId() + "");
                 bmpManager.loadBitmap(attachmentImageURL, listItemView.face);
-            }
-            else {
+                listItemView.face.setTag(attachmentImageURL);
+                listItemView.face.setOnClickListener(imageClickListener);
+
+            } else {
                 listItemView.face.setImageDrawable(convertView.getResources()
-                        .getDrawable(AttachmentType.getAttachmentTypeIconResourceId(attachment.getName(),
+                        .getDrawable(AttachmentIconType.getAttachmentTypeIconResourceId(attachment.getName(),
                                 attachment.getContentType())));
             }
 
             // }
-            // listItemView.face.setOnClickListener(faceClickListener);
-            listItemView.face.setTag(attachment);
 
             listItemView.title.setText(attachment.getName());
             listItemView.title.setTag(attachment);// 设置隐藏参数(实体类)
@@ -201,7 +337,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
         attachments = new ArrayList<Attachment>();
         attachmentAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), attachments,
                 R.layout.attachment_listitem);
-        attachmentPullToRefreshListView = (PullToRefreshListView)  lv
+        attachmentPullToRefreshListView = (PullToRefreshListView) lv
                 .findViewById(R.id.upload_list_view);
 
         attachment_list_footer = getActivity().getLayoutInflater().inflate(
@@ -252,6 +388,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                             UIHelper.LISTVIEW_ACTION_SCROLL);
                 }
             }
+
             public void onScroll(AbsListView view,
                                  int firstVisibleItem, int visibleItemCount,
                                  int totalItemCount) {
@@ -263,8 +400,8 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
         attachmentPullToRefreshListView
                 .setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
                     public void onRefresh() {
-                            initGetUploadsByProject(0, handler,
-                                    UIHelper.LISTVIEW_ACTION_REFRESH);
+                        initGetUploadsByProject(0, handler,
+                                UIHelper.LISTVIEW_ACTION_REFRESH);
 
                     }
                 });
@@ -281,42 +418,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                 if (attachment == null)
                     return;
                 Context context = view.getContext();
-                Intent intent = null;
-                if (attachment.getTargetType().equals("discussion")) {
-                    intent = new Intent(context,
-                            DiscussionDetail.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("discussionId", attachment.getAttachId());
-                    intent.putExtra("companyId", companyId);
-                    intent.putExtra("projectId", attachment.getProjectId());
-                    context.startActivity(intent);
-                }
-                else if (attachment.getTargetType().equals("document")){
-                    intent = new Intent(context,
-                            DocumentDetail.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("documentId", attachment.getAttachId());
-                    intent.putExtra("companyId", companyId);
-                    intent.putExtra("projectId", attachment.getProjectId());
-                    context.startActivity(intent);
-                } else if (attachment.getTargetType().equals("todo")){
-                    intent = new Intent(context,
-                            EditTodo.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("companyId", companyId);
-                    intent.putExtra("projectId", attachment.getProjectId());
-                    intent.putExtra("todoId", attachment.getAttachId());
-                    intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
-                    context.startActivity(intent);
-                }else if (attachment.getTargetType().equals("upload")){
-                    intent = new Intent(context,
-                            UploadDetail.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("companyId", companyId);
-                    intent.putExtra("projectId", attachment.getProjectId());
-                    intent.putExtra("uploadId", attachment.getAttachId());
-                    context.startActivity(intent);
-                }
+                UIHelper.pageLink(context, attachment.getTargetType(), attachment.getTargetId(), attachment.getCompanyId(), attachment.getProjectId());
             }
         });
     }
@@ -386,10 +488,10 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                     isRefresh = true;
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
-                    List<Attachment> attachments =new ArrayList<Attachment>();
-                    if(projectId != null)
-                        returnedAttachments= ac.getAttachmentsByProjectId(companyId, projectId, pageIndex);
-                    else if(userId!=null)
+                    List<Attachment> attachments = new ArrayList<Attachment>();
+                    if (projectId != null)
+                        returnedAttachments = ac.getAttachmentsByProjectId(companyId, projectId, pageIndex);
+                    else if (userId != null)
                         returnedAttachments = ac.getAttachmentsByCompanyIdByUserId(companyId, userId, pageIndex);
                     msg.what = returnedAttachments.size();
                     msg.obj = returnedAttachments;

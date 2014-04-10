@@ -27,7 +27,7 @@ public class HttpStreamToObject {
 				sb.append(line + "/n");
 			}
 			T data = null;
-			
+
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			data = mapper.readValue(sb.toString(), type);
@@ -50,8 +50,9 @@ public class HttpStreamToObject {
 		ObjectMapper m = new ObjectMapper();
 		m.configure(SerializationConfig.Feature.WRITE_NULL_PROPERTIES, false);
 		Map<String,Object> params = m.convertValue(object, Map.class);
+
 		return params;
 	}
-	
-	
+
+
 }
