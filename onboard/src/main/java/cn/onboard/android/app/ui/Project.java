@@ -8,7 +8,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.ui.fragment.DisscussionFragment;
+import cn.onboard.android.app.ui.fragment.TopicFragment;
 import cn.onboard.android.app.ui.fragment.ProjectMenuFragment;
 import cn.onboard.android.slidingmenu.SlidingMenu;
 import cn.onboard.android.slidingmenu.app.SlidingFragmentActivity;
@@ -41,7 +41,7 @@ public class Project extends SlidingFragmentActivity {
             mContent = getSupportFragmentManager().getFragment(
                     savedInstanceState, "mContent");
         if (mContent == null)
-            mContent = new DisscussionFragment(companyId, projectId);
+            mContent = new TopicFragment(companyId, projectId);
         popupListener = (OnMenuItemClickListener) mContent;
         // set the Above View
         setContentView(R.layout.content_frame);
@@ -51,7 +51,6 @@ public class Project extends SlidingFragmentActivity {
         getSupportActionBar().setIcon(R.drawable.actionbar_discussion);
         getSupportActionBar().setTitle("讨论");
         setCreateString("新建讨论");
-//        setPopupListener((DisscussionFragment) mContent);
 
 
         // set the Behind View
@@ -66,13 +65,6 @@ public class Project extends SlidingFragmentActivity {
         sm.setShadowDrawable(R.drawable.shadow);
         sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         sm.setFadeDegree(0.35f);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setLogo(R.drawable.actionbar_discussion);
-//        getSupportActionBar().setTitle("讨论");
-//        setCreateString("新建讨论");
-//        setPopupListener((DisscussionFragment) mContent);
-//        invalidateOptionsMenu();
-//		 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

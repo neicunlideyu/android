@@ -34,14 +34,10 @@ import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.ui.DiscussionDetail;
-import cn.onboard.android.app.ui.DocumentDetail;
-import cn.onboard.android.app.ui.EditTodo;
 import cn.onboard.android.app.ui.NewDiscussion;
-import cn.onboard.android.app.ui.UploadDetail;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
-public class DisscussionFragment extends Fragment implements OnMenuItemClickListener {
+public class TopicFragment extends Fragment implements OnMenuItemClickListener {
     private int companyId;
 
     private int projectId;
@@ -50,7 +46,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
 
     private List<Topic> returnedTopics;
 
-    public DisscussionFragment() {
+    public TopicFragment() {
         setRetainInstance(true);
     }
 
@@ -72,7 +68,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
 
     private Handler handler;
 
-    public DisscussionFragment(int companyId, int projectId) {
+    public TopicFragment(int companyId, int projectId) {
         this();
         this.companyId = companyId;
         this.projectId = projectId;
@@ -178,42 +174,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                         if (topic == null)
                             return;
                         Context context = view.getContext();
-                        Intent intent = null;
-                        if (topic.getRefType().equals("discussion")) {
-                            intent = new Intent(context,
-                                    DiscussionDetail.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("discussionId", topic.getRefId());
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", topic.getProjectId());
-                            context.startActivity(intent);
-                        } else if (topic.getRefType().equals("document")) {
-                            intent = new Intent(context,
-                                    DocumentDetail.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("documentId", topic.getRefId());
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", topic.getProjectId());
-                            context.startActivity(intent);
-                        } else if (topic.getRefType().equals("todo")) {
-                            intent = new Intent(context,
-                                    EditTodo.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", topic.getProjectId());
-                            intent.putExtra("todoId", topic.getRefId());
-                            intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
-                            context.startActivity(intent);
-                        } else if (topic.getRefType().equals("upload")) {
-                            intent = new Intent(context,
-                                    UploadDetail.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", topic.getProjectId());
-                            intent.putExtra("uploadId", topic.getRefId());
-                            context.startActivity(intent);
-                        }
-
+                        UIHelper.pageLink(context, topic.getRefType(), topic.getRefId(), companyId, topic.getProjectId());
                     }
                 });
 
@@ -278,7 +239,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
                     returnedTopics = ac
-                            .getTopicsByProjectId(companyId, projectId,pageIndex);
+                            .getTopicsByProjectId(companyId, projectId, pageIndex);
                     msg.what = returnedTopics.size();
                     msg.obj = returnedTopics;
                 } catch (AppException e) {
@@ -404,31 +365,7 @@ public class DisscussionFragment extends Fragment implements OnMenuItemClickList
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != Activity.RESULT_OK)
             return;
-//        String discussionJson = intent.getExtras().getString("discussion");
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        Discussion discussion = new Discussion();
-//        try {
-//            discussion = mapper.readValue(discussionJson, Discussion.class);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        List<Topic> tempTopicList = topicList;
-//        Topic topic = new Topic();
-//        topic.setProjectId(discussion.getProjectId());
-//        topic.setCompanyId(discussion.getCompanyId());
-//        topic.setRefType("discussion");
-//        topic.setRefId(discussion.getId());
-//        topic.setLastUpdatorId(discussion.getCreatorId());
-//        topic.setLastUpdator(discussion.getcre);
-//        topic.setCreated(discussion.getCreated());
-//        topic.setTitle(discussion.getSubject());
-//        topic.setExcerpt(discussion.getContent());
-//        topicList.add(0, topic);
-//        lvca.notifyDataSetChanged();
         activiPullToRefreshListView.clickRefresh();
-//        loadLvQuestionData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
-
     }
 
 }

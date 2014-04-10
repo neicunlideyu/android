@@ -25,8 +25,8 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.codehaus.jackson.type.TypeReference;
 
@@ -39,7 +39,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -135,23 +134,6 @@ public class ApiClient {
         return httpPost;
     }
 
-    // private static String _MakeURL(String p_url, Map<String, Object> params)
-    // {
-    // StringBuilder url = new StringBuilder(p_url);
-    // if(url.indexOf("?")<0)
-    // url.append('?');
-    //
-    // for(String name : params.keySet()){
-    // url.append('&');
-    // url.append(name);
-    // url.append('=');
-    // url.append(String.valueOf(params.get(name)));
-    // //不做URLEncoder处理
-    // //url.append(URLEncoder.encode(String.valueOf(params.get(name)), UTF_8));
-    // }
-    //
-    // return url.toString().replace("?&", "?");
-    // }
 
     /**
      * @param appContext
@@ -228,7 +210,6 @@ public class ApiClient {
     private static InputStream _post(AppContext appContext, String url,
                                      Map<String, Object> params, Map<String, File> files)
             throws AppException {
-        // System.out.println("post_url==> "+url);
         String cookie = getCookie(appContext);
         String userAgent = getUserAgent(appContext);
 
@@ -236,16 +217,9 @@ public class ApiClient {
         PostMethod httpPost = null;
 
         // post表单参数处理
-        int length = (params == null ? 0 : params.size())
-                + (files == null ? 0 : files.size());
+        int length = (files == null ? 0 : files.size());
         Part[] parts = new Part[length];
         int i = 0;
-        if (params != null)
-            for (String name : params.keySet()) {
-                parts[i++] = new StringPart(name, String.valueOf(params
-                        .get(name)), UTF_8);
-                // System.out.println("post_key==> "+name+"    value==>"+String.valueOf(params.get(name)));
-            }
         if (files != null)
             for (String file : files.keySet()) {
                 try {
@@ -271,10 +245,10 @@ public class ApiClient {
                     httpPost.setParameter(name,
                             String.valueOf(params.get(name)));
                 }
-//                httpPost.setEntity();
-                // httpPost.setRequestEntity(new
-                // MultipartRequestEntity(parts,httpPost.getParams()));
-
+                if (length != 0) {
+                    httpPost.setRequestEntity(new
+                            MultipartRequestEntity(parts, httpPost.getParams()));
+                }
                 int statusCode = httpClient.executeMethod(httpPost);
                 if (statusCode != HttpStatus.SC_OK) {
                     throw AppException.http(statusCode);
@@ -328,21 +302,6 @@ public class ApiClient {
         return new ByteArrayInputStream(responseBody.getBytes());
     }
 
-    /**
-     * post请求URL
-     *
-     * @param url
-     * @param params
-     * @param files
-     * @throws AppException
-     * @throws IOException
-     * @throws
-     */
-    // private static Result http_post(AppContext appContext, String url,
-    // Map<String, Object> params, Map<String,File> files) throws AppException,
-    // IOException {
-    // return Result.parseUser(_post(appContext, url, params, files));
-    // }
 
     /**
      * 获取网络图片
@@ -412,37 +371,6 @@ public class ApiClient {
             throw AppException.network(e);
         }
     }
-
-    // /**
-    // * 登录， 自动处理cookie
-    // * @param url
-    // * @param username
-    // * @param pwd
-    // * @return
-    // * @throws AppException
-    // */
-    // public static User login(AppContext appContext, String username, String
-    // pwd) throws AppException {
-    // Map<String,Object> params = new HashMap<String,Object>();
-    // // params.put("username", username);
-    // // params.put("pwd", pwd);
-    // // params.put("keep_login", 1);
-    //
-    // // String loginurl = URLs.LOGIN_VALIDATE_HTTP;
-    // String loginurl = "http://192.168.1.102:8080/api/";
-    // if(appContext.isHttpsLogin()){
-    // loginurl = URLs.LOGIN_VALIDATE_HTTPS;
-    // }
-    //
-    // try{
-    // List<Company> companyList=Company.parse(http_get(appContext,loginurl));
-    // return null;
-    // }catch(Exception e){
-    // if(e instanceof AppException)
-    // throw (AppException)e;
-    // throw AppException.network(e);
-    // }
-    // }
 
 
     public static User login(AppContext appContext, String username, String pwd)
@@ -562,9 +490,9 @@ public class ApiClient {
     }
 
     public static List<Topic> getTopicsByProjectId(AppContext appContext,
-                                                   int companyId, int projectId,int page) throws AppException {
+                                                   int companyId, int projectId, int page) throws AppException {
         String newUrl = URLs.TOPIC_LIST_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("projectId", projectId + "")+"?page="+page;
+                companyId + "").replaceAll("projectId", projectId + "") + "?page=" + page;
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<Topic>>() {
@@ -691,23 +619,6 @@ public class ApiClient {
         }
     }
 
-//	public static List<Repository> getRepositoryByProjectId(
-//			AppContext appContext, int companyId, int projectId)
-//			throws AppException {
-//		String newUrl = URLs.REPOSITY__LIST_HTTP.replaceAll("companyId",
-//				companyId + "").replaceAll("projectId", projectId + "");
-//		try {
-//			return HttpStreamToObject.inputStreamToObject(
-//					new TypeReference<List<Repository>>() {
-//					}, http_get(appContext, newUrl));
-//		} catch (Exception e) {
-//			if (e instanceof AppException)
-//				throw (AppException) e;
-//			throw AppException.network(e);
-//		}
-//
-//	}
-
     public static List<Upload> getUploadByProjectId(AppContext appContext,
                                                     int companyId, int projectId) throws AppException {
         String newUrl = URLs.UPLOAD_LIST_BY_PROJECT_HTTP.replaceAll("companyId",
@@ -752,7 +663,8 @@ public class ApiClient {
     public static List<Attachment> getAttachmentsByProjectId(AppContext appContext,
                                                              int companyId, int projectId, int page) throws AppException {
         String newUrl = URLs.ATTACHMENT_LIST_BY_PROJECT_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("projectId", projectId + "")  + "?page=" + page;;
+                companyId + "").replaceAll("projectId", projectId + "") + "?page=" + page;
+        ;
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<Attachment>>() {
@@ -795,7 +707,7 @@ public class ApiClient {
     }
 
     public static User getUserById(AppContext appContext, int userId) throws AppException {
-        String newUrl = URLs.USER_HTTP.replaceAll("userId",userId + "");
+        String newUrl = URLs.USER_HTTP.replaceAll("userId", userId + "");
         try {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<User>() {
@@ -845,6 +757,25 @@ public class ApiClient {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<Todo>() {
                     }, _post(appContext, url, params, null));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+
+    }
+
+
+    public static Upload createUpload(AppContext appContext, Upload upload, File file) throws AppException {
+        String url = URLs.UPLOAD_LIST_BY_PROJECT_HTTP.replaceAll("companyId", upload.getCompanyId() + "").replaceAll("projectId", upload.getProjectId() + "");
+        Map<String, Object> params = HttpStreamToObject.objectToMap(upload);
+        Map<String, File> files = new HashMap<String, File>();
+        files.put("file", file);
+
+        try {
+            return HttpStreamToObject.inputStreamToObject(
+                    new TypeReference<Upload>() {
+                    }, _post(appContext, url, params, files));
         } catch (Exception e) {
             if (e instanceof AppException)
                 throw (AppException) e;

@@ -1,7 +1,6 @@
 package cn.onboard.android.app.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,10 +30,6 @@ import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.ui.DiscussionDetail;
-import cn.onboard.android.app.ui.DocumentDetail;
-import cn.onboard.android.app.ui.EditTodo;
-import cn.onboard.android.app.ui.UploadDetail;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 public class ActivityFragment extends Fragment {
@@ -118,42 +113,7 @@ public class ActivityFragment extends Fragment {
                             activity = (Activity) tv.getTag();
                         }
                         Context context = view.getContext();
-                        Intent intent = null;
-                        if (activity.getAttachType().equals("discussion")) {
-                            intent = new Intent(context,
-                                    DiscussionDetail.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("discussionId", activity.getAttachId());
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", activity.getProjectId());
-                            context.startActivity(intent);
-                        }
-                        else if (activity.getAttachType().equals("document")){
-                            intent = new Intent(context,
-                                    DocumentDetail.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("documentId", activity.getAttachId());
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", activity.getProjectId());
-                            context.startActivity(intent);
-                        } else if (activity.getAttachType().equals("todo")){
-                            intent = new Intent(context,
-                                    EditTodo.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", activity.getProjectId());
-                            intent.putExtra("todoId", activity.getAttachId());
-                            intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
-                            context.startActivity(intent);
-                        } else if (activity.getAttachType().equals("upload")){
-                            intent = new Intent(context,
-                                    UploadDetail.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("companyId", companyId);
-                            intent.putExtra("projectId", activity.getProjectId());
-                            intent.putExtra("uploadId", activity.getAttachId());
-                            context.startActivity(intent);
-                        }
+                        UIHelper.pageLink(context, activity.getAttachType(), activity.getAttachId(), activity.getCompanyId(), activity.getProjectId());
                     }
                 });
         activiPullToRefreshListView
@@ -361,7 +321,7 @@ public class ActivityFragment extends Fragment {
             // listItemView.face.setOnClickListener(faceClickListener);
             listItemView.face.setTag(activity);
 
-            listItemView.title.setText("在项目"+activity.getProjectName() +activity.getSubject() + " " + activity.getTarget());
+            listItemView.title.setText("在项目" + activity.getProjectName() + activity.getSubject() + " " + activity.getTarget());
             listItemView.title.setTag(activity);// 设置隐藏参数(实体类)
             listItemView.author.setText(activity.getCreatorName());
             listItemView.date.setText(new SimpleDateFormat("yyyy-MM-dd")

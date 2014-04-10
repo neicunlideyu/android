@@ -10,7 +10,7 @@ import cn.onboard.android.app.R;
 /**
  * Created by xingliang on 14-3-27.
  */
-public class AttachmentType {
+public class AttachmentIconType {
     private static final Map<String, String> SUFFIX_TYPE_MAP = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 

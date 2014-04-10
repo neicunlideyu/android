@@ -732,7 +732,7 @@ public class AppContext extends Application {
 
     }
 
-    public List<Topic> getTopicsByProjectId(int companyId, int projectId,int page)
+    public List<Topic> getTopicsByProjectId(int companyId, int projectId, int page)
             throws AppException {
         List<Topic> topicList = new ArrayList<Topic>();
         topicList = ApiClient.getTopicsByProjectId(this, companyId, projectId, page);
@@ -779,12 +779,11 @@ public class AppContext extends Application {
         return activities;
     }
 
-    public List<Activity> getActivitiesByCompanyIdByUserId(int companyId,int userId, int page) throws AppException {
+    public List<Activity> getActivitiesByCompanyIdByUserId(int companyId, int userId, int page) throws AppException {
         List<Activity> activities = new ArrayList<Activity>();
         activities = ApiClient.getActivitiesByCompanyIdByUserId(this, companyId, userId, page);
         return activities;
     }
-
 
 
     public List<Upload> getUploadsByProjectId(int companyId, int projectId)
@@ -847,21 +846,26 @@ public class AppContext extends Application {
         return ApiClient.publishComment(this, comment);
     }
 
-    public Todo createTodo(Todo todo) throws  AppException{
-        return ApiClient.createTodo(this,todo);
+    public Todo createTodo(Todo todo) throws AppException {
+        return ApiClient.createTodo(this, todo);
     }
 
-    public Todo updateTodo(Todo todo) throws  AppException{
-        return ApiClient.updateTodo(this,todo);
+    public Upload createUpload(Upload upload, File file) throws AppException {
+        return ApiClient.createUpload(this, upload, file);
     }
 
-    public Todolist createTodolist(Todolist todolist) throws  AppException {
+    public Todo updateTodo(Todo todo) throws AppException {
+        return ApiClient.updateTodo(this, todo);
+    }
+
+    public Todolist createTodolist(Todolist todolist) throws AppException {
         return ApiClient.createTodolist(this, todolist);
     }
 
     public Todolist updateTodolist(Todolist todolist) throws AppException {
         return ApiClient.updateTodolist(this, todolist);
     }
+
     public Discussion createDiscussion(Discussion discussion) throws AppException {
         return ApiClient.createDiscussion(this, discussion);
     }

@@ -41,11 +41,11 @@ public class ProjectMenuFragment extends SherlockListFragment {
 			newContent = new RepositoryFragment(project.getCompanyId(),project.getProjectId());
 			break;
 		case 1:
-			newContent = new DisscussionFragment(project.getCompanyId(),project.getProjectId());
+			newContent = new TopicFragment(project.getCompanyId(),project.getProjectId());
             project.getSupportActionBar().setLogo(R.drawable.actionbar_discussion);
             project.getSupportActionBar().setTitle("讨论");
             project.setCreateString("新建讨论");
-            project.setPopupListener((DisscussionFragment) newContent);
+            project.setPopupListener((TopicFragment) newContent);
             break;
 		case 2:
 			newContent = new TodoFragment(project.getCompanyId(),project.getProjectId(),null,null);

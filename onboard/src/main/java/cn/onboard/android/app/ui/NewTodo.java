@@ -41,7 +41,7 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class EditTodo extends SherlockFragmentActivity {
+public class NewTodo extends SherlockFragmentActivity {
 
     private Todolist todolist;
     private Todo todo;
@@ -85,7 +85,6 @@ public class EditTodo extends SherlockFragmentActivity {
 
     void initView() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //指派人text框初始化
         findViewById(R.id.ll_assignee).setOnClickListener(
                 new OnClickListener() {
 
@@ -95,7 +94,7 @@ public class EditTodo extends SherlockFragmentActivity {
                         newFragment.show(getFragmentManager(), "assignees");
                     }
                 });
-        //截止日期text初始化
+
         findViewById(R.id.ll_assigndate).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,13 +111,12 @@ public class EditTodo extends SherlockFragmentActivity {
                 dateDialog.show();
             }
         });
-
-        //如果是编辑todo，显示评论列表
-        if (editType.equals(EditType.UPDATE)) {
+        if(editType.equals(EditType.UPDATE)){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            CommentListFragment commentList = new CommentListFragment(companyId, projectId, "todo", todoId);
+            CommentListFragment commentList = new CommentListFragment(companyId,projectId,"todo",todoId);
             ft.replace(R.id.todo_comments, commentList).commit();
-        } else
+        }
+        else
             findViewById(R.id.comment_footer).setVisibility(View.GONE);
     }
 
@@ -213,7 +211,7 @@ public class EditTodo extends SherlockFragmentActivity {
             try {
                 if (editType.equals(EditType.CREATE))
                     t = ac.createTodo(t);
-                else {
+                else{
                     Todo sample = new Todo();
                     sample.setId(t.getId());
                     sample.setContent(t.getContent());
@@ -239,7 +237,7 @@ public class EditTodo extends SherlockFragmentActivity {
             ObjectWriter ow = m.writer().withDefaultPrettyPrinter();
             try {
                 String todojson = ow.writeValueAsString(todo);
-                intent.putExtra("todo", todojson);
+                intent.putExtra("todo",todojson);
                 setResult(Activity.RESULT_OK, intent);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -260,7 +258,7 @@ public class EditTodo extends SherlockFragmentActivity {
                 todo.setCompanyId(t.getCompanyId());
                 todo.setTodolistId(t.getId());
                 todo.setDeleted(false);
-                todo.setPosition((double) t.getTodos().size() * 100);
+                todo.setPosition((double) t.getTodos().size()*100);
 
             } catch (AppException e) {
                 e.printStackTrace();
@@ -293,8 +291,8 @@ public class EditTodo extends SherlockFragmentActivity {
         }
 
         @Override
-        protected void onPostExecute(Void params) {
-            getSupportActionBar().setTitle("任务列表/" + todo.getTodolistName());
+        protected  void onPostExecute(Void params){
+            new GetTodolistTask().execute();
             if (todo.getDueDate() != null)
                 assigneeDateText.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(todo.getDueDate().getTime()));
             if (todo.getContent() != null)
