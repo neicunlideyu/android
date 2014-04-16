@@ -45,8 +45,8 @@ import cn.onboard.android.app.common.StringUtils;
 public class AppContext extends Application {
 
     public static final int NETTYPE_WIFI = 0x01;
-    public static final int NETTYPE_CMWAP = 0x02;
-    public static final int NETTYPE_CMNET = 0x03;
+    private static final int NETTYPE_CMWAP = 0x02;
+    private static final int NETTYPE_CMNET = 0x03;
 
     public static final int PAGE_SIZE = 20;// 默认分页大小
 
@@ -275,7 +275,7 @@ public class AppContext extends Application {
      * @return
      * @throws IOException
      */
-    public Serializable readObject(String file) {
+    Serializable readObject(String file) {
         if (!isExistDataCache(file))
             return null;
         FileInputStream fis = null;
@@ -305,7 +305,7 @@ public class AppContext extends Application {
         return null;
     }
 
-    public void setProperties(Properties ps) {
+    void setProperties(Properties ps) {
         AppConfig.getAppConfig(this).set(ps);
     }
 
@@ -317,7 +317,7 @@ public class AppContext extends Application {
         return AppConfig.getAppConfig(this).get(key);
     }
 
-    public void removeProperty(String... key) {
+    void removeProperty(String... key) {
         AppConfig.getAppConfig(this).remove(key);
     }
 

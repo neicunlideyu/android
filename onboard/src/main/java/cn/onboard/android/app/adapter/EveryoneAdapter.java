@@ -28,10 +28,10 @@ import cn.onboard.android.app.ui.Person;
 public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSimpleAdapter {
 
     class UserDepartmentName {
-        String userName;
-        int userId;
-        String avatar;
-        String departmentName;
+        final String userName;
+        final int userId;
+        final String avatar;
+        final String departmentName;
         UserDepartmentName(String departmentName, String username,int userId, String avatar) {
             this.userName = username;
             this.departmentName = departmentName;
@@ -40,13 +40,13 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
         }
     }
 
-    private List<UserDepartmentName> users;
-    private int companyId;
+    private final List<UserDepartmentName> users;
+    private final int companyId;
 
-    private int mHeaderResId;
-    private LayoutInflater mInflater;
-    private int mItemResId;
-    private BitmapManager bmpManager;
+    private final int mHeaderResId;
+    private final LayoutInflater mInflater;
+    private final int mItemResId;
+    private final BitmapManager bmpManager;
 
     public EveryoneAdapter(Context context, Map<String, List<User>> departmentNameUserMap, int companyId,int mHeaderResId, int mItemResId) {
         this.companyId = companyId;

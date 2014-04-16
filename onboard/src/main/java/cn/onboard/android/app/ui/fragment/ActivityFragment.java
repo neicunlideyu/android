@@ -51,7 +51,7 @@ public class ActivityFragment extends Fragment {
 
     private ProgressBar listview_footer_progress;
 
-    private List<Activity> activities = new ArrayList<Activity>();
+    private final List<Activity> activities = new ArrayList<Activity>();
 
     private List<Activity> returnedActivities;
 
@@ -59,7 +59,7 @@ public class ActivityFragment extends Fragment {
 
     private int sum = 0;
 
-    public ActivityFragment() {
+    private ActivityFragment() {
         setRetainInstance(true);
     }
 
@@ -242,10 +242,10 @@ public class ActivityFragment extends Fragment {
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private List<Activity> listItems;// 数据集合
-        private LayoutInflater listContainer;// 视图容器
-        private int itemViewResource;// 自定义项视图源
-        private BitmapManager bmpManager;
+        private final List<Activity> listItems;// 数据集合
+        private final LayoutInflater listContainer;// 视图容器
+        private final int itemViewResource;// 自定义项视图源
+        private final BitmapManager bmpManager;
 
         /**
          * 实例化Adapter

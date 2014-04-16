@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-public class RepositoryFragment extends Fragment {
+class RepositoryFragment extends Fragment {
 
-    public RepositoryFragment() {
+    private RepositoryFragment() {
 		setRetainInstance(true);
 	}
 

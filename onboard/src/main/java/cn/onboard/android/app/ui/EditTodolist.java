@@ -64,7 +64,7 @@ public class EditTodolist extends SherlockFragmentActivity {
         initView();
     }
 
-    private MenuItem.OnMenuItemClickListener saveTodolistListener = new MenuItem.OnMenuItemClickListener() {
+    private final MenuItem.OnMenuItemClickListener saveTodolistListener = new MenuItem.OnMenuItemClickListener() {
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -87,7 +87,7 @@ public class EditTodolist extends SherlockFragmentActivity {
 
     }
 
-    public class SaveTodolistTask extends AsyncTask<Todolist, Void, Todolist> {
+    private class SaveTodolistTask extends AsyncTask<Todolist, Void, Todolist> {
 
         @Override
         protected Todolist doInBackground(Todolist... todolist) {

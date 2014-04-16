@@ -29,10 +29,10 @@ public class AppException extends Exception implements UncaughtExceptionHandler 
     /**
      * 定义异常类型
      */
-    public final static byte TYPE_NETWORK = 0x01;
-    public final static byte TYPE_SOCKET = 0x02;
-    public final static byte TYPE_HTTP_CODE = 0x03;
-    public final static byte TYPE_HTTP_ERROR = 0x04;
+    private final static byte TYPE_NETWORK = 0x01;
+    private final static byte TYPE_SOCKET = 0x02;
+    private final static byte TYPE_HTTP_CODE = 0x03;
+    private final static byte TYPE_HTTP_ERROR = 0x04;
     public final static byte TYPE_XML = 0x05;
     public final static byte TYPE_RUN = 0x07;
 
@@ -63,7 +63,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler 
      * @param excp
      */
     @SuppressWarnings("deprecation")
-    public void saveErrorLog(Exception excp) {
+    void saveErrorLog(Exception excp) {
         String errorlog = "errorlog.txt";
         String savePath = "";
         String logFilePath = "";
@@ -118,7 +118,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler 
         return new AppException(TYPE_HTTP_ERROR, 0, e);
     }
 
-    public static AppException socket(Exception e) {
+    private static AppException socket(Exception e) {
         return new AppException(TYPE_SOCKET, 0, e);
     }
 

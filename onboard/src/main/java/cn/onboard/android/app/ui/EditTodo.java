@@ -51,7 +51,7 @@ public class EditTodo extends SherlockFragmentActivity {
     private int companyId;
     private int projectId;
 
-    List<User> assigneesList;
+    private List<User> assigneesList;
     private TextView assigneeText;
     private TextView assigneeDateText;
     private EditText todoContent;
@@ -74,7 +74,7 @@ public class EditTodo extends SherlockFragmentActivity {
 
     }
 
-    private MenuItem.OnMenuItemClickListener saveTodoListener = new MenuItem.OnMenuItemClickListener() {
+    private final MenuItem.OnMenuItemClickListener saveTodoListener = new MenuItem.OnMenuItemClickListener() {
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -203,7 +203,7 @@ public class EditTodo extends SherlockFragmentActivity {
         }
     }
 
-    public class SaveTodoaTask extends AsyncTask<Todo, Void, Todo> {
+    private class SaveTodoaTask extends AsyncTask<Todo, Void, Todo> {
 
         @Override
         protected Todo doInBackground(Todo... todo) {
@@ -248,7 +248,7 @@ public class EditTodo extends SherlockFragmentActivity {
         }
     }
 
-    public class GetTodolistTask extends AsyncTask<Void, Void, Todolist> {
+    private class GetTodolistTask extends AsyncTask<Void, Void, Todolist> {
 
         @Override
         protected Todolist doInBackground(Void... params) {
@@ -276,7 +276,7 @@ public class EditTodo extends SherlockFragmentActivity {
     }
 
 
-    public class GetTodoTask extends AsyncTask<Void, Void, Void> {
+    private class GetTodoTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

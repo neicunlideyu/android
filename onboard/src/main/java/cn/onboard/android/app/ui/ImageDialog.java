@@ -49,7 +49,7 @@ public class ImageDialog extends BaseActivity {
         this.initData();
     }
 
-    private View.OnTouchListener touchListener = new View.OnTouchListener() {
+    private final View.OnTouchListener touchListener = new View.OnTouchListener() {
         public boolean onTouch(View v, MotionEvent event) {
             thread.interrupt();
             handler = null;

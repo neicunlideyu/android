@@ -54,7 +54,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
     /**
      * Which month should be in focus currently.
      */
-    public static final String WEEK_PARAMS_FOCUS_MONTH = "focus_month";
+    private static final String WEEK_PARAMS_FOCUS_MONTH = "focus_month";
     /**
      * Whether the week number should be shown. Non-zero to show them.
      */
@@ -73,26 +73,26 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
      */
     public static final String WEEK_PARAMS_DAYS_PER_WEEK = "days_per_week";
 
-    protected static final int WEEK_COUNT = 3497 - 0;
-    protected static int DEFAULT_NUM_WEEKS = 6;
-    protected static int DEFAULT_MONTH_FOCUS = 0;
-    protected static int DEFAULT_DAYS_PER_WEEK = 7;
+    private static final int WEEK_COUNT = 3497 - 0;
+    private static final int DEFAULT_NUM_WEEKS = 6;
+    private static final int DEFAULT_MONTH_FOCUS = 0;
+    private static final int DEFAULT_DAYS_PER_WEEK = 7;
     protected static int DEFAULT_WEEK_HEIGHT = 32;
-    protected static int WEEK_7_OVERHANG_HEIGHT = 7;
+    private static int WEEK_7_OVERHANG_HEIGHT = 7;
 
-    protected static float mScale = 0;
-    protected Context mContext;
+    private static float mScale = 0;
+    final Context mContext;
     // The day to highlight as selected
-    protected Time mSelectedDay;
+    Time mSelectedDay;
     // The week since 1970 that the selected day is in
-    protected int mSelectedWeek;
+    int mSelectedWeek;
     // When the week starts; numbered like Time.<WEEKDAY> (e.g. SUNDAY=0).
-    protected int mFirstDayOfWeek;
-    protected boolean mShowWeekNumber = false;
-    protected GestureDetector mGestureDetector;
-    protected int mNumWeeks = DEFAULT_NUM_WEEKS;
-    protected int mDaysPerWeek = DEFAULT_DAYS_PER_WEEK;
-    protected int mFocusMonth = DEFAULT_MONTH_FOCUS;
+    int mFirstDayOfWeek;
+    boolean mShowWeekNumber = false;
+    GestureDetector mGestureDetector;
+    int mNumWeeks = DEFAULT_NUM_WEEKS;
+    int mDaysPerWeek = DEFAULT_DAYS_PER_WEEK;
+    int mFocusMonth = DEFAULT_MONTH_FOCUS;
 
     public SimpleWeeksAdapter(Context context, HashMap<String, Integer> params) {
         mContext = context;
@@ -114,7 +114,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
     /**
      * Set up the gesture detector and selected time
      */
-    protected void init() {
+    void init() {
         mGestureDetector = new GestureDetector(mContext, new CalendarGestureListener());
         mSelectedDay = new Time();
         mSelectedDay.setToNow();
@@ -167,7 +167,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
         notifyDataSetChanged();
     }
     
-    public static int getWeeksSinceEpochFromJulianDay(int julianDay, int firstDayOfWeek) {
+    private static int getWeeksSinceEpochFromJulianDay(int julianDay, int firstDayOfWeek) {
         int diff = Time.THURSDAY - firstDayOfWeek;
         if (diff < 0) {
             diff += 7;
@@ -188,7 +188,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
     /**
      * updates any config options that may have changed and refreshes the view
      */
-    protected void refresh() {
+    void refresh() {
         notifyDataSetChanged();
     }
 
@@ -281,7 +281,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
      *
      * @param day The day that was tapped
      */
-    protected void onDayTapped(Time day) {
+    void onDayTapped(Time day) {
         day.hour = mSelectedDay.hour;
         day.minute = mSelectedDay.minute;
         day.second = mSelectedDay.second;
@@ -293,7 +293,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
      * This is here so we can identify single tap events and set the selected
      * day correctly
      */
-    protected class CalendarGestureListener extends GestureDetector.SimpleOnGestureListener {
+    private class CalendarGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             return true;

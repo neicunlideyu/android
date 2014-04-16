@@ -76,7 +76,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
 
     private ListViewNewsAdapter listViewAdapter;
 
-    public TodoFragment() {
+    private TodoFragment() {
         setRetainInstance(true);
     }
 
@@ -219,10 +219,10 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
     }
 
     private class ListViewNewsAdapter extends BaseAdapter implements SectionIndexer {
-        private List<Item> listItems;// 数据集合
-        private LayoutInflater listContainer;// 视图容器
+        private final List<Item> listItems;// 数据集合
+        private final LayoutInflater listContainer;// 视图容器
 
-        private Item[] sections;
+        private final Item[] sections;
 
         /**
          * 实例化Adapter
@@ -400,12 +400,12 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
 
     static class Item {
 
-        private Object identifiable;
-        private Todolist todolist;
-        private int sectionPosition;
-        private int listPosition;
-        private String text;
-        private int type;
+        private final Object identifiable;
+        private final Todolist todolist;
+        private final int sectionPosition;
+        private final int listPosition;
+        private final String text;
+        private final int type;
 
         public Item(Object identifiable, Todolist todolist, int sectionPosition, int listPosition, String text, int type) {
             this.todolist = todolist;
@@ -431,7 +431,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         }
     }
 
-    public class newTodolistTask extends AsyncTask<String, Void, Todolist> {
+    private class newTodolistTask extends AsyncTask<String, Void, Todolist> {
 
         @Override
         protected Todolist doInBackground(String... todolistTitle) {
@@ -460,7 +460,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         }
     }
 
-    public class CompleteTodolistTask extends AsyncTask<Integer, Void, Todo> {
+    private class CompleteTodolistTask extends AsyncTask<Integer, Void, Todo> {
 
         @Override
         protected Todo doInBackground(Integer... todoId) {
@@ -497,7 +497,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         }
     }
 
-    public class InitDataTask extends AsyncTask<HashMap<String, Integer>, Void, List<Todolist>> {
+    private class InitDataTask extends AsyncTask<HashMap<String, Integer>, Void, List<Todolist>> {
 
         @Override
         protected List<Todolist> doInBackground(HashMap<String, Integer>... hashMaps) {

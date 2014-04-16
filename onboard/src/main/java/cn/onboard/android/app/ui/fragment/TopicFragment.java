@@ -42,15 +42,15 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
 
     private int projectId;
 
-    private List<Topic> topicList = new ArrayList<Topic>();
+    private final List<Topic> topicList = new ArrayList<Topic>();
 
     private List<Topic> returnedTopics;
 
-    public TopicFragment() {
+    private TopicFragment() {
         setRetainInstance(true);
     }
 
-    public ListViewNewsAdapter lvca;
+    private ListViewNewsAdapter lvca;
 
     private PullToRefreshListView activiPullToRefreshListView;
 
@@ -257,10 +257,10 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private List<Topic> listItems;// 数据集合
-        private LayoutInflater listContainer;// 视图容器
-        private int itemViewResource;// 自定义项视图源
-        private BitmapManager bmpManager;
+        private final List<Topic> listItems;// 数据集合
+        private final LayoutInflater listContainer;// 视图容器
+        private final int itemViewResource;// 自定义项视图源
+        private final BitmapManager bmpManager;
 
         static class ListItemView { // 自定义控件集合
             public ImageView face;

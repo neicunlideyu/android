@@ -28,10 +28,10 @@ import android.widget.ListView;
 
 import java.util.TimeZone;
 
-public class MonthListView extends ListView {
+class MonthListView extends ListView {
 
     private static final String TAG = "MonthListView";
-    VelocityTracker mTracker;
+    private VelocityTracker mTracker;
     private static float mScale = 0;
 
     // These define the behavior of the fling. Below MIN_VELOCITY_FOR_FLING, do the system fling
@@ -42,16 +42,16 @@ public class MonthListView extends ListView {
     private static int MIN_VELOCITY_FOR_FLING = 1500;
     private static int MULTIPLE_MONTH_VELOCITY_THRESHOLD = 2000;
     private static int FLING_VELOCITY_DIVIDER = 500;
-    private static int FLING_TIME = 1000;
+    private static final int FLING_TIME = 1000;
 
     // disposable variable used for time calculations
-    protected Time mTempTime;
+    private Time mTempTime;
     private long mDownActionTime;
     private final Rect mFirstViewRect = new Rect();
 
-    Context mListContext;
+    private Context mListContext;
     
-    TimeZone tz;
+    private TimeZone tz;
 
     // Updates the time zone when it changes
     private final Runnable mTimezoneUpdater = new Runnable() {

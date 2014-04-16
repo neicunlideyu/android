@@ -15,9 +15,9 @@ import java.util.List;
 import cn.onboard.android.app.R;
 
 public class GridViewProjectAdapter extends BaseAdapter{
-	private List<Project> listItems;// 数据集合
-	private LayoutInflater gridContainer;// 视图容器
-	private int itemViewResource;// 自定义项视图源
+	private final List<Project> listItems;// 数据集合
+	private final LayoutInflater gridContainer;// 视图容器
+	private final int itemViewResource;// 自定义项视图源
 
 	static class GridItemView{				//自定义控件集合  
 	        public TextView title;

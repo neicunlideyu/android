@@ -61,7 +61,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
   
     private boolean isBack;  
   
-    public OnRefreshListener refreshListener;  
+    private OnRefreshListener refreshListener;
     
     public PullToRefreshListView(Context context, AttributeSet attrs) {  
         super(context, attrs);  

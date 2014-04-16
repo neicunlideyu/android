@@ -127,7 +127,7 @@ public class NewDiscussion extends SherlockActivity {
         return result;
     }
 
-    private OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
+    private final OnMenuItemClickListener popupListener = new OnMenuItemClickListener() {
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {

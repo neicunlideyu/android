@@ -25,11 +25,11 @@ import cn.onboard.android.app.common.UIHelper;
 
 public class SelectCompany extends SherlockActivity {
 
-    ListViewCompanyAdapter listViewCompanyAdapter;
+    private ListViewCompanyAdapter listViewCompanyAdapter;
 
-    ListView companyListView;
+    private ListView companyListView;
 
-    ProgressBar loading;
+    private ProgressBar loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class SelectCompany extends SherlockActivity {
     }
 
 
-    public class GetCompanyListTask extends AsyncTask<Void, Void, List<Company>> {
+    private class GetCompanyListTask extends AsyncTask<Void, Void, List<Company>> {
 
         @Override
         protected List<Company> doInBackground(Void... params) {
@@ -93,9 +93,9 @@ public class SelectCompany extends SherlockActivity {
     }
 
     private static class ListViewCompanyAdapter extends BaseAdapter {
-        private List<Company> listItems;// 数据集合
-        private LayoutInflater listContainer;// 视图容器
-        private int itemViewResource;// 自定义项视图源
+        private final List<Company> listItems;// 数据集合
+        private final LayoutInflater listContainer;// 视图容器
+        private final int itemViewResource;// 自定义项视图源
 
         static class ListItemView {                //自定义控件集合
             public TextView title;

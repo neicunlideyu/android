@@ -12,7 +12,7 @@ import cn.onboard.android.app.AppManager;
  * @version 1.0
  * @created 2012-9-18
  */
-public class BaseActivity extends Activity{
+class BaseActivity extends Activity{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

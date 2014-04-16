@@ -75,7 +75,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
     private int sum = 0;
 
-    public AttachmentFragment() {
+    private AttachmentFragment() {
         setRetainInstance(true);
     }
 
@@ -101,7 +101,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
      *
      * @param items
      */
-    public void imageChooseItem(CharSequence[] items) {
+    void imageChooseItem(CharSequence[] items) {
         AlertDialog imageDialog = new AlertDialog.Builder(this.getActivity()).setTitle("上传图片").setIcon(android.R.drawable.btn_star).setItems(items,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
@@ -166,7 +166,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
         startActivityForResult(intent, ImageUtils.REQUEST_CODE_GETIMAGE_BYCAMERA);
     }
 
-    public class UploadImageTask extends AsyncTask<Void, Void, Void> {
+    private class UploadImageTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -219,10 +219,10 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private List<Attachment> listItems;// 数据集合
-        private LayoutInflater listContainer;// 视图容器
-        private int itemViewResource;// 自定义项视图源
-        private BitmapManager bmpManager;
+        private final List<Attachment> listItems;// 数据集合
+        private final LayoutInflater listContainer;// 视图容器
+        private final int itemViewResource;// 自定义项视图源
+        private final BitmapManager bmpManager;
 
         static class ListItemView { // 自定义控件集合
             public ImageView face;
@@ -259,7 +259,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
             return 0;
         }
 
-        private View.OnClickListener imageClickListener = new View.OnClickListener() {
+        private final View.OnClickListener imageClickListener = new View.OnClickListener() {
             public void onClick(View v) {
                 UIHelper.showImageDialog(v.getContext(), (String) v.getTag());
             }

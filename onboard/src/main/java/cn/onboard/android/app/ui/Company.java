@@ -46,8 +46,8 @@ public class Company extends FragmentActivity implements CalendarController.Even
     private StickyGridHeadersGridView everyoneView;
 
     private CalendarController mController;
-    MonthByWeekFragment monthFrag;
-    ActivityFragment activityFragment;
+    private MonthByWeekFragment monthFrag;
+    private ActivityFragment activityFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,7 +168,7 @@ public class Company extends FragmentActivity implements CalendarController.Even
     }
 
     //get project info
-    public class GetProjectListTask extends AsyncTask<Void, Void, List<Project>> {
+    private class GetProjectListTask extends AsyncTask<Void, Void, List<Project>> {
 
         @Override
         protected List<Project> doInBackground(Void... params) {
@@ -197,7 +197,7 @@ public class Company extends FragmentActivity implements CalendarController.Even
 
 
     // get department info
-    public class GetDepartmentNameUserMapTask extends AsyncTask<Void, Void, Map<String, List<User>>> {
+    private class GetDepartmentNameUserMapTask extends AsyncTask<Void, Void, Map<String, List<User>>> {
 
         @Override
         protected Map<String, List<User>> doInBackground(Void... params) {

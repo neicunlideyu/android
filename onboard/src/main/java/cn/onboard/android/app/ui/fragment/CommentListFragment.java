@@ -58,7 +58,7 @@ public class CommentListFragment extends Fragment {
     private Button commentPublish;
     private Comment comment;
 
-    public CommentListFragment() {
+    private CommentListFragment() {
         setRetainInstance(true);
     }
 
@@ -88,10 +88,10 @@ public class CommentListFragment extends Fragment {
 
 
     public static class ListViewAdapter extends BaseAdapter {
-        private List<Comment> listItems;// 数据集合
-        private LayoutInflater listContainer;// 视图容器
-        private int itemViewResource;// 自定义项视图源
-        private BitmapManager bmpManager;
+        private final List<Comment> listItems;// 数据集合
+        private final LayoutInflater listContainer;// 视图容器
+        private final int itemViewResource;// 自定义项视图源
+        private final BitmapManager bmpManager;
 
         static class ListItemView { // 自定义控件集合
             public ImageView userface;
@@ -189,7 +189,7 @@ public class CommentListFragment extends Fragment {
 
     }
 
-    private View.OnClickListener publishClickListener = new View.OnClickListener() {
+    private final View.OnClickListener publishClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             // 隐藏软键盘
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -244,7 +244,7 @@ public class CommentListFragment extends Fragment {
         }
     };
 
-    public class GetCommentsTask extends AsyncTask<Void, Void, List<Comment>> {
+    private class GetCommentsTask extends AsyncTask<Void, Void, List<Comment>> {
 
         @Override
         protected List<Comment> doInBackground(Void... voids) {
@@ -273,7 +273,7 @@ public class CommentListFragment extends Fragment {
         }
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
             return;

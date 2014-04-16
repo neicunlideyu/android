@@ -58,7 +58,7 @@ public class Person extends SherlockFragmentActivity {
         new GetUserTask().execute(userId);
     }
 
-    public class GetUserTask extends AsyncTask<Integer, Void, User> {
+    private class GetUserTask extends AsyncTask<Integer, Void, User> {
 
         @Override
         protected User doInBackground(Integer... userId) {

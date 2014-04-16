@@ -62,14 +62,14 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
 			+ "=1";
 	private static final String INSTANCES_SORT_ORDER = Instances.START_DAY
 			+ "," + Instances.START_MINUTE + "," + Instances.TITLE;
-	protected static boolean mShowDetailsInMonth = false;
-	protected int companyId;
-	protected float mMinimumTwoMonthFlingVelocity;
-	protected boolean mIsMiniMonth;
-	protected boolean mHideDeclined;
+	private static boolean mShowDetailsInMonth = false;
+	private int companyId;
+	private float mMinimumTwoMonthFlingVelocity;
+	private final boolean mIsMiniMonth;
+	private boolean mHideDeclined;
 
-	protected int mFirstLoadedJulianDay;
-	protected int mLastLoadedJulianDay;
+	private int mFirstLoadedJulianDay;
+	private int mLastLoadedJulianDay;
 
 	private long startTime;
 	private long endTime;
@@ -387,7 +387,7 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
 		goTo(mSelectedDay.toMillis(true), false, true, false);
 	}
 
-	private ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
+	private final ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
 
 
 	@Override

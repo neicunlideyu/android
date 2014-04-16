@@ -17,15 +17,15 @@ import android.widget.Scroller;
  */
 public class ScrollLayout extends ViewGroup {
     //	private static final String TAG = "ScrollLayout";
-    private Scroller mScroller;
+    private final Scroller mScroller;
     private VelocityTracker mVelocityTracker;
     private int mCurScreen;
-    private int mDefaultScreen = 0;
+    private final int mDefaultScreen = 0;
     private static final int TOUCH_STATE_REST = 0;
     private static final int TOUCH_STATE_SCROLLING = 1;
     private static final int SNAP_VELOCITY = 600;
     private int mTouchState = TOUCH_STATE_REST;
-    private int mTouchSlop;
+    private final int mTouchSlop;
     private float mLastMotionX;
     private float mLastMotionY;
     private OnViewChangeListener mOnViewChangeListener;
@@ -35,7 +35,7 @@ public class ScrollLayout extends ViewGroup {
      *
      * @author liux
      */
-    private boolean isScroll = true;
+    private final boolean isScroll = true;
 
     public ScrollLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -92,7 +92,7 @@ public class ScrollLayout extends ViewGroup {
      * According to the position of current layout scroll to the destination
      * page.
      */
-    public void snapToDestination() {
+    void snapToDestination() {
         final int screenWidth = getWidth();
         final int destScreen = (getScrollX() + screenWidth / 2) / screenWidth;
         snapToScreen(destScreen);
@@ -103,7 +103,7 @@ public class ScrollLayout extends ViewGroup {
         scrollToScreen(whichScreen);
     }
 
-    public void scrollToScreen(int whichScreen) {
+    void scrollToScreen(int whichScreen) {
         // get the valid layout page
         whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
         if (getScrollX() != (whichScreen * getWidth())) {

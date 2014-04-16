@@ -68,7 +68,7 @@ public class CalendarController {
     private Pair<Integer, EventHandler> mToBeAddedFirstEventHandler;
     private volatile int mDispatchInProgressCounter = 0;
 
-    private static WeakHashMap<Context, CalendarController> instances =
+    private static final WeakHashMap<Context, CalendarController> instances =
         new WeakHashMap<Context, CalendarController>();
 
     private final WeakHashMap<Object, Long> filters = new WeakHashMap<Object, Long>(1);
@@ -244,7 +244,7 @@ public class CalendarController {
      * can be ignored
      */
     public static final long EXTRA_GOTO_DATE = 1;
-    public static final long EXTRA_GOTO_TIME = 2;
+    private static final long EXTRA_GOTO_TIME = 2;
     public static final long EXTRA_GOTO_BACK_TO_PREVIOUS = 4;
     public static final long EXTRA_GOTO_TODAY = 8;
 
@@ -320,8 +320,8 @@ public class CalendarController {
      *        Use Attendees.ATTENDEE_STATUS_NONE for no response.
      * @param selectedMillis The time to specify as selected
      */
-    public void sendEventRelatedEventWithExtra(Object sender, long eventType, long eventId,
-            long startMillis, long endMillis, int x, int y, long extraLong, long selectedMillis) {
+    void sendEventRelatedEventWithExtra(Object sender, long eventType, long eventId,
+                                        long startMillis, long endMillis, int x, int y, long extraLong, long selectedMillis) {
         EventInfo info = new EventInfo();
         info.eventType = eventType;
         if (eventType == EventType.EDIT_EVENT || eventType == EventType.VIEW_EVENT_DETAILS) {
@@ -384,7 +384,7 @@ public class CalendarController {
         this.sendEvent(sender, info);
     }
 
-    public void sendEvent(Object sender, final EventInfo event) {
+    void sendEvent(Object sender, final EventInfo event) {
         // TODO Throw exception on invalid events
 
         if (DEBUG) {

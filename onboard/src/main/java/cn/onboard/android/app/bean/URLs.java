@@ -11,13 +11,13 @@ public class URLs implements Serializable {
 
     public final static String HOST = "onboard.cn";
 
-    public final static String IMAGE_HOST = "teamforge.b0.upaiyun.com";
+    private final static String IMAGE_HOST = "teamforge.b0.upaiyun.com";
 
-    public final static String HTTP = "http://";
+    private final static String HTTP = "http://";
 
     private final static String URL_SPLITTER = "/";
 
-    public final static String URL_API_HOST = HTTP + HOST + URL_SPLITTER;
+    private final static String URL_API_HOST = HTTP + HOST + URL_SPLITTER;
 
     public final static String LOGIN_VALIDATE_HTTP = URL_API_HOST + "api/signin";
     public final static String COMPANY_LIST_HTTP = URL_API_HOST + "api";

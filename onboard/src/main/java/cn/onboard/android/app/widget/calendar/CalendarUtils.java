@@ -40,7 +40,7 @@ import java.util.Locale;
  *
  * This class is expected to move into the app framework eventually.
  */
-public class CalendarUtils {
+class CalendarUtils {
     private static final boolean DEBUG = false;
     private static final String TAG = "CalendarUtils";
 
@@ -56,15 +56,15 @@ public class CalendarUtils {
                 CalendarCache.KEY, CalendarCache.VALUE
         };
 
-        private static StringBuilder mSB = new StringBuilder(50);
-        private static Formatter mF = new Formatter(mSB, Locale.getDefault());
+        private static final StringBuilder mSB = new StringBuilder(50);
+        private static final Formatter mF = new Formatter(mSB, Locale.getDefault());
         private volatile static boolean mFirstTZRequest = true;
         private volatile static boolean mTZQueryInProgress = false;
 
         private volatile static boolean mUseHomeTZ = false;
         private volatile static String mHomeTZ = Time.getCurrentTimezone();
 
-        private static HashSet<Runnable> mTZCallbacks = new HashSet<Runnable>();
+        private static final HashSet<Runnable> mTZCallbacks = new HashSet<Runnable>();
         private static int mToken = 1;
         private static AsyncTZHandler mHandler;
 
@@ -330,7 +330,7 @@ public class CalendarUtils {
          * @param key The preference to write to
          * @param value The value to write
          */
-        public static void setSharedPreference(SharedPreferences prefs, String key, String value) {
+        private static void setSharedPreference(SharedPreferences prefs, String key, String value) {
 //            SharedPreferences prefs = getSharedPreferences(context);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(key, value);
@@ -345,7 +345,7 @@ public class CalendarUtils {
          * @param key The preference to write to
          * @param value The value to write
          */
-        public static void setSharedPreference(SharedPreferences prefs, String key, boolean value) {
+        private static void setSharedPreference(SharedPreferences prefs, String key, boolean value) {
 //            SharedPreferences prefs = getSharedPreferences(context, prefsName);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(key, value);
@@ -353,7 +353,7 @@ public class CalendarUtils {
         }
 
         /** Return a properly configured SharedPreferences instance */
-        public static SharedPreferences getSharedPreferences(Context context, String prefsName) {
+        private static SharedPreferences getSharedPreferences(Context context, String prefsName) {
             return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
         }
 }

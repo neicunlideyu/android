@@ -36,7 +36,7 @@ public class AppConfig{
 		return (props!=null)?props.getProperty(key):null;
 	}
 	
-	public Properties get() {
+	Properties get() {
 		FileInputStream fis = null;
 		Properties props = new Properties();
 		try{

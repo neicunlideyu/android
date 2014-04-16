@@ -33,13 +33,13 @@ public class CalendarEvent implements Cloneable {
      * therefore show up in the allday area).
      */
 
-    public long id;
+    private long id;
     public int color;
     public CharSequence title;
-    public CharSequence location;
+    private CharSequence location;
     public boolean allDay;
-    public String organizer;
-    public boolean guestsCanModify;
+    private String organizer;
+    private boolean guestsCanModify;
 
     public int startDay;       // start Julian day
     public int endDay;         // end Julian day
@@ -51,8 +51,8 @@ public class CalendarEvent implements Cloneable {
     private int mColumn;
     private int mMaxColumns;
 
-    public boolean hasAlarm;
-    public boolean isRepeating;
+    private boolean hasAlarm;
+    private boolean isRepeating;
 
     public int selfAttendeeStatus;
 

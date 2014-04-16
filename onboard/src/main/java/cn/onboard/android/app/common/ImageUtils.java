@@ -37,7 +37,7 @@ public class ImageUtils{
 	{ 
 		saveImage(context, fileName, bitmap, 100);
 	}
-	public static void saveImage(Context context, String fileName, Bitmap bitmap, int quality) throws IOException 
+	private static void saveImage(Context context, String fileName, Bitmap bitmap, int quality) throws IOException
 	{ 
 		if(bitmap==null || fileName==null || context==null)	return;		
 

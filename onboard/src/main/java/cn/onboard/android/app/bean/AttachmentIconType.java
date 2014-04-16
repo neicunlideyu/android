@@ -34,7 +34,7 @@ public class AttachmentIconType {
         }
     };
 
-    public final static String IMAGE = "image";
+    private final static String IMAGE = "image";
 
     private static final String DEFAULT = "default";
 

@@ -40,27 +40,27 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     protected static int DEFAULT_QUERY_DAYS = 7 * 8; // 8 weeks
     private static final long ANIMATE_TODAY_TIMEOUT = 1000;
 
-    protected CalendarController mController;
-    protected String mHomeTimeZone;
-    protected Time mTempTime;
-    protected Time mToday;
-    protected int mFirstJulianDay;
-    protected int mQueryDays;
+    private CalendarController mController;
+    private String mHomeTimeZone;
+    private Time mTempTime;
+    private Time mToday;
+    private int mFirstJulianDay;
+    private int mQueryDays;
 //    protected boolean mIsMiniMonth = false;
-    protected int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
+private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
     private final boolean mShowAgendaWithMonth;
 
-    protected ArrayList<ArrayList<CalendarEvent>> mEventDayList = new ArrayList<ArrayList<CalendarEvent>>();
-    protected ArrayList<CalendarEvent> mEvents = null;
+    private ArrayList<ArrayList<CalendarEvent>> mEventDayList = new ArrayList<ArrayList<CalendarEvent>>();
+    private ArrayList<CalendarEvent> mEvents = null;
 
     private boolean mAnimateToday = false;
     private long mAnimateTime = 0;
 
-    MonthWeekEventsView mClickedView;
-    MonthWeekEventsView mSingleTapUpView;
+    private MonthWeekEventsView mClickedView;
+    private MonthWeekEventsView mSingleTapUpView;
 
-    float mClickedXLocation;                // Used to find which day was clicked
-    long mClickTime;                        // Used to calculate minimum click animation time
+    private float mClickedXLocation;                // Used to find which day was clicked
+    private long mClickTime;                        // Used to calculate minimum click animation time
     // Used to insure minimal time for seeing the click animation before switching views
     private static final int mOnTapDelay = 100;
     // Minimal time for a down touch action before stating the click animation, this insures that
@@ -346,7 +346,7 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     /**
      * This is here so we can identify events and process them
      */
-    protected class CalendarGestureListener extends GestureDetector.SimpleOnGestureListener {
+    private class CalendarGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             return true;

@@ -87,7 +87,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
     private static int DAY_SEPARATOR_INNER_WIDTH = 1;
     private static int DAY_SEPARATOR_VERTICAL_LENGTH = 53;
     private static int DAY_SEPARATOR_VERTICAL_LENGHT_PORTRAIT = 64;
-    private static int MIN_WEEK_WIDTH = 50;
+    private static final int MIN_WEEK_WIDTH = 50;
 
     private static int EVENT_X_OFFSET_LANDSCAPE = 38;
     private static int EVENT_Y_OFFSET_LANDSCAPE = 8;
@@ -104,72 +104,72 @@ public class MonthWeekEventsView extends SimpleWeekView {
     private static boolean mInitialized = false;
     private static boolean mShowDetailsInMonth;
 
-    protected Time mToday = new Time();
-    protected boolean mHasToday = false;
-    protected int mTodayIndex = -1;
-    protected int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
-    protected List<ArrayList<CalendarEvent>> mEvents = null;
-    protected ArrayList<CalendarEvent> mUnsortedEvents = null;
-    HashMap<Integer, Utils.DNAStrand> mDna = null;
+    private final Time mToday = new Time();
+    private boolean mHasToday = false;
+    private int mTodayIndex = -1;
+    private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
+    private List<ArrayList<CalendarEvent>> mEvents = null;
+    private ArrayList<CalendarEvent> mUnsortedEvents = null;
+    private HashMap<Integer, Utils.DNAStrand> mDna = null;
     // This is for drawing the outlines around event chips and supports up to 10
     // events being drawn on each day. The code will expand this if necessary.
     protected FloatRef mEventOutlines = new FloatRef(10 * 4 * 4 * 7);
 
 
 
-    protected static StringBuilder mStringBuilder = new StringBuilder(50);
+    private static final StringBuilder mStringBuilder = new StringBuilder(50);
     // TODO recreate formatter when locale changes
-    protected static Formatter mFormatter = new Formatter(mStringBuilder, Locale.getDefault());
+    private static final Formatter mFormatter = new Formatter(mStringBuilder, Locale.getDefault());
 
     protected Paint mMonthNamePaint;
-    protected TextPaint mEventPaint;
-    protected TextPaint mSolidBackgroundEventPaint;
-    protected TextPaint mFramedEventPaint;
-    protected TextPaint mDeclinedEventPaint;
-    protected TextPaint mEventExtrasPaint;
-    protected TextPaint mEventDeclinedExtrasPaint;
-    protected Paint mWeekNumPaint;
-    protected Paint mDNAAllDayPaint;
-    protected Paint mDNATimePaint;
-    protected Paint mEventSquarePaint;
+    private TextPaint mEventPaint;
+    private TextPaint mSolidBackgroundEventPaint;
+    private TextPaint mFramedEventPaint;
+    private TextPaint mDeclinedEventPaint;
+    private TextPaint mEventExtrasPaint;
+    private TextPaint mEventDeclinedExtrasPaint;
+    private Paint mWeekNumPaint;
+    private Paint mDNAAllDayPaint;
+    private Paint mDNATimePaint;
+    private Paint mEventSquarePaint;
 
 
-    protected Drawable mTodayDrawable;
+    private Drawable mTodayDrawable;
 
-    protected int mMonthNumHeight;
-    protected int mMonthNumAscentHeight;
-    protected int mEventHeight;
-    protected int mEventAscentHeight;
-    protected int mExtrasHeight;
-    protected int mExtrasAscentHeight;
-    protected int mExtrasDescent;
-    protected int mWeekNumAscentHeight;
+    private int mMonthNumHeight;
+    private int mMonthNumAscentHeight;
+    private int mEventHeight;
+    private int mEventAscentHeight;
+    private int mExtrasHeight;
+    private int mExtrasAscentHeight;
+    private int mExtrasDescent;
+    private int mWeekNumAscentHeight;
 
-    protected int mMonthBGColor;
-    protected int mMonthBGOtherColor;
-    protected int mMonthBGTodayColor;
-    protected int mMonthNumColor;
-    protected int mMonthNumOtherColor;
-    protected int mMonthNumTodayColor;
-    protected int mMonthNameColor;
-    protected int mMonthNameOtherColor;
-    protected int mMonthEventColor;
-    protected int mMonthDeclinedEventColor;
-    protected int mMonthDeclinedExtrasColor;
-    protected int mMonthEventExtraColor;
-    protected int mMonthEventOtherColor;
-    protected int mMonthEventExtraOtherColor;
-    protected int mMonthWeekNumColor;
+    private int mMonthBGColor;
+    private int mMonthBGOtherColor;
+    private int mMonthBGTodayColor;
+    private int mMonthNumColor;
+    private int mMonthNumOtherColor;
+    private int mMonthNumTodayColor;
+    private int mMonthNameColor;
+    private int mMonthNameOtherColor;
+    private int mMonthEventColor;
+    private int mMonthDeclinedEventColor;
+    private int mMonthDeclinedExtrasColor;
+    private int mMonthEventExtraColor;
+    private int mMonthEventOtherColor;
+    private int mMonthEventExtraOtherColor;
+    private int mMonthWeekNumColor;
     protected int mMonthBusyBitsBgColor;
-    protected int mMonthBusyBitsBusyTimeColor;
-    protected int mMonthBusyBitsConflictTimeColor;
+    private int mMonthBusyBitsBusyTimeColor;
+    private int mMonthBusyBitsConflictTimeColor;
     private int mClickedDayIndex = -1;
     private int mClickedDayColor;
     private static final int mClickedAlpha = 128;
 
     protected int mEventChipOutlineColor = 0xFFFFFFFF;
-    protected int mDaySeparatorInnerColor;
-    protected int mTodayAnimateColor;
+    private int mDaySeparatorInnerColor;
+    private int mTodayAnimateColor;
 
     private boolean mAnimateToday;
     private int mAnimateTodayAlpha = 0;
@@ -265,7 +265,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
      * isn't in a state that will create a valid set of dna yet (such as the
      * views width not being set correctly yet).
      */
-    public void createDna(ArrayList<CalendarEvent> unsortedEvents) {
+    void createDna(ArrayList<CalendarEvent> unsortedEvents) {
         if (unsortedEvents == null || mWidth <= MIN_WEEK_WIDTH || getContext() == null) {
             // Stash the list of events for use when this view is ready, or
             // just clear it if a null set has been passed to this view
@@ -298,7 +298,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         }
     }
 
-    public void setEvents(List<ArrayList<CalendarEvent>> sortedEvents) {
+    void setEvents(List<ArrayList<CalendarEvent>> sortedEvents) {
         mEvents = sortedEvents;
         if (sortedEvents == null) {
             return;
@@ -313,7 +313,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         }
     }
 
-    protected void loadColors(Context context) {
+    void loadColors(Context context) {
         Resources res = context.getResources();
         mMonthWeekNumColor = res.getColor(R.color.month_week_num_color);
         mMonthNumColor = res.getColor(R.color.month_day_number);
@@ -556,7 +556,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         drawClick(canvas);
     }
 
-    protected void drawToday(Canvas canvas) {
+    void drawToday(Canvas canvas) {
         r.top = DAY_SEPARATOR_INNER_WIDTH + (TODAY_HIGHLIGHT_WIDTH / 2);
         r.bottom = mHeight - (int) Math.ceil(TODAY_HIGHLIGHT_WIDTH / 2.0f);
         p.setStyle(Style.STROKE);
@@ -716,7 +716,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         }
     }
 
-    protected void drawEvents(Canvas canvas) {
+    void drawEvents(Canvas canvas) {
         if (mEvents == null) {
             return;
         }
@@ -818,8 +818,8 @@ public class MonthWeekEventsView extends SimpleWeekView {
      *   and returns
      * @return the y for the next event or the original y if it won't fit
      */
-    protected int drawEvent(Canvas canvas, CalendarEvent event, int x, int y, int rightEdge,
-            boolean moreEvents, boolean showTimes, boolean doDraw) {
+    int drawEvent(Canvas canvas, CalendarEvent event, int x, int y, int rightEdge,
+                  boolean moreEvents, boolean showTimes, boolean doDraw) {
         /*
          * Vertical layout:
          *   (top of box)
@@ -948,7 +948,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         return y;
     }
 
-    protected void drawMoreEvents(Canvas canvas, int remainingEvents, int x) {
+    void drawMoreEvents(Canvas canvas, int remainingEvents, int x) {
         int y = mHeight - (mExtrasDescent + EVENT_BOTTOM_PADDING);
         String text = getContext().getResources().getQuantityString(
                 R.plurals.month_more_events, remainingEvents);
@@ -965,7 +965,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
      *
      * @param canvas
      */
-    protected void drawDNA(Canvas canvas) {
+    void drawDNA(Canvas canvas) {
         // Draw event and conflict times
         if (mDna != null) {
             for (Utils.DNAStrand strand : mDna.values()) {
@@ -1017,7 +1017,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         }
     }
 
-    public int getDayIndexFromLocation(float x) {
+    int getDayIndexFromLocation(float x) {
         int dayStart = mShowWeekNum ? SPACING_WEEK_NUMBER + mPadding : mPadding;
         if (x < dayStart || x > mWidth - mPadding) {
             return -1;

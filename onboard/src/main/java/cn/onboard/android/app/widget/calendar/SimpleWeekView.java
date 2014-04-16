@@ -48,12 +48,12 @@ import cn.onboard.android.app.R;
  * See {@link SimpleWeeksAdapter} for usage.
  * </p>
  */
-public class SimpleWeekView extends View {
+class SimpleWeekView extends View {
     private static final String TAG = "MonthView";
     
-    public static final int MONDAY_BEFORE_JULIAN_EPOCH = Time.EPOCH_JULIAN_DAY - 3;
-    private static StringBuilder mSB = new StringBuilder(50);
-    private static Formatter mF = new Formatter(mSB, Locale.getDefault());
+    private static final int MONDAY_BEFORE_JULIAN_EPOCH = Time.EPOCH_JULIAN_DAY - 3;
+    private static final StringBuilder mSB = new StringBuilder(50);
+    private static final Formatter mF = new Formatter(mSB, Locale.getDefault());
 
     /**
      * These params can be passed into the view to control how it appears.
@@ -94,83 +94,83 @@ public class SimpleWeekView extends View {
      */
     public static final String VIEW_PARAMS_SHOW_WK_NUM = "show_wk_num";
 
-    protected static int DEFAULT_HEIGHT = 32;
-    protected static int MIN_HEIGHT = 10;
-    protected static final int DEFAULT_SELECTED_DAY = -1;
-    protected static final int DEFAULT_WEEK_START = Time.SUNDAY;
-    protected static final int DEFAULT_NUM_DAYS = 7;
+    private static int DEFAULT_HEIGHT = 32;
+    private static int MIN_HEIGHT = 10;
+    private static final int DEFAULT_SELECTED_DAY = -1;
+    private static final int DEFAULT_WEEK_START = Time.SUNDAY;
+    private static final int DEFAULT_NUM_DAYS = 7;
     protected static final int DEFAULT_SHOW_WK_NUM = 0;
-    protected static final int DEFAULT_FOCUS_MONTH = -1;
+    private static final int DEFAULT_FOCUS_MONTH = -1;
 
-    protected static int DAY_SEPARATOR_WIDTH = 1;
+    private static int DAY_SEPARATOR_WIDTH = 1;
 
-    protected static int MINI_DAY_NUMBER_TEXT_SIZE = 14;
-    protected static int MINI_WK_NUMBER_TEXT_SIZE = 12;
-    protected static int MINI_TODAY_NUMBER_TEXT_SIZE = 18;
-    protected static int MINI_TODAY_OUTLINE_WIDTH = 2;
-    protected static int WEEK_NUM_MARGIN_BOTTOM = 4;
+    private static int MINI_DAY_NUMBER_TEXT_SIZE = 14;
+    private static int MINI_WK_NUMBER_TEXT_SIZE = 12;
+    private static int MINI_TODAY_NUMBER_TEXT_SIZE = 18;
+    private static int MINI_TODAY_OUTLINE_WIDTH = 2;
+    private static int WEEK_NUM_MARGIN_BOTTOM = 4;
 
     // used for scaling to the device density
-    protected static float mScale = 0;
+    static float mScale = 0;
 
     // affects the padding on the sides of this view
-    protected int mPadding = 0;
+    int mPadding = 0;
 
-    protected Rect r = new Rect();
-    protected Paint p = new Paint();
-    protected Paint mMonthNumPaint;
-    protected Drawable mSelectedDayLine;
+    final Rect r = new Rect();
+    final Paint p = new Paint();
+    Paint mMonthNumPaint;
+    private final Drawable mSelectedDayLine;
 
     // Cache the number strings so we don't have to recompute them each time
-    protected String[] mDayNumbers;
+    String[] mDayNumbers;
     // Quick lookup for checking which days are in the focus month
-    protected boolean[] mFocusDay;
+    boolean[] mFocusDay;
     // Quick lookup for checking which days are in an odd month (to set a different background)
-    protected boolean[] mOddMonth;
+    boolean[] mOddMonth;
     // The Julian day of the first day displayed by this item
-    protected int mFirstJulianDay = -1;
+    int mFirstJulianDay = -1;
     // The month of the first day in this week
-    protected int mFirstMonth = -1;
+    private int mFirstMonth = -1;
     // The month of the last day in this week
-    protected int mLastMonth = -1;
+    private int mLastMonth = -1;
     // The position of this week, equivalent to weeks since the week of Jan 1st,
     // 1970
-    protected int mWeek = -1;
+    int mWeek = -1;
     // Quick reference to the width of this view, matches parent
-    protected int mWidth;
+    int mWidth;
     // The height this view should draw at in pixels, set by height param
-    protected int mHeight = DEFAULT_HEIGHT;
+    int mHeight = DEFAULT_HEIGHT;
     // Whether the week number should be shown
-    protected boolean mShowWeekNum = false;
+    boolean mShowWeekNum = false;
     // If this view contains the selected day
-    protected boolean mHasSelectedDay = false;
+    boolean mHasSelectedDay = false;
     // If this view contains the today
-    protected boolean mHasToday = false;
+    private boolean mHasToday = false;
     // Which day is selected [0-6] or -1 if no day is selected
-    protected int mSelectedDay = DEFAULT_SELECTED_DAY;
+    int mSelectedDay = DEFAULT_SELECTED_DAY;
     // Which day is today [0-6] or -1 if no day is today
-    protected int mToday = DEFAULT_SELECTED_DAY;
+    private int mToday = DEFAULT_SELECTED_DAY;
     // Which day of the week to start on [0-6]
-    protected int mWeekStart = DEFAULT_WEEK_START;
+    int mWeekStart = DEFAULT_WEEK_START;
     // How many days to display
-    protected int mNumDays = DEFAULT_NUM_DAYS;
+    int mNumDays = DEFAULT_NUM_DAYS;
     // The number of days + a spot for week number if it is displayed
-    protected int mNumCells = mNumDays;
+    int mNumCells = mNumDays;
     // The left edge of the selected day
-    protected int mSelectedLeft = -1;
+    int mSelectedLeft = -1;
     // The right edge of the selected day
-    protected int mSelectedRight = -1;
+    int mSelectedRight = -1;
     // The timezone to display times/dates in (used for determining when Today
     // is)
-    protected String mTimeZone = Time.getCurrentTimezone();
+    String mTimeZone = Time.getCurrentTimezone();
 
-    protected int mBGColor;
-    protected int mSelectedWeekBGColor;
-    protected int mFocusMonthColor;
-    protected int mOtherMonthColor;
-    protected int mDaySeparatorColor;
-    protected int mTodayOutlineColor;
-    protected int mWeekNumColor;
+    private final int mBGColor;
+    private final int mSelectedWeekBGColor;
+    private final int mFocusMonthColor;
+    private final int mOtherMonthColor;
+    private final int mDaySeparatorColor;
+    private final int mTodayOutlineColor;
+    final int mWeekNumColor;
 
     public SimpleWeekView(Context context) {
         super(context);
@@ -204,7 +204,7 @@ public class SimpleWeekView extends View {
         initView();
     }
     
-    public static int getJulianMondayFromWeeksSinceEpoch(int week) {
+    private static int getJulianMondayFromWeeksSinceEpoch(int week) {
         return MONDAY_BEFORE_JULIAN_EPOCH + week * 7;
     }
 
@@ -325,7 +325,7 @@ public class SimpleWeekView extends View {
      * Sets up the text and style properties for painting. Override this if you
      * want to use a different paint.
      */
-    protected void initView() {
+    void initView() {
         p.setFakeBoldText(false);
         p.setAntiAlias(true);
         p.setTextSize(MINI_DAY_NUMBER_TEXT_SIZE);
@@ -413,7 +413,7 @@ public class SimpleWeekView extends View {
      *
      * @param canvas The canvas to draw on
      */
-    protected void drawBackground(Canvas canvas) {
+    void drawBackground(Canvas canvas) {
         if (mHasSelectedDay) {
             p.setColor(mSelectedWeekBGColor);
             p.setStyle(Style.FILL);
@@ -436,7 +436,7 @@ public class SimpleWeekView extends View {
      *
      * @param canvas The canvas to draw on
      */
-    protected void drawWeekNums(Canvas canvas) {
+    void drawWeekNums(Canvas canvas) {
         int y = ((mHeight + MINI_DAY_NUMBER_TEXT_SIZE) / 2) - DAY_SEPARATOR_WIDTH;
         int nDays = mNumCells;
 
@@ -480,7 +480,7 @@ public class SimpleWeekView extends View {
      *
      * @param canvas The canvas to draw on
      */
-    protected void drawDaySeparators(Canvas canvas) {
+    void drawDaySeparators(Canvas canvas) {
         if (mHasSelectedDay) {
             r.top = 1;
             r.bottom = mHeight - 1;
@@ -509,7 +509,7 @@ public class SimpleWeekView extends View {
     /**
      * This calculates the positions for the selected day lines.
      */
-    protected void updateSelectionPositions() {
+    void updateSelectionPositions() {
         if (mHasSelectedDay) {
             int selectedPosition = mSelectedDay - mWeekStart;
             if (selectedPosition < 0) {
@@ -557,8 +557,8 @@ public class SimpleWeekView extends View {
         return true;
     }
     
-    public String formatDateRange(Context context, long startMillis,
-            long endMillis, int flags) {
+    String formatDateRange(Context context, long startMillis,
+                           long endMillis, int flags) {
         String date;
         String tz;
         if ((flags & DateUtils.FORMAT_UTC) != 0) {

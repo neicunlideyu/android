@@ -54,7 +54,7 @@ import cn.onboard.android.app.common.HttpStreamToObject;
  */
 public class ApiClient {
 
-    public static final String UTF_8 = "UTF-8";
+    private static final String UTF_8 = "UTF-8";
 
     private final static int TIMEOUT_CONNECTION = 20000;
     private final static int TIMEOUT_SOCKET = 20000;

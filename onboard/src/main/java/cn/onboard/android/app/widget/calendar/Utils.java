@@ -53,7 +53,7 @@ import cn.onboard.android.app.R;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 
 
-public class Utils {
+class Utils {
     private static final boolean DEBUG = false;
     private static final String TAG = "CalUtils";
 
@@ -83,35 +83,35 @@ public class Utils {
     public static final String INTENT_VALUE_VIEW_TYPE_DAY = "DAY";
     public static final String INTENT_KEY_HOME = "KEY_HOME";
 
-    public static final int MONDAY_BEFORE_JULIAN_EPOCH = Time.EPOCH_JULIAN_DAY - 3;
-    public static final int DECLINED_EVENT_ALPHA = 0x66;
+    private static final int MONDAY_BEFORE_JULIAN_EPOCH = Time.EPOCH_JULIAN_DAY - 3;
+    private static final int DECLINED_EVENT_ALPHA = 0x66;
     public static final int DECLINED_EVENT_TEXT_ALPHA = 0xC0;
 
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
 
     // Defines used by the DNA generation code
-    static final int DAY_IN_MINUTES = 60 * 24;
-    static final int WEEK_IN_MINUTES = DAY_IN_MINUTES * 7;
+    private static final int DAY_IN_MINUTES = 60 * 24;
+    private static final int WEEK_IN_MINUTES = DAY_IN_MINUTES * 7;
     // The work day is being counted as 6am to 8pm
-    static int WORK_DAY_MINUTES = 14 * 60;
-    static int WORK_DAY_START_MINUTES = 6 * 60;
-    static int WORK_DAY_END_MINUTES = 20 * 60;
-    static int WORK_DAY_END_LENGTH = (24 * 60) - WORK_DAY_END_MINUTES;
-    static int CONFLICT_COLOR = 0xFF000000;
-    static boolean mMinutesLoaded = false;
+    private static int WORK_DAY_MINUTES = 14 * 60;
+    private static int WORK_DAY_START_MINUTES = 6 * 60;
+    private static int WORK_DAY_END_MINUTES = 20 * 60;
+    private static int WORK_DAY_END_LENGTH = (24 * 60) - WORK_DAY_END_MINUTES;
+    private static int CONFLICT_COLOR = 0xFF000000;
+    private static boolean mMinutesLoaded = false;
 
     // The name of the shared preferences file. This name must be maintained for
     // historical
     // reasons, as it's what PreferenceManager assigned the first time the file
     // was created.
-    static final String SHARED_PREFS_NAME = "com.android.calendar_preferences";
+    private static final String SHARED_PREFS_NAME = "com.android.calendar_preferences";
 
     public static final String KEY_QUICK_RESPONSES = "preferences_quick_responses";
 
     public static final String APPWIDGET_DATA_TYPE = "vnd.android.data/update";
 
-    static final String MACHINE_GENERATED_ADDRESS = "calendar.google.com";
+    private static final String MACHINE_GENERATED_ADDRESS = "calendar.google.com";
 
     private static final CalendarUtils.TimeZoneUtils mTZUtils = new CalendarUtils.TimeZoneUtils(SHARED_PREFS_NAME);
     private static boolean mAllowWeekForDetailView = false;
@@ -121,7 +121,7 @@ public class Utils {
     /**
      * Returns whether the SDK is the Jellybean release or later.
      */
-    public static boolean isJellybeanOrLater() {
+    private static boolean isJellybeanOrLater() {
       return Build.VERSION.SDK_INT >= Build.VERSION_CODES.BASE;
     }
 
@@ -526,7 +526,7 @@ public class Utils {
      * @param utcTime Time to convert, in UTC.
      * @param tz The time zone to convert this time to.
      */
-    public static long convertAlldayUtcToLocal(Time recycle, long utcTime, String tz) {
+    private static long convertAlldayUtcToLocal(Time recycle, long utcTime, String tz) {
         if (recycle == null) {
             recycle = new Time();
         }
@@ -1389,7 +1389,7 @@ public class Utils {
      * Example fake email addresses used as attendee emails are resources like conference rooms,
      * or another calendar, etc.  These all end in "calendar.google.com".
      */
-    public static boolean isValidEmail(String email) {
+    private static boolean isValidEmail(String email) {
         return email != null && !email.endsWith(MACHINE_GENERATED_ADDRESS);
     }
 
@@ -1424,7 +1424,7 @@ public class Utils {
 
     private static class CalendarBroadcastReceiver extends BroadcastReceiver {
 
-        Runnable mCallBack;
+        final Runnable mCallBack;
 
         public CalendarBroadcastReceiver(Runnable callback) {
             super();

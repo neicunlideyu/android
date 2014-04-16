@@ -31,13 +31,13 @@ import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.DocumentDetail;
 import cn.onboard.android.app.ui.NewDiscussion;
 
-public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
+class DocumentFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
 
 	private int projectId;
 
 	private int companyId;
 
-	public DocumentFragment() {
+	private DocumentFragment() {
 		setRetainInstance(true);
 	}
 
@@ -144,9 +144,9 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 	}
 
 	public class ListViewNewsAdapter extends BaseAdapter {
-        private List<Document> listItems;// 数据集合
-		private LayoutInflater listContainer;// 视图容器
-		private int itemViewResource;// 自定义项视图源
+        private final List<Document> listItems;// 数据集合
+		private final LayoutInflater listContainer;// 视图容器
+		private final int itemViewResource;// 自定义项视图源
 
 		class ListItemView { // 自定义控件集合
 			public TextView title;

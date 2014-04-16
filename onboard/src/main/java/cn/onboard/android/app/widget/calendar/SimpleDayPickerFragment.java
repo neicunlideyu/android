@@ -58,74 +58,74 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
     private static final String TAG = "MonthFragment";
     private static final String KEY_CURRENT_TIME = "current_time";
     
-    private static StringBuilder mSB = new StringBuilder(50);
-    private static Formatter mF = new Formatter(mSB, Locale.getDefault());
+    private static final StringBuilder mSB = new StringBuilder(50);
+    private static final Formatter mF = new Formatter(mSB, Locale.getDefault());
 
     // Affects when the month selection will change while scrolling up
-    protected static final int SCROLL_HYST_WEEKS = 2;
+    private static final int SCROLL_HYST_WEEKS = 2;
     // How long the GoTo fling animation should last
-    protected static final int GOTO_SCROLL_DURATION = 500;
+    static final int GOTO_SCROLL_DURATION = 500;
     // How long to wait after receiving an onScrollStateChanged notification
     // before acting on it
-    protected static final int SCROLL_CHANGE_DELAY = 40;
+    private static final int SCROLL_CHANGE_DELAY = 40;
     // The number of days to display in each week
     public static final int DAYS_PER_WEEK = 7;
     // The size of the month name displayed above the week list
     protected static final int MINI_MONTH_NAME_TEXT_SIZE = 18;
     public static int LIST_TOP_OFFSET = -1;  // so that the top line will be under the separator
-    protected int WEEK_MIN_VISIBLE_HEIGHT = 12;
-    protected int BOTTOM_BUFFER = 20;
-    protected int mSaturdayColor = 0;
-    protected int mSundayColor = 0;
-    protected int mDayNameColor = 0;
+    private int WEEK_MIN_VISIBLE_HEIGHT = 12;
+    private int BOTTOM_BUFFER = 20;
+    private int mSaturdayColor = 0;
+    private int mSundayColor = 0;
+    private int mDayNameColor = 0;
 
     // You can override these numbers to get a different appearance
-    protected int mNumWeeks = 6;
-    protected boolean mShowWeekNumber = false;
-    protected int mDaysPerWeek = 7;
+    final int mNumWeeks = 6;
+    boolean mShowWeekNumber = false;
+    int mDaysPerWeek = 7;
 
     // These affect the scroll speed and feel
-    protected float mFriction = 1.0f;
+    private final float mFriction = 1.0f;
 
-    protected Context mContext;
-    protected Handler mHandler;
+    Context mContext;
+    final Handler mHandler;
 
-    protected float mMinimumFlingVelocity;
+    private float mMinimumFlingVelocity;
 
     // highlighted time
-    protected Time mSelectedDay = new Time();
-    protected SimpleWeeksAdapter mAdapter;
-    protected ListView mListView;
-    protected ViewGroup mDayNamesHeader;
-    protected String[] mDayLabels;
+    final Time mSelectedDay = new Time();
+    SimpleWeeksAdapter mAdapter;
+    ListView mListView;
+    ViewGroup mDayNamesHeader;
+    String[] mDayLabels;
 
     // disposable variable used for time calculations
-    protected Time mTempTime = new Time();
+    final Time mTempTime = new Time();
 
     private static float mScale = 0;
     // When the week starts; numbered like Time.<WEEKDAY> (e.g. SUNDAY=0).
-    protected int mFirstDayOfWeek;
+    int mFirstDayOfWeek;
     // The first day of the focus month
-    protected Time mFirstDayOfMonth = new Time();
+    final Time mFirstDayOfMonth = new Time();
     // The first day that is visible in the view
-    protected Time mFirstVisibleDay = new Time();
+    final Time mFirstVisibleDay = new Time();
     // The name of the month to display
-    protected TextView mMonthName;
+    private TextView mMonthName;
     // The last name announced by accessibility
     protected CharSequence mPrevMonthName;
     // which month should be displayed/highlighted [0-11]
-    protected int mCurrentMonthDisplayed;
+    private int mCurrentMonthDisplayed;
     // used for tracking during a scroll
-    protected long mPreviousScrollPosition;
+    private long mPreviousScrollPosition;
     // used for tracking which direction the view is scrolling
-    protected boolean mIsScrollingUp = false;
+    private boolean mIsScrollingUp = false;
     // used for tracking what state listview is in
-    protected int mPreviousScrollState = OnScrollListener.SCROLL_STATE_IDLE;
+    private int mPreviousScrollState = OnScrollListener.SCROLL_STATE_IDLE;
     // used for tracking what state listview is in
-    protected int mCurrentScrollState = OnScrollListener.SCROLL_STATE_IDLE;
+    private int mCurrentScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 
     // This causes an update of the view at midnight
-    protected Runnable mTodayUpdater = new Runnable() {
+    final Runnable mTodayUpdater = new Runnable() {
         @Override
         public void run() {
             Time midnight = new Time(mFirstVisibleDay.timezone);
@@ -146,7 +146,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
     };
 
     // This allows us to update our position when a day is tapped
-    protected DataSetObserver mObserver = new DataSetObserver() {
+    final DataSetObserver mObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
             Time day = mAdapter.getSelectedDay();
@@ -156,7 +156,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
         }
     };
 
-    public SimpleDayPickerFragment(long initialTime) {
+    SimpleDayPickerFragment(long initialTime) {
         goTo(initialTime, false, true, true);
         mHandler = new Handler();
     }
@@ -200,7 +200,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * Creates a new adapter if necessary and sets up its parameters. Override
      * this method to provide a custom adapter.
      */
-    protected void setUpAdapter() {
+    void setUpAdapter() {
         HashMap<String, Integer> weekParams = new HashMap<String, Integer>();
         weekParams.put(SimpleWeeksAdapter.WEEK_PARAMS_NUM_WEEKS, mNumWeeks);
         weekParams.put(SimpleWeeksAdapter.WEEK_PARAMS_SHOW_WEEK, mShowWeekNumber ? 1 : 0);
@@ -249,7 +249,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * different strings or modify the view params.
      */
     @SuppressWarnings("deprecation")
-	protected void setUpHeader() {
+    void setUpHeader() {
         mDayLabels = new String[7];
         for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
             mDayLabels[i - Calendar.SUNDAY] = DateUtils.getDayOfWeekString(i,
@@ -261,7 +261,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * Sets all the required fields for the list view. Override this method to
      * set a different list view behavior.
      */
-    protected void setUpListView() {
+    void setUpListView() {
         // Configure the listview
         mListView = getListView();
         // Transparent background on scroll
@@ -301,7 +301,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * Updates the user preference fields. Override this to use a different
      * preference space.
      */
-    protected void doResumeUpdates() {
+    void doResumeUpdates() {
         // Get default week start based on locale, subtracting one for use with android Time.
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         mFirstDayOfWeek = cal.getFirstDayOfWeek() - 1;
@@ -318,7 +318,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * Fixes the day names header to provide correct spacing and updates the
      * label text. Override this to set up a custom header.
      */
-    protected void updateHeader() {
+    void updateHeader() {
         TextView label = (TextView) mDayNamesHeader.findViewById(R.id.wk_label);
         if (mShowWeekNumber) {
             label.setVisibility(View.VISIBLE);
@@ -379,7 +379,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      *            visible
      * @return Whether or not the view animated to the new location
      */
-    public boolean goTo(long time, boolean animate, boolean setSelected, boolean forceScroll) {
+    boolean goTo(long time, boolean animate, boolean setSelected, boolean forceScroll) {
         if (time == -1) {
             Log.e(TAG, "time is invalid");
             return false;
@@ -562,7 +562,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
      * @param time A day in the new focus month.
      * @param updateHighlight TODO(epastern):
      */
-    protected void setMonthDisplayed(Time time, boolean updateHighlight) {
+    void setMonthDisplayed(Time time, boolean updateHighlight) {
         CharSequence oldMonth = mMonthName.getText();
         int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_MONTH_DAY
                 | DateUtils.FORMAT_SHOW_YEAR;
@@ -577,7 +577,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
         }
     }
     
-    public static int getWeeksSinceEpochFromJulianDay(int julianDay, int firstDayOfWeek) {
+    private static int getWeeksSinceEpochFromJulianDay(int julianDay, int firstDayOfWeek) {
         int diff = Time.THURSDAY - firstDayOfWeek;
         if (diff < 0) {
             diff += 7;
@@ -586,8 +586,8 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
         return (julianDay - refDay) / 7;
     }
     
-    public String formatDateRange(Context context, long startMillis,
-            long endMillis, int flags) {
+    String formatDateRange(Context context, long startMillis,
+                           long endMillis, int flags) {
         String date;
         String tz;
         if ((flags & DateUtils.FORMAT_UTC) != 0) {
@@ -610,7 +610,7 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
         mScrollStateChangedRunnable.doScrollStateChange(view, scrollState);
     }
 
-    protected ScrollStateRunnable mScrollStateChangedRunnable = new ScrollStateRunnable();
+    final ScrollStateRunnable mScrollStateChangedRunnable = new ScrollStateRunnable();
 
     protected class ScrollStateRunnable implements Runnable {
         private int mNewState;

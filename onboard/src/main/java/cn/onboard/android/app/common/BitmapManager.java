@@ -30,10 +30,10 @@ import cn.onboard.android.app.api.ApiClient;
  */
 public class BitmapManager {  
 	  
-    private static HashMap<String, SoftReference<Bitmap>> cache;  
-    private static ExecutorService pool;  
-    private static Map<ImageView, String> imageViews;  
-    private Bitmap defaultBmp;  
+    private static final HashMap<String, SoftReference<Bitmap>> cache;
+    private static final ExecutorService pool;
+    private static final Map<ImageView, String> imageViews;
+    private final Bitmap defaultBmp;
     
     static {  
         cache = new HashMap<String, SoftReference<Bitmap>>();  
@@ -61,7 +61,7 @@ public class BitmapManager {
      * @param width
      * @param height
      */
-    public void loadBitmap(String url, ImageView imageView, Bitmap defaultBmp, int width, int height) {  
+    void loadBitmap(String url, ImageView imageView, Bitmap defaultBmp, int width, int height) {
         imageViews.put(imageView, url);  
         Bitmap bitmap = getBitmapFromCache(url);  
    
@@ -89,7 +89,7 @@ public class BitmapManager {
      * 从缓存中获取图片
      * @param url
      */
-    public Bitmap getBitmapFromCache(String url) {  
+    Bitmap getBitmapFromCache(String url) {
     	Bitmap bitmap = null;
         if (cache.containsKey(url)) {  
             bitmap = cache.get(url).get();  
@@ -104,7 +104,7 @@ public class BitmapManager {
      * @param width
      * @param height
      */
-    public void queueJob(final String url, final ImageView imageView, final int width, final int height) {  
+    void queueJob(final String url, final ImageView imageView, final int width, final int height) {
         /* Create handler in UI thread. */  
         final Handler handler = new Handler() {  
             public void handleMessage(Message msg) {  

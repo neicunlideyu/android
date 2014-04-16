@@ -40,12 +40,12 @@ import cn.onboard.android.app.common.UIHelper;
 public class ImageZoomDialog extends BaseActivity implements OnTouchListener, OnClickListener {
 
     // These matrices will be used to move and zoom image
-    Matrix matrix = new Matrix();
-    Matrix savedMatrix = new Matrix();
-    PointF start = new PointF();
-    PointF mid = new PointF();
-    DisplayMetrics dm;
-    float oldDist = 1f;
+    private final Matrix matrix = new Matrix();
+    private final Matrix savedMatrix = new Matrix();
+    private final PointF start = new PointF();
+    private final PointF mid = new PointF();
+    private DisplayMetrics dm;
+    private float oldDist = 1f;
     private ImageView imgView;
     private Button zoomIn, zoomOut;
     private ViewSwitcher mViewSwitcher;
@@ -58,14 +58,14 @@ public class ImageZoomDialog extends BaseActivity implements OnTouchListener, On
     private static final double ZOOM_IN_SCALE = 1.25;// 放大系数
     private static final double ZOOM_OUT_SCALE = 0.8;// 缩小系数
 
-    float minScaleR;// 最小缩放比例
-    static final float MAX_SCALE = 4f;// 最大缩放比例
+    private float minScaleR;// 最小缩放比例
+    private static final float MAX_SCALE = 4f;// 最大缩放比例
 
     // We can be in one of these 3 states
-    static final int NONE = 0;// 初始状态
-    static final int DRAG = 1;// 拖动
-    static final int ZOOM = 2;// 缩放
-    int mode = NONE;
+    private static final int NONE = 0;// 初始状态
+    private static final int DRAG = 1;// 拖动
+    private static final int ZOOM = 2;// 缩放
+    private int mode = NONE;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -250,7 +250,7 @@ public class ImageZoomDialog extends BaseActivity implements OnTouchListener, On
     /**
      * 横向、纵向居中
      */
-    protected void center(boolean horizontal, boolean vertical) {
+    void center(boolean horizontal, boolean vertical) {
         Matrix m = new Matrix();
         m.set(matrix);
         RectF rect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());

@@ -77,10 +77,10 @@ public class UploadDetail extends SherlockFragmentActivity {
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private List<Attachment> listItems;// 数据集合
-        private LayoutInflater listContainer;// 视图容器
-        private int itemViewResource;// 自定义项视图源
-        private BitmapManager bmpManager;
+        private final List<Attachment> listItems;// 数据集合
+        private final LayoutInflater listContainer;// 视图容器
+        private final int itemViewResource;// 自定义项视图源
+        private final BitmapManager bmpManager;
 
         static class ListItemView { // 自定义控件集合
             public ImageView attachmentImage;
