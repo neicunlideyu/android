@@ -30,7 +30,6 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
-import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
@@ -134,8 +133,7 @@ public class ActivityFragment extends Fragment {
                             scrollEnd = false;
                         }
 
-                        int lvDataState = StringUtils
-                                .toInt(activiPullToRefreshListView.getTag());
+                        int lvDataState = Integer.parseInt(activiPullToRefreshListView.getTag().toString());
                         if (scrollEnd
                                 && lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
                             activiPullToRefreshListView

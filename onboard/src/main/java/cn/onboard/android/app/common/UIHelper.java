@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import cn.onboard.android.app.AppManager;
@@ -89,20 +88,6 @@ public class UIHelper {
         builder.show();
     }
 
-    /**
-     * 获取webviewClient对象
-     *
-     * @return
-     */
-    public static WebViewClient getWebViewClient() {
-        return new WebViewClient() {
-//			@Override
-//			public boolean shouldOverrideUrlLoading(WebView view,String url) {
-//				showUrlRedirect(view.getContext(), url);
-//				return true;
-//			}
-        };
-    }
 
     public static void pageLink(Context context, String type, int id, int companyId, int projectId) {
         Intent intent = null;
@@ -134,11 +119,11 @@ public class UIHelper {
 
     /**
      * 显示图片对话框
+     *
      * @param context
      * @param imgUrl
      */
-    public static void showImageDialog(Context context, String imgUrl)
-    {
+    public static void showImageDialog(Context context, String imgUrl) {
         Intent intent = new Intent(context, ImageDialog.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("img_url", imgUrl);
@@ -147,11 +132,11 @@ public class UIHelper {
 
     /**
      * 显示放大的图片
+     *
      * @param context
      * @param imgUrl
      */
-    public static void showImageZoomDialog(Context context, String imgUrl)
-    {
+    public static void showImageZoomDialog(Context context, String imgUrl) {
         Intent intent = new Intent(context, ImageZoomDialog.class);
         intent.putExtra("img_url", imgUrl);
         context.startActivity(intent);

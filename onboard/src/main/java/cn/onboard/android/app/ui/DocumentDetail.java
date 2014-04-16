@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -169,7 +170,7 @@ public class DocumentDetail extends SherlockFragmentActivity {
 
 					mWebView.loadDataWithBaseURL(null, body, "text/html",
 							"utf-8", null);
-					mWebView.setWebViewClient(UIHelper.getWebViewClient());
+					mWebView.setWebViewClient(new WebViewClient());
 
 					// //发送通知广播
 					// if(msg.obj != null){

@@ -45,7 +45,6 @@ import cn.onboard.android.app.bean.AttachmentIconType;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.ImageUtils;
-import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
@@ -367,8 +366,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                     scrollEnd = false;
                 }
 
-                int lvDataState = StringUtils
-                        .toInt(attachmentPullToRefreshListView.getTag());
+                int lvDataState = Integer.parseInt(attachmentPullToRefreshListView.getTag().toString());
                 if (scrollEnd
                         && lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
                     attachmentPullToRefreshListView

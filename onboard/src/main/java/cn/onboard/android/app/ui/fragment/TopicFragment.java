@@ -32,7 +32,6 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
-import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.NewDiscussion;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
@@ -52,7 +51,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
 
     private ListViewNewsAdapter lvca;
 
-    private PullToRefreshListView activiPullToRefreshListView;
+    private PullToRefreshListView topicsPullToRefreshListView;
 
     private View listview_footer;
 
@@ -95,20 +94,20 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                 .findViewById(R.id.listview_foot_more);
         listview_foot_progress = (ProgressBar) listview_footer
                 .findViewById(R.id.listview_foot_progress);
-        activiPullToRefreshListView = (PullToRefreshListView) lv
+        topicsPullToRefreshListView = (PullToRefreshListView) lv
                 .findViewById(R.id.topic_list);
-        activiPullToRefreshListView.addFooterView(listview_footer);// 添加底部视图
+        topicsPullToRefreshListView.addFooterView(listview_footer);// 添加底部视图
         // 必须在setAdapter前
-        activiPullToRefreshListView.setAdapter(lvca);
-        handler = this.getLvHandler(activiPullToRefreshListView,
+        topicsPullToRefreshListView.setAdapter(lvca);
+        handler = this.getLvHandler(topicsPullToRefreshListView,
                 lvca, listview_foot_more,
                 listview_foot_progress, AppContext.PAGE_SIZE);
 
-        activiPullToRefreshListView
+        topicsPullToRefreshListView
                 .setOnScrollListener(new AbsListView.OnScrollListener() {
                     public void onScrollStateChanged(AbsListView view,
                                                      int scrollState) {
-                        activiPullToRefreshListView.onScrollStateChanged(view,
+                        topicsPullToRefreshListView.onScrollStateChanged(view,
                                 scrollState);
 
                         // 数据为空--不用继续下面代码了
@@ -125,11 +124,10 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                             scrollEnd = false;
                         }
 
-                        int lvDataState = StringUtils
-                                .toInt(activiPullToRefreshListView.getTag());
+                        int lvDataState = Integer.parseInt(topicsPullToRefreshListView.getTag().toString());
                         if (scrollEnd
                                 && lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
-                            activiPullToRefreshListView
+                            topicsPullToRefreshListView
                                     .setTag(UIHelper.LISTVIEW_DATA_LOADING);
                             listview_foot_more.setText(R.string.load_ing);
                             listview_foot_progress
@@ -144,19 +142,19 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                     public void onScroll(AbsListView view,
                                          int firstVisibleItem, int visibleItemCount,
                                          int totalItemCount) {
-                        activiPullToRefreshListView.onScroll(view,
+                        topicsPullToRefreshListView.onScroll(view,
                                 firstVisibleItem, visibleItemCount,
                                 totalItemCount);
                     }
                 });
-        activiPullToRefreshListView
+        topicsPullToRefreshListView
                 .setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
                     public void onRefresh() {
                         loadTopicsData(0, handler,
                                 UIHelper.LISTVIEW_ACTION_REFRESH);
                     }
                 });
-        activiPullToRefreshListView
+        topicsPullToRefreshListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
@@ -358,7 +356,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != Activity.RESULT_OK)
             return;
-        activiPullToRefreshListView.clickRefresh();
+        topicsPullToRefreshListView.clickRefresh();
     }
 
 }

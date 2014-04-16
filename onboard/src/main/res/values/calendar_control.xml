@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Copyright (C) 2011 The Android Open Source Project Licensed under the
+    Apache License, Version 2.0 (the "License"); you may not use this file
+    except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+    applicable law or agreed to in writing, software distributed under the
+    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+    CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the
+    License.
+-->
+<resources>
+    <!-- size of event title font in month view  -->
+    <integer name="text_size_event_title">14</integer>
+    <!-- size of day date font in month view  -->
+    <integer name="text_size_month_number">14</integer>
+    <!-- max number of lines in the description without showing More/Less button  -->
+    <integer name="event_info_desc_line_num">8</integer>
+    <!-- The alpha level of photos of attendees that didn't respond -->
+    <integer name="noresponse_attendee_photo_alpha_level">64</integer>
+    <!-- The default alpha level of photos of attendees -->
+    <integer name="default_attendee_photo_alpha_level">255</integer>
+    <!-- margin between the day number and the edge of the day in month view -->
+    <integer name="month_day_number_margin">6</integer>
+    <!-- The size of the color chip in the agenda view for all day events -->
+    <integer name="color_chip_all_day_height">48</integer>
+    <!-- The size of the color chip in the agenda view -->
+    <integer name="color_chip_height">24</integer>
+    <!-- The time of day in minutes usually considered the start of the work day, eg. 6am in the US -->
+    <integer name="work_start_minutes">360</integer>
+    <!-- The time of day in minutes usually considered the end of the work day, eg. 8pm in the US -->
+    <integer name="work_end_minutes">1200</integer>
+    <!-- The time (in milliseconds) to scroll in or out the mini month and calendar controls -->
+    <integer name="calendar_controls_animation_time">400</integer>
+
+    <plurals name="month_more_events">
+        <item quantity="other">+%d</item>
+        <item quantity="one">+1</item>
+    </plurals>
+
+    <!-- turn on/off the mini-calendar and calendar picker -->
+    <!-- supported only for x-large devices  -->
+    <bool name="show_calendar_controls">false</bool>
+    <!-- turn on/off month with agenda view -->
+    <!-- not supported for X-large devices -->
+    <bool name="show_agenda_with_month">false</bool>
+    <!-- when on, shows details of event in month view, when off, shows busy bits -->
+    <!-- the "show details" mode is recommended for devices with large screens -->
+    <bool name="show_details_in_month">false</bool>
+</resources>

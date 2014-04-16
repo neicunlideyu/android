@@ -19,7 +19,6 @@ import java.io.IOException;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.api.ApiClient;
-import cn.onboard.android.app.common.FileUtils;
 import cn.onboard.android.app.common.ImageUtils;
 import cn.onboard.android.app.common.UIHelper;
 
@@ -93,7 +92,7 @@ public class ImageDialog extends BaseActivity {
             public void run() {
                 Message msg = new Message();
                 Bitmap bmp = null;
-                String filename = FileUtils.getFileName(imgURL);
+                String filename = imgURL.replaceAll("/", "-");;
                 try {
                     //读取本地图片
                     if (imgURL.endsWith("portrait.gif") || Strings.isNullOrEmpty(imgURL)) {
