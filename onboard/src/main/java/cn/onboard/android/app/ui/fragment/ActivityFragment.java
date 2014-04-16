@@ -79,11 +79,6 @@ public class ActivityFragment extends Fragment {
         return lv;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
     private void initActivityListView() {
         listViewNewsAdapter = new ListViewNewsAdapter(getActivity(), activities,
                 R.layout.activity_listitem);

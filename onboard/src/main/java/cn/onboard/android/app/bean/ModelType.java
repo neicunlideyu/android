@@ -1,8 +1,5 @@
 package cn.onboard.android.app.bean;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by xuchen on 14-4-9.
  */
