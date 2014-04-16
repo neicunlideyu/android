@@ -19,9 +19,11 @@ import android.widget.TextView;
 
 import com.onboard.api.dto.Activity;
 
-import java.text.SimpleDateFormat;
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -39,15 +41,15 @@ public class ActivityFragment extends Fragment {
 
     private PullToRefreshListView activiPullToRefreshListView;
 
-    private ListViewNewsAdapter lvQuestionAdapter;
+    private ListViewNewsAdapter listViewNewsAdapter;
 
     private Handler handler;
 
-    private View lvQuestion_footer;
+    private View listviewFooter;
 
-    private TextView lvQuestion_foot_more;
+    private TextView listview_footer_more;
 
-    private ProgressBar lvQuestion_foot_progress;
+    private ProgressBar listview_footer_progress;
 
     private List<Activity> activities = new ArrayList<Activity>();
 
@@ -72,8 +74,8 @@ public class ActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         lv = (LinearLayout) inflater.inflate(R.layout.activities, null);
-        initQuestionListView();
-        loadLvQuestionData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
+        initActivityListView();
+        loadActivityData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
         return lv;
     }
 
@@ -82,23 +84,23 @@ public class ActivityFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void initQuestionListView() {
-        lvQuestionAdapter = new ListViewNewsAdapter(getActivity(), activities,
-                R.layout.question_listitem);
-        lvQuestion_footer = getActivity().getLayoutInflater().inflate(
+    private void initActivityListView() {
+        listViewNewsAdapter = new ListViewNewsAdapter(getActivity(), activities,
+                R.layout.activity_listitem);
+        listviewFooter = getActivity().getLayoutInflater().inflate(
                 R.layout.listview_footer, null);
-        lvQuestion_foot_more = (TextView) lvQuestion_footer
+        listview_footer_more = (TextView) listviewFooter
                 .findViewById(R.id.listview_foot_more);
-        lvQuestion_foot_progress = (ProgressBar) lvQuestion_footer
+        listview_footer_progress = (ProgressBar) listviewFooter
                 .findViewById(R.id.listview_foot_progress);
         activiPullToRefreshListView = (PullToRefreshListView) lv
-                .findViewById(R.id.frame_listview_question);
-        activiPullToRefreshListView.addFooterView(lvQuestion_footer);// 添加底部视图
+                .findViewById(R.id.activity_listview);
+        activiPullToRefreshListView.addFooterView(listviewFooter);// 添加底部视图
         // 必须在setAdapter前
-        activiPullToRefreshListView.setAdapter(lvQuestionAdapter);
+        activiPullToRefreshListView.setAdapter(listViewNewsAdapter);
         handler = this.getLvHandler(activiPullToRefreshListView,
-                lvQuestionAdapter, lvQuestion_foot_more,
-                lvQuestion_foot_progress, AppContext.PAGE_SIZE);
+                listViewNewsAdapter, listview_footer_more,
+                listview_footer_progress, AppContext.PAGE_SIZE);
         activiPullToRefreshListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view,
@@ -109,7 +111,7 @@ public class ActivityFragment extends Fragment {
                             activity = (Activity) view.getTag();
                         } else {
                             TextView tv = (TextView) view
-                                    .findViewById(R.id.question_listitem_title);
+                                    .findViewById(R.id.activity_listitem_title);
                             activity = (Activity) tv.getTag();
                         }
                         Context context = view.getContext();
@@ -130,7 +132,7 @@ public class ActivityFragment extends Fragment {
                         // 判断是否滚动到底部
                         boolean scrollEnd = false;
                         try {
-                            if (view.getPositionForView(lvQuestion_footer) == view
+                            if (view.getPositionForView(listviewFooter) == view
                                     .getLastVisiblePosition())
                                 scrollEnd = true;
                         } catch (Exception e) {
@@ -143,12 +145,12 @@ public class ActivityFragment extends Fragment {
                                 && lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
                             activiPullToRefreshListView
                                     .setTag(UIHelper.LISTVIEW_DATA_LOADING);
-                            lvQuestion_foot_more.setText(R.string.load_ing);
-                            lvQuestion_foot_progress
+                            listview_footer_more.setText(R.string.load_ing);
+                            listview_footer_progress
                                     .setVisibility(View.VISIBLE);
                             // 当前pageIndex
                             int pageIndex = sum / AppContext.PAGE_SIZE;
-                            loadLvQuestionData(pageIndex, handler,
+                            loadActivityData(pageIndex, handler,
                                     UIHelper.LISTVIEW_ACTION_SCROLL);
                         }
                     }
@@ -164,14 +166,14 @@ public class ActivityFragment extends Fragment {
         activiPullToRefreshListView
                 .setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
                     public void onRefresh() {
-                        loadLvQuestionData(0, handler,
+                        loadActivityData(0, handler,
                                 UIHelper.LISTVIEW_ACTION_REFRESH);
                     }
                 });
     }
 
-    private void loadLvQuestionData(final int pageIndex, final Handler handler,
-                                    final int action) {
+    private void loadActivityData(final int pageIndex, final Handler handler,
+                                  final int action) {
         new Thread() {
             public void run() {
                 Message msg = new Message();
@@ -245,7 +247,6 @@ public class ActivityFragment extends Fragment {
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private Context context;// 运行上下文
         private List<Activity> listItems;// 数据集合
         private LayoutInflater listContainer;// 视图容器
         private int itemViewResource;// 自定义项视图源
@@ -260,7 +261,6 @@ public class ActivityFragment extends Fragment {
          */
         public ListViewNewsAdapter(Context context, List<Activity> data,
                                    int resource) {
-            this.context = context;
             this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
             this.itemViewResource = resource;
             this.listItems = data;
@@ -297,15 +297,13 @@ public class ActivityFragment extends Fragment {
                 listItemView = new ListItemView();
                 // 获取控件对象
                 listItemView.face = (ImageView) convertView
-                        .findViewById(R.id.question_listitem_userface);
+                        .findViewById(R.id.activity_listitem_userface);
                 listItemView.title = (TextView) convertView
-                        .findViewById(R.id.question_listitem_title);
+                        .findViewById(R.id.activity_listitem_title);
                 listItemView.author = (TextView) convertView
-                        .findViewById(R.id.question_listitem_author);
-                listItemView.count = (TextView) convertView
-                        .findViewById(R.id.question_listitem_count);
+                        .findViewById(R.id.activity_listitem_author);
                 listItemView.date = (TextView) convertView
-                        .findViewById(R.id.question_listitem_date);
+                        .findViewById(R.id.activity_listitem_date);
 
                 // 设置控件集到convertView
                 convertView.setTag(listItemView);
@@ -324,9 +322,7 @@ public class ActivityFragment extends Fragment {
             listItemView.title.setText("在项目" + activity.getProjectName() + activity.getSubject() + " " + activity.getTarget());
             listItemView.title.setTag(activity);// 设置隐藏参数(实体类)
             listItemView.author.setText(activity.getCreatorName());
-            listItemView.date.setText(new SimpleDateFormat("yyyy-MM-dd")
-                    .format(activity.getCreated()));
-            listItemView.count.setVisibility(0);
+            listItemView.date.setText(new PrettyTime(new Locale("zh")).format(activity.getCreated()));
 
             return convertView;
         }
@@ -336,7 +332,6 @@ public class ActivityFragment extends Fragment {
             public TextView title;
             public TextView author;
             public TextView date;
-            public TextView count;
         }
     }
 

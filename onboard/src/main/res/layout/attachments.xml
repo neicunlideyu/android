@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView
-        android:id="@+id/upload_list_view"
+        android:id="@+id/attachment_list_view"
         style="@style/widget_listview" />
 
 </LinearLayout>

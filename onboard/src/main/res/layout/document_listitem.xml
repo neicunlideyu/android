@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
         
         <ImageView 
-            android:id="@+id/news_listitem_flag"
+            android:id="@+id/document_listitem_flag"
 	      	android:layout_width="14.0dip" 
 	        android:layout_height="14.0dip"
 	        android:layout_marginRight="2dip"
@@ -23,7 +23,7 @@
 	        android:src="@drawable/frame_logo_news"
 	        android:visibility="gone"/>
     
-	    <TextView android:id="@+id/news_listitem_title" 
+	    <TextView android:id="@+id/document_listitem_title"
 	        android:layout_width="fill_parent" 
 	     	android:layout_height="wrap_content"
 	     	android:textStyle="bold"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dip">   
        	
-       	<TextView android:id="@+id/news_listitem_author"  
+       	<TextView android:id="@+id/document_listitem_author"
     		android:layout_width="wrap_content" 
            	android:layout_height="wrap_content" 
            	android:textSize="@dimen/text_size_10"
@@ -53,7 +53,7 @@
             android:textColor="@color/listitem_gray"
             android:text="发布于"/>
        	
-       	<TextView android:id="@+id/news_listitem_date"  
+       	<TextView android:id="@+id/document_listitem_date"
     		android:layout_width="wrap_content" 
            	android:layout_height="wrap_content"
            	android:layout_marginLeft="2dip" 
@@ -67,7 +67,7 @@
 	        android:layout_gravity="center_vertical"
 	        android:src="@drawable/widget_comment_count_icon"/>
 	        
-       	<TextView android:id="@+id/news_listitem_commentCount"  
+       	<TextView android:id="@+id/document_listitem_commentCount"
     		android:layout_width="wrap_content" 
            	android:layout_height="wrap_content" 
            	android:layout_marginLeft="3dip"

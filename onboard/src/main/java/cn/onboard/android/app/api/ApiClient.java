@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,6 @@ import java.util.Map;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.bean.URLs;
-import cn.onboard.android.app.bean.Update;
 import cn.onboard.android.app.common.HttpStreamToObject;
 
 /**
@@ -57,8 +55,6 @@ import cn.onboard.android.app.common.HttpStreamToObject;
 public class ApiClient {
 
     public static final String UTF_8 = "UTF-8";
-    public static final String DESC = "descend";
-    public static final String ASC = "ascend";
 
     private final static int TIMEOUT_CONNECTION = 20000;
     private final static int TIMEOUT_SOCKET = 20000;
@@ -362,18 +358,6 @@ public class ApiClient {
     }
 
 
-    public static Update checkVersion(AppContext appContext)
-            throws AppException {
-        try {
-            return Update.parse(http_get(appContext, URLs.UPDATE_VERSION));
-        } catch (Exception e) {
-            if (e instanceof AppException)
-                throw (AppException) e;
-            throw AppException.network(e);
-        }
-    }
-
-
     public static User login(AppContext appContext, String username, String pwd)
             throws AppException {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -521,21 +505,6 @@ public class ApiClient {
         }
     }
 
-    public static List<Todolist> getTodolistsByProjectId(AppContext appContext,
-                                                         int companyId, int projectId) throws AppException {
-        String newUrl = URLs.TODOLIST_LIST_BY_PROJECT_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("projectId", projectId + "");
-        try {
-            return HttpStreamToObject.inputStreamToObject(
-                    new TypeReference<List<Todolist>>() {
-                    }, http_get(appContext, newUrl));
-        } catch (Exception e) {
-            if (e instanceof AppException)
-                throw (AppException) e;
-            throw AppException.network(e);
-        }
-    }
-
     public static Discussion getDiscussionById(AppContext appContext,
                                                int companyId, int projectId, int discussionId) throws AppException {
         String newUrl = URLs.DISCUSSION_HTTP_STRING
@@ -572,22 +541,6 @@ public class ApiClient {
 
     }
 
-    public static List<Discussion> getDiscussionsByProjectId(
-            AppContext appContext, int companyId, int projectId)
-            throws AppException {
-        String newUrl = URLs.DISCUSSION_LIST_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("projectId", projectId + "");
-        try {
-            return HttpStreamToObject.inputStreamToObject(
-                    new TypeReference<List<Discussion>>() {
-                    }, http_get(appContext, newUrl));
-        } catch (Exception e) {
-            if (e instanceof AppException)
-                throw (AppException) e;
-            throw AppException.network(e);
-        }
-    }
-
     public static List<Activity> getActivitiesByCompanyId(
             AppContext appContext, int companyId, int page)
             throws AppException {
@@ -613,21 +566,6 @@ public class ApiClient {
             return HttpStreamToObject.inputStreamToObject(
                     new TypeReference<List<Activity>>() {
                     }, http_get(appContext, url));
-        } catch (Exception e) {
-            if (e instanceof AppException)
-                throw (AppException) e;
-            throw AppException.network(e);
-        }
-    }
-
-    public static List<Upload> getUploadByProjectId(AppContext appContext,
-                                                    int companyId, int projectId) throws AppException {
-        String newUrl = URLs.UPLOAD_LIST_BY_PROJECT_HTTP.replaceAll("companyId",
-                companyId + "").replaceAll("projectId", projectId + "");
-        try {
-            return HttpStreamToObject.inputStreamToObject(
-                    new TypeReference<List<Upload>>() {
-                    }, http_get(appContext, newUrl));
         } catch (Exception e) {
             if (e instanceof AppException)
                 throw (AppException) e;

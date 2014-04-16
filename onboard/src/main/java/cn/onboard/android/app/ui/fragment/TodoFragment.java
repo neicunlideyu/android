@@ -213,27 +213,14 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             this.value = value;
         }
 
-        public static Type valueOf(int value) {
-            switch (value) {
-                case 0:
-                    return TODOLIST;
-                case 1:
-                    return TODO;
-                default:
-            }
-            return null;
-        }
-
         public int value() {
             return this.value;
         }
     }
 
     private class ListViewNewsAdapter extends BaseAdapter implements SectionIndexer {
-        private Context context;// 运行上下文
         private List<Item> listItems;// 数据集合
         private LayoutInflater listContainer;// 视图容器
-        private int itemViewResource;// 自定义项视图源
 
         private Item[] sections;
 
@@ -244,7 +231,6 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
          * @param data
          */
         public ListViewNewsAdapter(Context context, List<Item> data, int sectionSize) {
-            this.context = context;
             this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
             this.listItems = data;
             this.sections = new Item[sectionSize];
@@ -428,18 +414,6 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             this.listPosition = listPosition;
             this.text = text;
             this.type = type;
-        }
-
-        public int getSectionPosition() {
-            return sectionPosition;
-        }
-
-        public int getListPosition() {
-            return listPosition;
-        }
-
-        public Object getIdentifiable() {
-            return identifiable;
         }
 
         public String getText() {

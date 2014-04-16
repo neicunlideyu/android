@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -83,11 +82,8 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
     private final static String FILE_SAVEPATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/onboard/";
 
     private Uri origUri;
-    private Uri cropUri;
     private File protraitFile;
-    private Bitmap protraitBitmap;
     private String protraitPath;
-    private final static int CROP = 200;
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -223,7 +219,6 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private Context context;// 运行上下文
         private List<Attachment> listItems;// 数据集合
         private LayoutInflater listContainer;// 视图容器
         private int itemViewResource;// 自定义项视图源
@@ -245,7 +240,6 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
          * @param resource
          */
         public ListViewNewsAdapter(Context context, List<Attachment> attachments, int resource) {
-            this.context = context;
             this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
             this.itemViewResource = resource;
             this.listItems = attachments;
@@ -286,10 +280,10 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
                 listItemView = new ListItemView();
                 // 获取控件对象
-                listItemView.face = (ImageView) convertView.findViewById(R.id.question_listitem_userface);
-                listItemView.title = (TextView) convertView.findViewById(R.id.question_listitem_title);
-                listItemView.author = (TextView) convertView.findViewById(R.id.question_listitem_author);
-                listItemView.date = (TextView) convertView.findViewById(R.id.question_listitem_date);
+                listItemView.face = (ImageView) convertView.findViewById(R.id.attachment_listitem_icon);
+                listItemView.title = (TextView) convertView.findViewById(R.id.attachment_listitem_title);
+                listItemView.author = (TextView) convertView.findViewById(R.id.attachment_listitem_author);
+                listItemView.date = (TextView) convertView.findViewById(R.id.attachment_listitem_date);
                 listItemView.btn_download = (Button) convertView.findViewById(R.id.button_download);
 
                 listItemView.btn_download.setOnClickListener(new View.OnClickListener() {
@@ -338,7 +332,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
         attachmentAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), attachments,
                 R.layout.attachment_listitem);
         attachmentPullToRefreshListView = (PullToRefreshListView) lv
-                .findViewById(R.id.upload_list_view);
+                .findViewById(R.id.attachment_list_view);
 
         attachment_list_footer = getActivity().getLayoutInflater().inflate(
                 R.layout.listview_footer, null);
@@ -412,7 +406,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                 if (view instanceof TextView) {
                     attachment = (Attachment) view.getTag();
                 } else {
-                    TextView tv = (TextView) view.findViewById(R.id.question_listitem_title);
+                    TextView tv = (TextView) view.findViewById(R.id.attachment_listitem_title);
                     attachment = (Attachment) tv.getTag();
                 }
                 if (attachment == null)
@@ -471,7 +465,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final LinearLayout lv = (LinearLayout) inflater.inflate(R.layout.attachment_list, null);
+        final LinearLayout lv = (LinearLayout) inflater.inflate(R.layout.attachments, null);
         initView(lv);
         initGetUploadsByProject(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
         return lv;

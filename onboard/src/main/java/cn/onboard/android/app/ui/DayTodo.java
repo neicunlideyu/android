@@ -17,7 +17,6 @@ public class DayTodo extends SherlockFragmentActivity {
 
     private int companyId;
     private long startTime;
-    private long endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -5,13 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -28,14 +22,9 @@ import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class DocumentDetail extends SherlockFragmentActivity {
-	private FrameLayout mHeader;
-	private LinearLayout mFooter;
-	private ImageView mRefresh;
-	private ProgressBar mProgressbar;
-	private ScrollView mScrollView;
 
 
-	private TextView mAuthor;
+    private TextView mAuthor;
 	private TextView mPubDate;
 	private TextView mCommentCount;
 
@@ -48,9 +37,7 @@ public class DocumentDetail extends SherlockFragmentActivity {
 	private int projectId;
 
 
-	private GestureDetector gd;
-
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.blog_detail);
@@ -108,7 +95,6 @@ public class DocumentDetail extends SherlockFragmentActivity {
 		documentId = getIntent().getIntExtra("documentId", 0);
 		companyId = getIntent().getIntExtra("companyId", 0);
 		projectId = getIntent().getIntExtra("projectId", 0);
-		mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
 
 		mAuthor = (TextView) findViewById(R.id.blog_detail_author);
 		mPubDate = (TextView) findViewById(R.id.blog_detail_date);

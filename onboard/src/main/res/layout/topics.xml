@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView
-        android:id="@+id/discussion_list"
+        android:id="@+id/topic_list"
         style="@style/widget_listview" />
 
 </LinearLayout>

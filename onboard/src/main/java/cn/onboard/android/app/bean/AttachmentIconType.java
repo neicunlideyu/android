@@ -12,7 +12,6 @@ import cn.onboard.android.app.R;
  */
 public class AttachmentIconType {
     private static final Map<String, String> SUFFIX_TYPE_MAP = new HashMap<String, String>() {
-        private static final long serialVersionUID = 1L;
 
         {
             put("ppt", "ppt");

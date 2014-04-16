@@ -8,7 +8,7 @@
 
     <include layout="@layout/progress_bar"/>
     <ListView
-        android:id="@+id/frame_listview_news"
+        android:id="@+id/document_list_view"
         style="@style/widget_listview" />
 
 

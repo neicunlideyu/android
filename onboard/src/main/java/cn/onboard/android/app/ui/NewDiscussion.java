@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,6 +18,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.google.common.base.Strings;
 import com.onboard.api.dto.Discussion;
 import com.onboard.api.dto.User;
 
@@ -33,11 +33,9 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.common.StringUtils;
 import cn.onboard.android.app.common.UIHelper;
 
 public class NewDiscussion extends SherlockActivity {
-    private InputMethodManager imm;
     private TextView discussionTitleTextView;
     private TextView discussionContentTextView;
     private int companyId;
@@ -79,7 +77,6 @@ public class NewDiscussion extends SherlockActivity {
     }
 
     private void initView() {
-        imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         discussionTitleTextView = (TextView) findViewById(R.id.discussion_title);
         discussionContentTextView = (TextView) findViewById(R.id.discussion_content);
         companyId = getIntent().getIntExtra("companyId", 0);
@@ -139,11 +136,11 @@ public class NewDiscussion extends SherlockActivity {
             setSupportProgressBarIndeterminateVisibility(true);
             String discussionTitle = discussionTitleTextView.getText().toString();
             String discussionContent = discussionContentTextView.getText().toString();
-            if (StringUtils.isEmpty(discussionTitle)) {
+            if (Strings.isNullOrEmpty(discussionTitle)) {
                 UIHelper.ToastMessage(getApplicationContext(), "请输入讨论主题");
                 return false;
             }
-            if (StringUtils.isEmpty(discussionContent)) {
+            if (Strings.isNullOrEmpty(discussionContent)) {
                 UIHelper.ToastMessage(getApplicationContext(), "请输入讨论内容");
                 return false;
             }
@@ -169,7 +166,7 @@ public class NewDiscussion extends SherlockActivity {
                         ObjectWriter ow = m.writer().withDefaultPrettyPrinter();
                         try {
                             String discussionJson = ow.writeValueAsString(discussion);
-                            intent.putExtra("discussion",discussionJson);
+                            intent.putExtra("discussion", discussionJson);
                             setResult(Activity.RESULT_OK, intent);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -251,9 +248,10 @@ public class NewDiscussion extends SherlockActivity {
             return thisDialog;
         }
     }
+
     private List<User> getSubscribes() {
         List<User> subscribes = new ArrayList<User>();
-        for (int i = 1;i < assigneesList.size() + 1;i++) {
+        for (int i = 1; i < assigneesList.size() + 1; i++) {
             if (ifAssigned[i]) {
                 subscribes.add(assigneesList.get(i - 1));
             }

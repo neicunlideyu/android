@@ -54,13 +54,11 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
 
     private PullToRefreshListView activiPullToRefreshListView;
 
-    private View lvQuestion_footer;
+    private View listview_footer;
 
-    private TextView lvQuestion_foot_more;
+    private TextView listview_foot_more;
 
-    private ProgressBar lvQuestion_foot_progress;
-
-    private PullToRefreshListView discussionPullToRefreshView;
+    private ProgressBar listview_foot_progress;
 
     private LinearLayout lv;
 
@@ -78,9 +76,9 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         lv = (LinearLayout) inflater.inflate(
-                R.layout.discussions, null);
+                R.layout.topics, null);
         initTopicView();
-        loadLvQuestionData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
+        loadTopicsData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
         return lv;
     }
 
@@ -88,23 +86,23 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
     void initTopicView() {
         lvca = new ListViewNewsAdapter(
                 getActivity().getApplicationContext(), topicList,
-                R.layout.question_listitem);
+                R.layout.topic_listitem);
 
 
-        lvQuestion_footer = getActivity().getLayoutInflater().inflate(
+        listview_footer = getActivity().getLayoutInflater().inflate(
                 R.layout.listview_footer, null);
-        lvQuestion_foot_more = (TextView) lvQuestion_footer
+        listview_foot_more = (TextView) listview_footer
                 .findViewById(R.id.listview_foot_more);
-        lvQuestion_foot_progress = (ProgressBar) lvQuestion_footer
+        listview_foot_progress = (ProgressBar) listview_footer
                 .findViewById(R.id.listview_foot_progress);
         activiPullToRefreshListView = (PullToRefreshListView) lv
-                .findViewById(R.id.discussion_list);
-        activiPullToRefreshListView.addFooterView(lvQuestion_footer);// 添加底部视图
+                .findViewById(R.id.topic_list);
+        activiPullToRefreshListView.addFooterView(listview_footer);// 添加底部视图
         // 必须在setAdapter前
         activiPullToRefreshListView.setAdapter(lvca);
         handler = this.getLvHandler(activiPullToRefreshListView,
-                lvca, lvQuestion_foot_more,
-                lvQuestion_foot_progress, AppContext.PAGE_SIZE);
+                lvca, listview_foot_more,
+                listview_foot_progress, AppContext.PAGE_SIZE);
 
         activiPullToRefreshListView
                 .setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -120,7 +118,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                         // 判断是否滚动到底部
                         boolean scrollEnd = false;
                         try {
-                            if (view.getPositionForView(lvQuestion_footer) == view
+                            if (view.getPositionForView(listview_footer) == view
                                     .getLastVisiblePosition())
                                 scrollEnd = true;
                         } catch (Exception e) {
@@ -133,12 +131,12 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                                 && lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
                             activiPullToRefreshListView
                                     .setTag(UIHelper.LISTVIEW_DATA_LOADING);
-                            lvQuestion_foot_more.setText(R.string.load_ing);
-                            lvQuestion_foot_progress
+                            listview_foot_more.setText(R.string.load_ing);
+                            listview_foot_progress
                                     .setVisibility(View.VISIBLE);
                             // 当前pageIndex
                             int pageIndex = sum / AppContext.PAGE_SIZE;
-                            loadLvQuestionData(pageIndex, handler,
+                            loadTopicsData(pageIndex, handler,
                                     UIHelper.LISTVIEW_ACTION_SCROLL);
                         }
                     }
@@ -154,7 +152,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
         activiPullToRefreshListView
                 .setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
                     public void onRefresh() {
-                        loadLvQuestionData(0, handler,
+                        loadTopicsData(0, handler,
                                 UIHelper.LISTVIEW_ACTION_REFRESH);
                     }
                 });
@@ -168,7 +166,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                             topic = (Topic) view.getTag();
                         } else {
                             TextView tv = (TextView) view
-                                    .findViewById(R.id.question_listitem_title);
+                                    .findViewById(R.id.topic_listitem_title);
                             topic = (Topic) tv.getTag();
                         }
                         if (topic == null)
@@ -227,8 +225,8 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
         };
     }
 
-    private void loadLvQuestionData(final int pageIndex, final Handler handler,
-                                    final int action) {
+    private void loadTopicsData(final int pageIndex, final Handler handler,
+                                final int action) {
         new Thread() {
             public void run() {
                 Message msg = new Message();
@@ -259,7 +257,6 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private Context context;// 运行上下文
         private List<Topic> listItems;// 数据集合
         private LayoutInflater listContainer;// 视图容器
         private int itemViewResource;// 自定义项视图源
@@ -269,7 +266,6 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
             public ImageView face;
             public TextView title;
             public TextView author;
-            public TextView date;
             public TextView count;
         }
 
@@ -282,7 +278,6 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
          */
         public ListViewNewsAdapter(Context context, List<Topic> data,
                                    int resource) {
-            this.context = context;
             this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
             this.itemViewResource = resource;
             this.listItems = data;
@@ -319,15 +314,13 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                 listItemView = new ListItemView();
                 // 获取控件对象
                 listItemView.face = (ImageView) convertView
-                        .findViewById(R.id.question_listitem_userface);
+                        .findViewById(R.id.topic_listitem_userface);
                 listItemView.title = (TextView) convertView
-                        .findViewById(R.id.question_listitem_title);
+                        .findViewById(R.id.topic_listitem_title);
                 listItemView.author = (TextView) convertView
-                        .findViewById(R.id.question_listitem_author);
+                        .findViewById(R.id.topic_listitem_author);
                 listItemView.count = (TextView) convertView
-                        .findViewById(R.id.question_listitem_count);
-                listItemView.date = (TextView) convertView
-                        .findViewById(R.id.question_listitem_date);
+                        .findViewById(R.id.topic_listitem_count);
 
                 // 设置控件集到convertView
                 convertView.setTag(listItemView);

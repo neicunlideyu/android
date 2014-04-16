@@ -342,5 +342,6 @@
 		<item name="android:layout_marginRight">6.0dip</item>
 		<item name="android:background">@drawable/line_bluegray</item>
 	</style>
-    
+
+
 </resources>

@@ -22,11 +22,10 @@ import cn.onboard.android.app.ui.fragment.TodoFragment;
 public class Person extends SherlockFragmentActivity {
 
 
-    private final int INVALID_USER_ID = -1;
     private Button meActivityButton;
     private Button meTodoButton;
     private Button meFileButton;
-    private BitmapManager bitmapManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

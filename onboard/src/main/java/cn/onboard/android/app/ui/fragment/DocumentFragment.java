@@ -62,9 +62,9 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 					List<Document> documents = (List<Document>) msg.obj;
 					ListViewNewsAdapter lvca = new ListViewNewsAdapter(
 							getActivity().getApplicationContext(), documents,
-							R.layout.news_listitem);
+							R.layout.document_listitem);
 					ListView listView = (ListView) getActivity().findViewById(
-							R.id.frame_listview_news);
+							R.id.document_list_view);
 					listView.setAdapter(lvca);
 					listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 						public void onItemClick(AdapterView<?> parent,
@@ -75,7 +75,7 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 								document = (Document) view.getTag();
 							} else {
 								TextView tv = (TextView) view
-										.findViewById(R.id.news_listitem_title);
+										.findViewById(R.id.document_listitem_title);
 								document = (Document) tv.getTag();
 							}
 							if (document == null)
@@ -144,8 +144,7 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 	}
 
 	public class ListViewNewsAdapter extends BaseAdapter {
-		private Context context;// 运行上下文
-		private List<Document> listItems;// 数据集合
+        private List<Document> listItems;// 数据集合
 		private LayoutInflater listContainer;// 视图容器
 		private int itemViewResource;// 自定义项视图源
 
@@ -166,8 +165,7 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 		 */
 		public ListViewNewsAdapter(Context context, List<Document> data,
 				int resource) {
-			this.context = context;
-			this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
+            this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
 			this.itemViewResource = resource;
 			this.listItems = data;
 		}
@@ -201,15 +199,15 @@ public class DocumentFragment extends Fragment implements MenuItem.OnMenuItemCli
 				listItemView = new ListItemView();
 				// 获取控件对象
 				listItemView.title = (TextView) convertView
-						.findViewById(R.id.news_listitem_title);
+						.findViewById(R.id.document_listitem_title);
 				listItemView.author = (TextView) convertView
-						.findViewById(R.id.news_listitem_author);
+						.findViewById(R.id.document_listitem_author);
 				listItemView.count = (TextView) convertView
-						.findViewById(R.id.news_listitem_commentCount);
+						.findViewById(R.id.document_listitem_commentCount);
 				listItemView.date = (TextView) convertView
-						.findViewById(R.id.news_listitem_date);
+						.findViewById(R.id.document_listitem_date);
 				listItemView.flag = (ImageView) convertView
-						.findViewById(R.id.news_listitem_flag);
+						.findViewById(R.id.document_listitem_flag);
 
 				// 设置控件集到convertView
 				convertView.setTag(listItemView);

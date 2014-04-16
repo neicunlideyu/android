@@ -312,14 +312,9 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
   
     public interface OnRefreshListener {  
         public void onRefresh();  
-    }  
-  
-    public void onRefreshComplete(String update) {  
-        lastUpdatedTextView.setText(update);  
-        onRefreshComplete();
-    } 
-    
-    public void onRefreshComplete() {  
+    }
+
+    public void onRefreshComplete() {
         state = DONE;  
         changeHeaderViewByState();  
     }  

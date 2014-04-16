@@ -37,10 +37,6 @@ public class ScrollLayout extends ViewGroup {
      */
     private boolean isScroll = true;
 
-    public void setIsScroll(boolean b) {
-        this.isScroll = b;
-    }
-
     public ScrollLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -121,20 +117,6 @@ public class ScrollLayout extends ViewGroup {
                 mOnViewChangeListener.OnViewChange(mCurScreen);
             }
         }
-    }
-
-    public void setToScreen(int whichScreen) {
-        whichScreen = Math.max(0, Math.min(whichScreen, getChildCount() - 1));
-        mCurScreen = whichScreen;
-        scrollTo(whichScreen * getWidth(), 0);
-
-        if (mOnViewChangeListener != null) {
-            mOnViewChangeListener.OnViewChange(mCurScreen);
-        }
-    }
-
-    public int getCurScreen() {
-        return mCurScreen;
     }
 
     @Override

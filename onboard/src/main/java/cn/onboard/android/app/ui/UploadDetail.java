@@ -13,15 +13,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -42,12 +37,6 @@ import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class UploadDetail extends SherlockFragmentActivity {
-    private BitmapManager bmpManager;
-    private FrameLayout mHeader;
-    private LinearLayout mFooter;
-    private ImageView mRefresh;
-    private ProgressBar mProgressbar;
-    private ScrollView mScrollView;
     private ListViewNewsAdapter attachmentAdapter;
 
     private TextView mAuthor;
@@ -55,7 +44,6 @@ public class UploadDetail extends SherlockFragmentActivity {
     private TextView mCommentCount;
     private ListView attachmentListview;
 
-    private WebView mWebView;
     private Handler mHandler;
     private Upload upload;
     private List<Attachment> attachments;
@@ -63,10 +51,6 @@ public class UploadDetail extends SherlockFragmentActivity {
     private int uploadId;
     private static int companyId;
     private static int projectId;
-
-    private final static int DATA_LOAD_ING = 0x001;
-    private final static int DATA_LOAD_COMPLETE = 0x002;
-    private final static int DATA_LOAD_FAIL = 0x003;
 
     private GestureDetector gd;
     private boolean isFullScreen;
@@ -93,7 +77,6 @@ public class UploadDetail extends SherlockFragmentActivity {
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
-        private Context context;// 运行上下文
         private List<Attachment> listItems;// 数据集合
         private LayoutInflater listContainer;// 视图容器
         private int itemViewResource;// 自定义项视图源
@@ -105,7 +88,6 @@ public class UploadDetail extends SherlockFragmentActivity {
         }
 
         public ListViewNewsAdapter(Context context, List<Attachment> attachments, int resource) {
-            this.context = context;
             this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
             this.itemViewResource = resource;
             this.listItems = attachments;
@@ -124,6 +106,7 @@ public class UploadDetail extends SherlockFragmentActivity {
         public long getItemId(int arg0) {
             return 0;
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // 自定义视图
@@ -160,8 +143,7 @@ public class UploadDetail extends SherlockFragmentActivity {
                         .replaceAll("projectId", projectId + "")
                         .replaceAll("attachmentId", attachment.getId() + "");
                 bmpManager.loadBitmap(attachmentImageURL, listItemView.attachmentImage);
-            }
-            else {
+            } else {
                 listItemView.attachmentImage.setImageDrawable(convertView.getResources()
                         .getDrawable(AttachmentIconType.getAttachmentTypeIconResourceId(attachment.getName(),
                                 attachment.getContentType())));
@@ -173,13 +155,12 @@ public class UploadDetail extends SherlockFragmentActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case android.R.id.home:
-            finish();
-            break;
+            case android.R.id.home:
+                finish();
+                break;
         }
         return true;
     }
@@ -188,8 +169,6 @@ public class UploadDetail extends SherlockFragmentActivity {
         uploadId = getIntent().getIntExtra("uploadId", 0);
         companyId = getIntent().getIntExtra("companyId", 0);
         projectId = getIntent().getIntExtra("projectId", 0);
-        mScrollView = (ScrollView) findViewById(R.id.blog_detail_scrollview);
-
         mAuthor = (TextView) findViewById(R.id.blog_detail_author);
         mPubDate = (TextView) findViewById(R.id.blog_detail_date);
         mCommentCount = (TextView) findViewById(R.id.blog_detail_commentcount);
@@ -201,7 +180,7 @@ public class UploadDetail extends SherlockFragmentActivity {
         attachmentListview.setAdapter(attachmentAdapter);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        CommentListFragment commentList = new CommentListFragment(companyId,projectId,"upload",uploadId);
+        CommentListFragment commentList = new CommentListFragment(companyId, projectId, "upload", uploadId);
         ft.replace(R.id.discussion_comments, commentList).commit();
 
 
@@ -267,31 +246,6 @@ public class UploadDetail extends SherlockFragmentActivity {
     }
 
     /**
-     * 头部按钮展示
-     * 
-     * @param type
-     */
-    private void headButtonSwitch(int type) {
-        switch (type) {
-        case DATA_LOAD_ING:
-            mScrollView.setVisibility(View.GONE);
-            mProgressbar.setVisibility(View.VISIBLE);
-            mRefresh.setVisibility(View.GONE);
-            break;
-        case DATA_LOAD_COMPLETE:
-            mScrollView.setVisibility(View.VISIBLE);
-            mProgressbar.setVisibility(View.GONE);
-            mRefresh.setVisibility(View.VISIBLE);
-            break;
-        case DATA_LOAD_FAIL:
-            mScrollView.setVisibility(View.GONE);
-            mProgressbar.setVisibility(View.GONE);
-            mRefresh.setVisibility(View.VISIBLE);
-            break;
-        }
-    }
-
-    /**
      * 注册双击全屏事件
      */
     private void regOnDoubleEvent() {
@@ -304,15 +258,11 @@ public class UploadDetail extends SherlockFragmentActivity {
                     params.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     getWindow().setAttributes(params);
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                    mHeader.setVisibility(View.VISIBLE);
-                    mFooter.setVisibility(View.VISIBLE);
                 } else {
                     WindowManager.LayoutParams params = getWindow().getAttributes();
                     params.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
                     getWindow().setAttributes(params);
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                    mHeader.setVisibility(View.GONE);
-                    mFooter.setVisibility(View.GONE);
                 }
                 return true;
             }

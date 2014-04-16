@@ -21,8 +21,6 @@ public class Project extends SlidingFragmentActivity {
 
     private int projectId;
 
-    protected Menu menu;
-
     private String createString;
 
     private OnMenuItemClickListener popupListener;
@@ -101,28 +99,12 @@ public class Project extends SlidingFragmentActivity {
         return companyId;
     }
 
-    public void setCompanyId(int companyId) {
-        this.companyId = companyId;
-    }
-
     public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getCreateString() {
-        return createString;
-    }
-
     public void setCreateString(String createString) {
         this.createString = createString;
-    }
-
-    public OnMenuItemClickListener getPopupListener() {
-        return popupListener;
     }
 
     public void setPopupListener(OnMenuItemClickListener popupListener) {

@@ -1,14 +1,10 @@
 package cn.onboard.android.app.ui;
 
-import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +32,8 @@ import cn.onboard.android.app.widget.calendar.MonthByWeekFragment;
 import cn.onboard.android.app.widget.scroll.ScrollLayout;
 
 public class Company extends FragmentActivity implements CalendarController.EventHandler {
+    private AppContext ac;
+
     private int companyId;
 
     private ScrollLayout mScrollLayout;
@@ -45,37 +43,26 @@ public class Company extends FragmentActivity implements CalendarController.Even
     private int mCurSel;
 
     private GridView projectGridView;
-
     private StickyGridHeadersGridView everyoneView;
 
     private CalendarController mController;
     MonthByWeekFragment monthFrag;
     ActivityFragment activityFragment;
-    Fragment dayFrag;
-    private CalendarController.EventInfo event;
-    private boolean dayView;
-    private long eventID;
-    boolean eventView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.company);
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        ac = (AppContext) getApplication();
         companyId = getIntent().getIntExtra("companyId", 0);
         initPageScroll();
+
         initProjectFrameView();
         initCalendarFrameView();
         initEveryOneFrameView();
         initActivityView();
         initMeFrameView();
+
         findViewById(R.id.app_footbar_setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,19 +78,38 @@ public class Company extends FragmentActivity implements CalendarController.Even
 
     private void initProjectFrameView() {
         projectGridView = (GridView) findViewById(R.id.project_grid_list);
-        getProjectList(this);
+        projectGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent,
+                                    View view, int position, long id) {
+                Project project = null;
+                // 判断是否是TextView
+                if (view instanceof TextView) {
+                    project = (Project) view.getTag();
+                } else {
+                    TextView tv = (TextView) view
+                            .findViewById(R.id.project_name);
+                    project = (Project) tv.getTag();
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, cn.onboard.android.app.ui.Project.class);
+                    intent.putExtra("projectId", project.getId());
+                    intent.putExtra("companyId", companyId);
+                    context.startActivity(intent);
+                }
+                if (project == null)
+                    return;
+            }
+        });
+        new GetProjectListTask().execute();
     }
 
     private void initEveryOneFrameView() {
         everyoneView = (StickyGridHeadersGridView) findViewById(R.id.everyone_grid);
-        getDepartmentNameUserMap(this);
+        new GetDepartmentNameUserMapTask().execute();
     }
 
     private void initCalendarFrameView() {
         mController = CalendarController.getInstance(this);
-        //setContentView(R.layout.cal_layout);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-
         monthFrag = new MonthByWeekFragment(System.currentTimeMillis(), false);
         monthFrag.setCompanyId(companyId);
         ft.replace(R.id.cal_frame, monthFrag).commit();
@@ -115,110 +121,13 @@ public class Company extends FragmentActivity implements CalendarController.Even
     private void initActivityView() {
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         activityFragment = new ActivityFragment(companyId, null);
-        ft.replace(R.id.me_frame, activityFragment).commit();
+        ft.replace(R.id.activity_frame, activityFragment).commit();
 
     }
 
     private void initMeFrameView() {
-//		FragmentTransaction ft = getFragmentManager().beginTransaction();
-//		
-//		tabNavigation = new TabNavigation();
-//        ft.replace(R.id.frame_me, tabNavigation).commit();
-
     }
 
-    @SuppressLint("HandlerLeak")
-    private void getProjectList(final Context context) {
-        final Handler handler = new Handler() {
-            public void handleMessage(Message msg) {
-                if (msg.what >= 1) {
-                    @SuppressWarnings("unchecked")
-                    List<Project> projectList = (List<Project>) msg.obj;
-                    GridViewProjectAdapter gridViewProjectAdapter = new GridViewProjectAdapter(
-                            context, projectList, R.layout.project_item);
-                    projectGridView.setAdapter(gridViewProjectAdapter);
-                    //projectGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-                    projectGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> parent,
-                                                View view, int position, long id) {
-                            Project project = null;
-                            // 判断是否是TextView
-                            if (view instanceof TextView) {
-                                project = (Project) view.getTag();
-                            } else {
-                                TextView tv = (TextView) view
-                                        .findViewById(R.id.project_name);
-                                project = (Project) tv.getTag();
-                                Context context = view.getContext();
-                                Intent intent = new Intent(context, cn.onboard.android.app.ui.Project.class);
-                                intent.putExtra("projectId", project.getId());
-                                intent.putExtra("companyId", companyId);
-                                context.startActivity(intent);
-
-                            }
-                            if (project == null)
-                                return;
-                        }
-                    });
-
-                } else if (msg.what == -1) {
-                    UIHelper.ToastMessage(Company.this,
-                            getString(R.string.get_project_list_fail));
-                }
-            }
-        };
-        new Thread() {
-            public void run() {
-                Message msg = new Message();
-                try {
-                    AppContext ac = (AppContext) getApplication();
-                    List<Project> projectList = ac
-                            .getProjectListByCompanyId(companyId);
-                    msg.what = projectList.size();
-                    msg.obj = projectList;
-                } catch (AppException e) {
-                    e.printStackTrace();
-                    msg.what = -1;
-                    msg.obj = e;
-                }
-                handler.sendMessage(msg);
-            }
-        }.start();
-    }
-
-    private void getDepartmentNameUserMap(final Context context) {
-        final Handler handler = new Handler() {
-            public void handleMessage(Message msg) {
-                if (msg.what >= 1) {
-                    @SuppressWarnings("unchecked")
-                    Map<String, List<User>> departmentUserMap = (Map<String, List<User>>) msg.obj;
-                    everyoneView.setAdapter(new EveryoneAdapter(getApplicationContext(), departmentUserMap, companyId, R.layout.everyone_header, R.layout.everyone_item));
-                    //projectGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-
-
-                } else if (msg.what == -1) {
-                    UIHelper.ToastMessage(Company.this,
-                            getString(R.string.get_department_name_user_map_fail));
-                }
-            }
-        };
-        new Thread() {
-            public void run() {
-                Message msg = new Message();
-                try {
-                    AppContext ac = (AppContext) getApplication();
-                    Map<String, List<User>> departmentNameUserMap = ac.getDepartmentNameUserMapByCompanyId(companyId);
-                    msg.what = departmentNameUserMap.size();
-                    msg.obj = departmentNameUserMap;
-                } catch (AppException e) {
-                    e.printStackTrace();
-                    msg.what = -1;
-                    msg.obj = e;
-                }
-                handler.sendMessage(msg);
-            }
-        }.start();
-    }
 
     private void initPageScroll() {
         mHeadTitles = getResources()
@@ -258,6 +167,59 @@ public class Company extends FragmentActivity implements CalendarController.Even
                 });
     }
 
+    //get project info
+    public class GetProjectListTask extends AsyncTask<Void, Void, List<Project>> {
+
+        @Override
+        protected List<Project> doInBackground(Void... params) {
+            List<Project> projects = null;
+            try {
+                projects = ac.getProjectListByCompanyId(companyId);
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+            return projects;
+        }
+
+        @Override
+        protected void onPostExecute(List<Project> projects) {
+            if (projects != null) {
+                GridViewProjectAdapter gridViewProjectAdapter = new GridViewProjectAdapter(
+                        getBaseContext(), projects, R.layout.project_item);
+                projectGridView.setAdapter(gridViewProjectAdapter);
+                findViewById(R.id.loading_progress_bar).setVisibility(View.GONE);
+            } else {
+                UIHelper.ToastMessage(Company.this,
+                        getString(R.string.get_project_list_fail));
+            }
+        }
+    }
+
+
+    // get department info
+    public class GetDepartmentNameUserMapTask extends AsyncTask<Void, Void, Map<String, List<User>>> {
+
+        @Override
+        protected Map<String, List<User>> doInBackground(Void... params) {
+            Map<String, List<User>> departmentNameUserMap = null;
+            try {
+                departmentNameUserMap = ac.getDepartmentNameUserMapByCompanyId(companyId);
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+            return departmentNameUserMap;
+        }
+
+        @Override
+        protected void onPostExecute(Map<String, List<User>> departmentNameUserMap) {
+            if (departmentNameUserMap != null) {
+                everyoneView.setAdapter(new EveryoneAdapter(getApplicationContext(), departmentNameUserMap, companyId, R.layout.everyone_header, R.layout.everyone_item));
+            } else {
+                UIHelper.ToastMessage(Company.this,
+                        getString(R.string.get_department_name_user_map_fail));
+            }
+        }
+    }
 
     @Override
     public long getSupportedEventTypes() {
@@ -268,22 +230,10 @@ public class Company extends FragmentActivity implements CalendarController.Even
     public void handleEvent(CalendarController.EventInfo event) {
         if (event.eventType == CalendarController.EventType.GO_TO) {
             Intent intent = new Intent(Company.this, DayTodo.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("startTime", event.startTime.toMillis(true));
             intent.putExtra("companyId", companyId);
             startActivity(intent);
-        } else if (event.eventType == CalendarController.EventType.VIEW_EVENT) {
-            //TODO do something when an event is clicked
-            dayView = false;
-            eventView = true;
-            this.event = event;
-//					FragmentTransaction ft = getFragmentManager().beginTransaction();
-//					edit = new EditEvent(event.id);
-//					ft.replace(R.id.cal_frame, edit).addToBackStack(null).commit();
-
-
         }
-
     }
 
     @Override

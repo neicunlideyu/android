@@ -13,11 +13,11 @@
 
         <include layout="@layout/frame_projects" />
 
-        <include layout="@layout/cal_layout" />
+        <include layout="@layout/frame_calendar" />
 
         <include layout="@layout/frame_everyone" />
 
-        <include layout="@layout/frame_me" />
+        <include layout="@layout/frame_activity" />
     </cn.onboard.android.app.widget.scroll.ScrollLayout>
     <include layout="@layout/company_footer" />
 

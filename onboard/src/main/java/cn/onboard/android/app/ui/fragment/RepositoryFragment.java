@@ -9,19 +9,13 @@ import android.widget.RelativeLayout;
 
 public class RepositoryFragment extends Fragment {
 
-	private int companyId;
-
-	private int projectId;
-
-	public RepositoryFragment() {
+    public RepositoryFragment() {
 		setRetainInstance(true);
 	}
 
 	public RepositoryFragment(int companyId, int projectId) {
 		this();
-		this.companyId = companyId;
-		this.projectId = projectId;
-	}
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

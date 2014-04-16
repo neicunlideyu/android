@@ -39,22 +39,12 @@ public class BitmapManager {
         cache = new HashMap<String, SoftReference<Bitmap>>();  
         pool = Executors.newFixedThreadPool(5);  //固定线程池
         imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
-    }  
-    
-    public BitmapManager(){}
-    
+    }
+
     public BitmapManager(Bitmap def) {
     	this.defaultBmp = def;
     }
-    
-    /**
-     * 设置默认图片
-     * @param bmp
-     */
-    public void setDefaultBmp(Bitmap bmp) {  
-    	defaultBmp = bmp;  
-    }   
-  
+
     /**
      * 加载图片
      * @param url
@@ -63,17 +53,7 @@ public class BitmapManager {
     public void loadBitmap(String url, ImageView imageView) {  
     	loadBitmap(url, imageView, this.defaultBmp, 0, 0);
     }
-	
-    /**
-     * 加载图片-可设置加载失败后显示的默认图片
-     * @param url
-     * @param imageView
-     * @param defaultBmp
-     */
-    public void loadBitmap(String url, ImageView imageView, Bitmap defaultBmp) {  
-    	loadBitmap(url, imageView, defaultBmp, 0, 0);
-    }
-    
+
     /**
      * 加载图片-可指定显示图片的高宽
      * @param url

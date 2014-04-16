@@ -20,20 +20,8 @@
     <string name="download">下载</string>
 
     <string name="setting_head_title">系统设置</string>
+    <string name="company_list_title">公司列表</string>
 
-    <string-array name="accordion_sections">
-        <item>无分组</item>
-        <item>开发部</item>
-        <item>市场部</item>
-        <item>财务部</item>
-    </string-array>
-
-    <integer-array name="accordion_visibility">
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-    </integer-array>
 
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>

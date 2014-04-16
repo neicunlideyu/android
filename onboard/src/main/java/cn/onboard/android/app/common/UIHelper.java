@@ -1,11 +1,9 @@
 package cn.onboard.android.app.common;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.View;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
@@ -25,10 +23,8 @@ import cn.onboard.android.app.ui.UploadDetail;
  */
 public class UIHelper {
 
-    public final static int LISTVIEW_ACTION_INIT = 0x01;
     public final static int LISTVIEW_ACTION_REFRESH = 0x02;
     public final static int LISTVIEW_ACTION_SCROLL = 0x03;
-    public final static int LISTVIEW_ACTION_CHANGE_CATALOG = 0x04;
 
     public final static int LISTVIEW_DATA_MORE = 0x01;
     public final static int LISTVIEW_DATA_LOADING = 0x02;
@@ -54,10 +50,6 @@ public class UIHelper {
 
     public static void ToastMessage(Context cont, int msg) {
         Toast.makeText(cont, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    public static void ToastMessage(Context cont, String msg, int time) {
-        Toast.makeText(cont, msg, time).show();
     }
 
 
@@ -95,20 +87,6 @@ public class UIHelper {
             }
         });
         builder.show();
-    }
-
-    /**
-     * 点击返回监听事件
-     *
-     * @param activity
-     * @return
-     */
-    public static View.OnClickListener finish(final Activity activity) {
-        return new View.OnClickListener() {
-            public void onClick(View v) {
-                activity.finish();
-            }
-        };
     }
 
     /**
