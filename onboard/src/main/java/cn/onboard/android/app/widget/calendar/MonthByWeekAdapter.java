@@ -30,8 +30,6 @@ import android.widget.AbsListView.LayoutParams;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import cn.onboard.android.app.R;
-
 
 public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     private static final String TAG = "MonthByWeek";
@@ -75,7 +73,7 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
         if (params.containsKey(WEEK_PARAMS_IS_MINI)) {
 //            mIsMiniMonth = params.get(WEEK_PARAMS_IS_MINI) != 0;
         }
-        mShowAgendaWithMonth = Utils.getConfigBool(context, R.bool.show_agenda_with_month);
+        mShowAgendaWithMonth = false;
         ViewConfiguration vc = ViewConfiguration.get(context);
         mOnDownDelay = ViewConfiguration.getTapTimeout();
         mMovedPixelToCancel = vc.getScaledTouchSlop();

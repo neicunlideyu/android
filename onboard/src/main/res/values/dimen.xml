@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="menu_item_padding">10dp</dimen>
-    <dimen name="menu_header_padding_top">8dp</dimen>
-    <dimen name="menu_header_line">3dp</dimen>
-    <dimen name="menu_icon_side">40dp</dimen>
-    <dimen name="sticky_height">120dp</dimen>
-    <dimen name="photo_crop_width">280.0dip</dimen>
-    <dimen name="photo_crop_stroke_width">1.0dip</dimen>
-    <dimen name="photo_preview_size">200.0dip</dimen>
-    <dimen name="retry_button_size">48.0dip</dimen>
-    <dimen name="web_suggestion_view_height">48.0dip</dimen>
-    <dimen name="web_suggestion_icon_size">32.0dip</dimen>
-    <dimen name="suggestion_footer_view_height">48.0dip</dimen>
-    <dimen name="search_device_footer_bottom_margin">12.0dip</dimen>
-    <dimen name="suggestion_view_height">64.0dip</dimen>
-    <dimen name="suggestion_view_height_large">191.5dip</dimen>
-    <dimen name="suggestion_icon_size">64.0dip</dimen>
-    <dimen name="suggestion_large_image_max_width">640.0dip</dimen>
-    <dimen name="suggestion_large_image_max_height">640.0dip</dimen>
-    <dimen name="suggestion_text2_height">26.0dip</dimen>
     <dimen name="suggestion_icon1_left_padding">2.0dip</dimen>
     <dimen name="suggestion_text_padding">16.0dip</dimen>
     <dimen name="suggestions_padding">8.0dip</dimen>
@@ -65,10 +46,6 @@
     <dimen name="suggest_summons_area_padding">0.0dip</dimen>
     <dimen name="suggest_web_height">56.0dip</dimen>
     <dimen name="suggest_web_padding">2.0dip</dimen>
-    <dimen name="summons_height">56.0dip</dimen>
-    <dimen name="summons_padding">2.0dip</dimen>
-    <dimen name="summons_width">350.0dip</dimen>
-    <dimen name="summons_inter_source_padding">20.0dip</dimen>
     <dimen name="suppressed_web_results_min_visible_height">28.0dip</dimen>
     <dimen name="websearch_collapse_card_padding_offscreen_leeway">50.0dip</dimen>
     <dimen name="image_result_height">100.0dip</dimen>
@@ -177,7 +154,7 @@
     <dimen name="histogram_bar_size">16.0dip</dimen>
     <dimen name="histogram_bar_padding">0.0dip</dimen>
     <dimen name="histogram_width">100.0dip</dimen>
-    
+
     <dimen name="day_label_text_size">11sp</dimen>
     <dimen name="all_day_bottom_margin">8dip</dimen>
     <dimen name="one_day_header_height">0dip</dimen>
@@ -197,24 +174,64 @@
     <dimen name="hours_left_margin">20dip</dimen>
     <dimen name="hours_right_margin">4dip</dimen>
     <!-- size of day header in day and week views  -->
-    <dimen name="day_header_height">16dip</dimen>
-    <dimen name="widget_day_num_size">36sp</dimen>
-    <dimen name="widget_day_num_top_padding">-4dip</dimen>
-    <dimen name="action_bar_date_text_size">22sp</dimen>
-    <dimen name="new_event_hint_text_size">12sp</dimen>
-    <dimen name="edit_event_view_width">800dip</dimen>
-    <dimen name="edit_event_view_padding_left">80dip</dimen>
-    <dimen name="edit_event_view_padding_right">80dip</dimen>
-    <dimen name="edit_reminder_min_size">36dip</dimen>
-    <dimen name="event_info_text_size">14dip</dimen>
-    <dimen name="event_info_desc_margin_left">0dip</dimen>
-    <dimen name="event_info_desc_margin_right">0dip</dimen>
-    <dimen name="event_info_padding">0dip</dimen>
-    <dimen name="calendar_controls_width">280dip</dimen>
-    <dimen name="min_portrait_calendar_controls_width">300dip</dimen>
-    <dimen name="max_portrait_calendar_controls_width">350dip</dimen>
-    <dimen name="calendar_controls_height">300dip</dimen>
-    <dimen name="agenda_item_right_margin">4dip</dimen>
-    <dimen name="today_icon_text_size">14sp</dimen>
+
+    <dimen name="text_size_32">32.0dip</dimen>
+    <dimen name="text_size_31">31.0dip</dimen>
+    <dimen name="text_size_30">30.0dip</dimen>
+    <dimen name="text_size_29">29.0dip</dimen>
+    <dimen name="text_size_28">28.0dip</dimen>
+    <dimen name="text_size_27">27.0dip</dimen>
+    <dimen name="text_size_26">26.0dip</dimen>
+    <dimen name="text_size_25">25.0dip</dimen>
+    <dimen name="text_size_24">24.0dip</dimen>
+    <dimen name="text_size_23">23.0dip</dimen>
+    <dimen name="text_size_22">22.0dip</dimen>
+    <dimen name="text_size_21">21.0dip</dimen>
+    <dimen name="text_size_20">20.0dip</dimen>
+    <dimen name="text_size_19">19.0dip</dimen>
+    <dimen name="text_size_18">18.0dip</dimen>
+    <dimen name="text_size_17">17.0dip</dimen>
+    <dimen name="text_size_16">16.0dip</dimen>
+    <dimen name="text_size_15">15.0dip</dimen>
+    <dimen name="text_size_14">14.0dip</dimen>
+    <dimen name="text_size_13">13.0dip</dimen>
+    <dimen name="text_size_12">12.0dip</dimen>
+    <dimen name="text_size_11">11.0dip</dimen>
+    <dimen name="text_size_10">10.0dip</dimen>
+    <dimen name="text_size_9">9.0dip</dimen>
+    <dimen name="text_size_8">8.0dip</dimen>
+    <dimen name="text_size_7">7.0dip</dimen>
+    <dimen name="space_30">30.0dip</dimen>
+    <dimen name="space_29">29.0dip</dimen>
+    <dimen name="space_28">28.0dip</dimen>
+    <dimen name="space_27">27.0dip</dimen>
+    <dimen name="space_26">26.0dip</dimen>
+    <dimen name="space_25">25.0dip</dimen>
+    <dimen name="space_24">24.0dip</dimen>
+    <dimen name="space_23">23.0dip</dimen>
+    <dimen name="space_22">22.0dip</dimen>
+    <dimen name="space_21">21.0dip</dimen>
+    <dimen name="space_20">20.0dip</dimen>
+    <dimen name="space_19">19.0dip</dimen>
+    <dimen name="space_18">18.0dip</dimen>
+    <dimen name="space_17">17.0dip</dimen>
+    <dimen name="space_16">16.0dip</dimen>
+    <dimen name="space_15">15.0dip</dimen>
+    <dimen name="space_14">14.0dip</dimen>
+    <dimen name="space_13">13.0dip</dimen>
+    <dimen name="space_12">12.0dip</dimen>
+    <dimen name="space_11">11.0dip</dimen>
+    <dimen name="space_10">10.0dip</dimen>
+    <dimen name="space_9">9.0dip</dimen>
+    <dimen name="space_8">8.0dip</dimen>
+    <dimen name="space_7">7.0dip</dimen>
+    <dimen name="space_6">6.0dip</dimen>
+    <dimen name="space_5">5.0dip</dimen>
+    <dimen name="space_4">4.0dip</dimen>
+    <dimen name="space_3">3.0dip</dimen>
+    <dimen name="space_2">2.0dip</dimen>
+    <dimen name="space_1">1.0dip</dimen>
+    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="shadow_width">15dp</dimen>
 
 </resources>

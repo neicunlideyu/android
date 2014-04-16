@@ -40,7 +40,6 @@ import java.util.UUID;
 
 import cn.onboard.android.app.api.ApiClient;
 import cn.onboard.android.app.bean.URLs;
-import cn.onboard.android.app.common.StringUtils;
 
 public class AppContext extends Application {
 
@@ -148,7 +147,7 @@ public class AppContext extends Application {
      */
     public User getLoginInfo() {
         User user = new User();
-        user.setId(StringUtils.toInt(getProperty("user.id"), 0));
+        user.setId(Integer.parseInt(getProperty("user.id")));
         user.setName(getProperty("user.name"));
         user.setEmail(getProperty("user.email"));
         user.setPassword(getProperty("user.password"));
@@ -198,7 +197,7 @@ public class AppContext extends Application {
         if (Strings.isNullOrEmpty(perf_loadimage))
             return true;
         else
-            return StringUtils.toBool(perf_loadimage);
+            return Boolean.parseBoolean(perf_loadimage);
     }
 
     /**

@@ -31,7 +31,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -39,14 +38,11 @@ import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import cn.onboard.android.app.R;
 
@@ -122,7 +118,7 @@ class Utils {
      * Returns whether the SDK is the Jellybean release or later.
      */
     private static boolean isJellybeanOrLater() {
-      return Build.VERSION.SDK_INT >= Build.VERSION_CODES.BASE;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.BASE;
     }
 
 //    public static int getViewTypeFromIntentAndSharedPref(Activity activity) {
@@ -176,7 +172,7 @@ class Utils {
      * **tbd** will cause it to be set to the device's time zone. null or empty
      * tz will be ignored.
      *
-     * @param context The calling activity
+     * @param context  The calling activity
      * @param timeZone The time zone to set Calendar to, or **tbd**
      */
     public static void setTimeZone(Context context, String timeZone) {
@@ -192,11 +188,11 @@ class Utils {
      * what is stored in preferences and should cause the calling activity to
      * refresh anything that depends on calling this method.
      *
-     * @param context The calling activity
+     * @param context  The calling activity
      * @param callback The runnable that should execute if a query returns new
-     *            values
+     *                 values
      * @return The string value representing the time zone Calendar should
-     *         display
+     * display
      */
     public static String getTimeZone(Context context, Runnable callback) {
         return mTZUtils.getTimeZone(context, callback);
@@ -205,11 +201,11 @@ class Utils {
     /**
      * Formats a date or a time range according to the local conventions.
      *
-     * @param context the context is required only if the time is shown
+     * @param context     the context is required only if the time is shown
      * @param startMillis the start time in UTC milliseconds
-     * @param endMillis the end time in UTC milliseconds
-     * @param flags a bit mask of options See {@link android.text.format.DateUtils#formatDateRange(android.content.Context, java.util.Formatter,
-     * long, long, int, String) formatDateRange}
+     * @param endMillis   the end time in UTC milliseconds
+     * @param flags       a bit mask of options See {@link android.text.format.DateUtils#formatDateRange(android.content.Context, java.util.Formatter,
+     *                    long, long, int, String) formatDateRange}
      * @return a string containing the formatted date/time range.
      */
     public static String formatDateRange(
@@ -294,7 +290,7 @@ class Utils {
 
         String[] columnNames = cursor.getColumnNames();
         if (columnNames == null) {
-            columnNames = new String[] {};
+            columnNames = new String[]{};
         }
         MatrixCursor newCursor = new MatrixCursor(columnNames);
         int numColumns = cursor.getColumnCount();
@@ -313,7 +309,7 @@ class Utils {
      * Compares two cursors to see if they contain the same data.
      *
      * @return Returns true of the cursors contain the same data and are not
-     *         null, false otherwise
+     * null, false otherwise
      */
     public static boolean compareCursors(Cursor c1, Cursor c2) {
         if (c1 == null || c2 == null) {
@@ -387,7 +383,7 @@ class Utils {
      * ["a", "b", "c"] could be joined into "a,b,c"
      *
      * @param things the things to join together
-     * @param delim the delimiter to use
+     * @param delim  the delimiter to use
      * @return a string contained the things joined together
      */
     public static String join(List<?> things, String delim) {
@@ -407,14 +403,14 @@ class Utils {
     /**
      * Returns the week since {@link android.text.format.Time#EPOCH_JULIAN_DAY} (Jan 1, 1970)
      * adjusted for first day of week.
-     *
+     * <p/>
      * This takes a julian day and the week start day and calculates which
      * week since {@link android.text.format.Time#EPOCH_JULIAN_DAY} that day occurs in, starting
      * at 0. *Do not* use this to compute the ISO week number for the year.
      *
-     * @param julianDay The julian day to calculate the week number for
+     * @param julianDay      The julian day to calculate the week number for
      * @param firstDayOfWeek Which week day is the first day of the week,
-     *          see {@link android.text.format.Time#SUNDAY}
+     *                       see {@link android.text.format.Time#SUNDAY}
      * @return Weeks since the epoch
      */
     public static int getWeeksSinceEpochFromJulianDay(int julianDay, int firstDayOfWeek) {
@@ -429,7 +425,7 @@ class Utils {
     /**
      * Takes a number of weeks since the epoch and calculates the Julian day of
      * the Monday for that week.
-     *
+     * <p/>
      * This assumes that the week containing the {@link android.text.format.Time#EPOCH_JULIAN_DAY}
      * is considered week 0. It returns the Julian day for the Monday
      * {@code week} weeks after the Monday of the week containing the epoch.
@@ -463,7 +459,7 @@ class Utils {
 //        } else if (startDay == Calendar.MONDAY) {
 //            return Time.MONDAY;
 //        } else {
-            return Time.SUNDAY;
+        return Time.SUNDAY;
 //        }
     }
 
@@ -489,13 +485,13 @@ class Utils {
     public static int getDaysPerWeek(Context context) {
 //        final SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
 //        return prefs.getInt(GeneralPreferences.KEY_DAYS_PER_WEEK, 7);
-    	return 7;
+        return 7;
     }
 
     /**
      * Determine whether the column position is Saturday or not.
      *
-     * @param column the column position
+     * @param column         the column position
      * @param firstDayOfWeek the first day of week in android.text.format.Time
      * @return true if the column is Saturday position
      */
@@ -508,7 +504,7 @@ class Utils {
     /**
      * Determine whether the column position is Sunday or not.
      *
-     * @param column the column position
+     * @param column         the column position
      * @param firstDayOfWeek the first day of week in android.text.format.Time
      * @return true if the column is Sunday position
      */
@@ -524,7 +520,7 @@ class Utils {
      *
      * @param recycle Time object to recycle, otherwise null.
      * @param utcTime Time to convert, in UTC.
-     * @param tz The time zone to convert this time to.
+     * @param tz      The time zone to convert this time to.
      */
     private static long convertAlldayUtcToLocal(Time recycle, long utcTime, String tz) {
         if (recycle == null) {
@@ -551,7 +547,7 @@ class Utils {
      *
      * @param recycle - Time object to recycle, otherwise null.
      * @param theTime - Time used for calculations (in UTC)
-     * @param tz The time zone to convert this time to.
+     * @param tz      The time zone to convert this time to.
      */
     public static long getNextMidnight(Time recycle, long theTime, String tz) {
         if (recycle == null) {
@@ -559,7 +555,7 @@ class Utils {
         }
         recycle.timezone = tz;
         recycle.set(theTime);
-        recycle.monthDay ++;
+        recycle.monthDay++;
         recycle.hour = 0;
         recycle.minute = 0;
         recycle.second = 0;
@@ -572,8 +568,8 @@ class Utils {
      * provided map with whether or not each name is repeated.
      *
      * @param isDuplicateName The map to put the duplicate check results in.
-     * @param cursor The query of calendars to check
-     * @param nameIndex The column of the query that contains the display name
+     * @param cursor          The query of calendars to check
+     * @param nameIndex       The column of the query that contains the display name
      */
     public static void checkForDuplicateNames(
             Map<String, Boolean> isDuplicateName, Cursor cursor, int nameIndex) {
@@ -600,7 +596,7 @@ class Utils {
     }
 
     public static void setAllowWeekForDetailView(boolean allowWeekView) {
-        mAllowWeekForDetailView  = allowWeekView;
+        mAllowWeekForDetailView = allowWeekView;
     }
 
     public static boolean getAllowWeekForDetailView() {
@@ -677,16 +673,16 @@ class Utils {
      * </ul>
      *
      * @param firstJulianDay The julian day of the first day of events
-     * @param events A list of events sorted by start time
-     * @param top The lowest y value the dna should be drawn at
-     * @param bottom The highest y value the dna should be drawn at
-     * @param dayXs An array of x values to draw the dna at, one for each day
-     * @param context the color to use for conflicts
+     * @param events         A list of events sorted by start time
+     * @param top            The lowest y value the dna should be drawn at
+     * @param bottom         The highest y value the dna should be drawn at
+     * @param dayXs          An array of x values to draw the dna at, one for each day
+     * @param context        the color to use for conflicts
      * @return
      */
     public static HashMap<Integer, DNAStrand> createDNAStrands(int firstJulianDay,
-            ArrayList<CalendarEvent> events, int top, int bottom, int minPixels, int[] dayXs,
-            Context context) {
+                                                               ArrayList<CalendarEvent> events, int top, int bottom, int minPixels, int[] dayXs,
+                                                               Context context) {
 
         if (!mMinutesLoaded) {
             if (context == null) {
@@ -807,7 +803,7 @@ class Utils {
             if (startMinute < lastSegment.endMinute) {
                 int i = segments.size();
                 // find the last segment this event intersects with
-                while (--i >= 0 && endMinute < segments.get(i).startMinute);
+                while (--i >= 0 && endMinute < segments.get(i).startMinute) ;
 
                 DNASegment currSegment;
                 // for each segment this event intersects with
@@ -903,7 +899,7 @@ class Utils {
 
     // This figures out allDay colors as allDay events are found
     private static void addAllDayToStrands(CalendarEvent event, HashMap<Integer, DNAStrand> strands,
-            int firstJulianDay, int numDays) {
+                                           int firstJulianDay, int numDays) {
         DNAStrand strand = getOrCreateStrand(strands, CONFLICT_COLOR);
         // if we haven't initialized the allDay portion create it now
         if (strand.allDays == null) {
@@ -926,7 +922,7 @@ class Utils {
     // This processes all the segments, sorts them by color, and generates a
     // list of points to draw
     private static void weaveDNAStrands(LinkedList<DNASegment> segments, int firstJulianDay,
-            HashMap<Integer, DNAStrand> strands, int top, int bottom, int[] dayXs) {
+                                        HashMap<Integer, DNAStrand> strands, int top, int bottom, int[] dayXs) {
         // First, get rid of any colors that ended up with no segments
         Iterator<DNAStrand> strandIterator = strands.values().iterator();
         while (strandIterator.hasNext()) {
@@ -971,7 +967,7 @@ class Utils {
      * height and the height of the top area.
      */
     private static int getPixelOffsetFromMinutes(int minute, int workDayHeight,
-            int remainderHeight) {
+                                                 int remainderHeight) {
         int y;
         if (minute < WORK_DAY_START_MINUTES) {
             y = minute * remainderHeight / WORK_DAY_START_MINUTES;
@@ -990,7 +986,7 @@ class Utils {
      * segments across day boundaries and ensures a minimum size for segments.
      */
     private static void addNewSegment(LinkedList<DNASegment> segments, CalendarEvent event,
-            HashMap<Integer, DNAStrand> strands, int firstJulianDay, int minStart, int minMinutes) {
+                                      HashMap<Integer, DNAStrand> strands, int firstJulianDay, int minStart, int minMinutes) {
         if (event.startDay > event.endDay) {
             Log.wtf(TAG, "Event starts after it ends: " + event.toString());
         }
@@ -1072,7 +1068,7 @@ class Utils {
      * and to allow refining the search.
      *
      * @param view The {@link android.widget.SearchView} to set up
-     * @param act The activity using the view
+     * @param act  The activity using the view
      */
     public static void setUpSearchView(SearchView view, Activity act) {
         SearchManager searchManager = (SearchManager) act.getSystemService(Context.SEARCH_SERVICE);
@@ -1106,37 +1102,6 @@ class Utils {
         return weekTime.getWeekNumber();
     }
 
-    /**
-     * Formats a day of the week string. This is either just the name of the day
-     * or a combination of yesterday/today/tomorrow and the day of the week.
-     *
-     * @param julianDay The julian day to get the string for
-     * @param todayJulianDay The julian day for today's date
-     * @param millis A utc millis since epoch time that falls on julian day
-     * @param context The calling context, used to get the timezone and do the
-     *            formatting
-     * @return
-     */
-    public static String getDayOfWeekString(int julianDay, int todayJulianDay, long millis,
-            Context context) {
-        getTimeZone(context, null);
-        int flags = DateUtils.FORMAT_SHOW_WEEKDAY;
-        String dayViewText;
-        if (julianDay == todayJulianDay) {
-            dayViewText = context.getString(R.string.agenda_today,
-                    mTZUtils.formatDateRange(context, millis, millis, flags).toString());
-        } else if (julianDay == todayJulianDay - 1) {
-            dayViewText = context.getString(R.string.agenda_yesterday,
-                    mTZUtils.formatDateRange(context, millis, millis, flags).toString());
-        } else if (julianDay == todayJulianDay + 1) {
-            dayViewText = context.getString(R.string.agenda_tomorrow,
-                    mTZUtils.formatDateRange(context, millis, millis, flags).toString());
-        } else {
-            dayViewText = mTZUtils.formatDateRange(context, millis, millis, flags).toString();
-        }
-        dayViewText = dayViewText.toUpperCase();
-        return dayViewText;
-    }
 
     // Calculate the time until midnight + 1 second and set the handler to
     // do run the runnable
@@ -1161,99 +1126,6 @@ class Utils {
         h.removeCallbacks(r);
     }
 
-    /**
-     * Returns a string description of the specified time interval.
-     */
-    public static String getDisplayedDatetime(long startMillis, long endMillis, long currentMillis,
-            String localTimezone, boolean allDay, Context context) {
-        // Configure date/time formatting.
-        int flagsDate = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY;
-        int flagsTime = DateUtils.FORMAT_SHOW_TIME;
-        if (DateFormat.is24HourFormat(context)) {
-            flagsTime |= DateUtils.FORMAT_24HOUR;
-        }
-
-        Time currentTime = new Time(localTimezone);
-        currentTime.set(currentMillis);
-        Resources resources = context.getResources();
-        String datetimeString = null;
-        if (allDay) {
-            // All day events require special timezone adjustment.
-            long localStartMillis = convertAlldayUtcToLocal(null, startMillis, localTimezone);
-            long localEndMillis = convertAlldayUtcToLocal(null, endMillis, localTimezone);
-            if (singleDayEvent(localStartMillis, localEndMillis, currentTime.gmtoff)) {
-                // If possible, use "Today" or "Tomorrow" instead of a full date string.
-                int todayOrTomorrow = isTodayOrTomorrow(context.getResources(),
-                        localStartMillis, currentMillis, currentTime.gmtoff);
-                if (TODAY == todayOrTomorrow) {
-                    datetimeString = resources.getString(R.string.today);
-                } else if (TOMORROW == todayOrTomorrow) {
-                    datetimeString = resources.getString(R.string.tomorrow);
-                }
-            }
-            if (datetimeString == null) {
-                // For multi-day allday events or single-day all-day events that are not
-                // today or tomorrow, use framework formatter.
-                Formatter f = new Formatter(new StringBuilder(50), Locale.getDefault());
-                datetimeString = DateUtils.formatDateRange(context, f, startMillis,
-                        endMillis, flagsDate, Time.TIMEZONE_UTC).toString();
-            }
-        } else {
-            if (singleDayEvent(startMillis, endMillis, currentTime.gmtoff)) {
-                // Format the time.
-                String timeString = Utils.formatDateRange(context, startMillis, endMillis,
-                        flagsTime);
-
-                // If possible, use "Today" or "Tomorrow" instead of a full date string.
-                int todayOrTomorrow = isTodayOrTomorrow(context.getResources(), startMillis,
-                        currentMillis, currentTime.gmtoff);
-                if (TODAY == todayOrTomorrow) {
-                    // Example: "Today at 1:00pm - 2:00 pm"
-                    datetimeString = resources.getString(R.string.today_at_time_fmt,
-                            timeString);
-                } else if (TOMORROW == todayOrTomorrow) {
-                    // Example: "Tomorrow at 1:00pm - 2:00 pm"
-                    datetimeString = resources.getString(R.string.tomorrow_at_time_fmt,
-                            timeString);
-                } else {
-                    // Format the full date. Example: "Thursday, April 12, 1:00pm - 2:00pm"
-                    String dateString = Utils.formatDateRange(context, startMillis, endMillis,
-                            flagsDate);
-                    datetimeString = resources.getString(R.string.date_time_fmt, dateString,
-                            timeString);
-                }
-            } else {
-                // For multiday events, shorten day/month names.
-                // Example format: "Fri Apr 6, 5:00pm - Sun, Apr 8, 6:00pm"
-                int flagsDatetime = flagsDate | flagsTime | DateUtils.FORMAT_ABBREV_MONTH |
-                        DateUtils.FORMAT_ABBREV_WEEKDAY;
-                datetimeString = Utils.formatDateRange(context, startMillis, endMillis,
-                        flagsDatetime);
-            }
-        }
-        return datetimeString;
-    }
-
-    /**
-     * Returns the timezone to display in the event info, if the local timezone is different
-     * from the event timezone.  Otherwise returns null.
-     */
-    public static String getDisplayedTimezone(long startMillis, String localTimezone,
-            String eventTimezone) {
-        String tzDisplay = null;
-        if (!TextUtils.equals(localTimezone, eventTimezone)) {
-            // Figure out if this is in DST
-            TimeZone tz = TimeZone.getTimeZone(localTimezone);
-            if (tz == null || tz.getID().equals("GMT")) {
-                tzDisplay = localTimezone;
-            } else {
-                Time startTime = new Time(localTimezone);
-                startTime.set(startMillis);
-                tzDisplay = tz.getDisplayName(startTime.isDst != 0, TimeZone.SHORT);
-            }
-        }
-        return tzDisplay;
-    }
 
     /**
      * Returns whether the specified time interval is in a single day.
@@ -1279,7 +1151,7 @@ class Utils {
      * Returns TODAY or TOMORROW if applicable.  Otherwise returns NONE.
      */
     private static int isTodayOrTomorrow(Resources r, long dayMillis,
-            long currentMillis, long localGmtOffset) {
+                                         long currentMillis, long localGmtOffset) {
         int startDay = Time.getJulianDay(dayMillis, localGmtOffset);
         int currentDay = Time.getJulianDay(currentMillis, localGmtOffset);
 
@@ -1395,9 +1267,9 @@ class Utils {
 
     /**
      * Returns true if:
-     *   (1) the email is not a resource like a conference room or another calendar.
-     *       Catch most of these by filtering out suffix calendar.google.com.
-     *   (2) the email is not equal to the sync account to prevent mailing himself.
+     * (1) the email is not a resource like a conference room or another calendar.
+     * Catch most of these by filtering out suffix calendar.google.com.
+     * (2) the email is not equal to the sync account to prevent mailing himself.
      */
     public static boolean isEmailableFrom(String email, String syncAccountName) {
         return Utils.isValidEmail(email) && !email.equals(syncAccountName);
@@ -1430,6 +1302,7 @@ class Utils {
             super();
             mCallBack = callback;
         }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED) ||

@@ -275,8 +275,7 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
 		mMinimumTwoMonthFlingVelocity = viewConfig
 				.getScaledMaximumFlingVelocity() / 2;
 		Resources res = activity.getResources();
-		mShowCalendarControls = Utils.getConfigBool(activity,
-				R.bool.show_calendar_controls);
+		mShowCalendarControls = false;
 		// Synchronized the loading time of the month's events with the
 		// animation of the
 		// calendar controls.

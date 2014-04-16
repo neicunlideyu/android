@@ -146,4 +146,55 @@
     </style>
 
 
+    <!-- from git hub-->
+    <style name="Global">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+
+    <style name="EditText" parent="Global">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+    </style>
+
+    <style name="FormalMultiLineEditText" parent="EditText">
+        <item name="android:gravity">top</item>
+        <item name="android:inputType">textMultiLine|textAutoCorrect|textCapSentences</item>
+    </style>
+
+    <style name="FormalSingleLineEditText" parent="EditText">
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">text|textAutoCorrect|textCapSentences</item>
+    </style>
+
+
+    <style name="TitleText">
+        <item name="android:textSize">17sp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="HeaderTitleText" parent="TitleText">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="SubtitleText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="ListSubtitleText" parent="SubtitleText"></style>
+
+
+
 </resources>
