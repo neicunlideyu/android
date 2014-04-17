@@ -36,13 +36,7 @@ import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
 
-/**
- * 应用程序Activity的基类
- *
- * @author liux (http://my.oschina.net/liux)
- * @version 1.0
- * @created 2012-9-18
- */
+
 public class CommentListFragment extends Fragment {
 
     private ListViewAdapter lvCommentAdapter;
@@ -74,8 +68,6 @@ public class CommentListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        //setContentView(R.layout.comment_list);
         final LinearLayout lv = (LinearLayout) inflater.inflate(R.layout.comments, null);
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         commentContent = (EditText) getActivity().findViewById(R.id.comment_foot_editer);
@@ -265,7 +257,6 @@ public class CommentListFragment extends Fragment {
             comments.addAll(commentList);
             lvCommentAdapter = new ListViewAdapter(getActivity(), comments,
                     R.layout.comment_listitem);
-            // lvComment.addFooterView(lvComment_footer);// 添加底部视图 必须在setAdapter前
             lvComment.setAdapter(lvCommentAdapter);
             setListViewHeightBasedOnChildren(lvComment);
             if (comments.size() == 0)

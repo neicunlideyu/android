@@ -60,6 +60,12 @@
             android:name=".ui.EditTodo"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
+
+        <activity
+            android:name=".ui.NewTodo"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar" />
+
         <activity
             android:name=".ui.EditTodolist"
             android:screenOrientation="portrait"

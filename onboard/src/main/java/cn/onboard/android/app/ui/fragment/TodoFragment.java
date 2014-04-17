@@ -59,6 +59,7 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.EditTodo;
 import cn.onboard.android.app.ui.EditTodolist;
+import cn.onboard.android.app.ui.NewTodo;
 
 
 public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
@@ -194,7 +195,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             itemList.add(todolistItem);
             int num_of_todos = todolists.get(i).getTodos() == null ? 0 : todolists.get(i).getTodos().size();
             for (int j = 0; j < num_of_todos; j++) {
-                if (!(todolists.get(i).getTodos().get(j).getCompleted())&&!(todolists.get(i).getTodos().get(j).getDeleted())) {
+                if (!(todolists.get(i).getTodos().get(j).getCompleted()) && !(todolists.get(i).getTodos().get(j).getDeleted())) {
                     Item todoItem = new Item(todolists.get(i).getTodos().get(j), todolists.get(i), sectionPosition, listPosition++, todolists.get(i).getTodos().get(j).getContent(), Type.TODO.value());
                     itemList.add(todoItem);
                 }
@@ -309,11 +310,11 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                     public void onClick(View view) {
                         Context context = view.getContext();
                         Intent intent = new Intent(context, EditTodolist.class);
-                        intent.putExtra("companyId",  item.todolist.getCompanyId());
-                        intent.putExtra("projectId",  item.todolist.getProjectId());
-                        intent.putExtra("todolistId",  item.todolist.getId());
-                        intent.putExtra("todolistName",  item.todolist.getName());
-                        startActivityForResult(intent, EditTodo.EditType.CREATE.value());
+                        intent.putExtra("companyId", item.todolist.getCompanyId());
+                        intent.putExtra("projectId", item.todolist.getProjectId());
+                        intent.putExtra("todolistId", item.todolist.getId());
+                        intent.putExtra("todolistName", item.todolist.getName());
+                        startActivityForResult(intent, EditType.CREATE.value());
 
 
                     }
@@ -325,11 +326,10 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                     public void onClick(View view) {
                         Context context = view.getContext();
                         Intent intent = new Intent(context,
-                                EditTodo.class);
+                                NewTodo.class);
                         intent.putExtra("companyId", item.todolist.getCompanyId());
                         intent.putExtra("projectId", item.todolist.getProjectId());
                         intent.putExtra("todolistId", item.todolist.getId());
-                        intent.putExtra("editType", EditTodo.EditType.CREATE);
                         startActivityForResult(intent, 0);
 
                     }
@@ -358,10 +358,8 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                                 EditTodo.class);
                         intent.putExtra("companyId", item.todolist.getCompanyId());
                         intent.putExtra("projectId", item.todolist.getProjectId());
-                        intent.putExtra("todolistId", item.todolist.getId());
                         intent.putExtra("todoId", ((Todo) item.identifiable).getId());
-                        intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
-                        startActivityForResult(intent, EditTodo.EditType.UPDATE.value());
+                        startActivityForResult(intent, EditType.UPDATE.value());
                     }
                 });
 
@@ -541,4 +539,30 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
 
         }
     }
+
+    public enum EditType {
+        CREATE(0), UPDATE(1);
+
+        private int value = 0;
+
+        private EditType(int value) {
+            this.value = value;
+        }
+
+        public static EditType valueOf(int value) {
+            switch (value) {
+                case 0:
+                    return CREATE;
+                case 1:
+                    return UPDATE;
+                default:
+            }
+            return null;
+        }
+
+        public int value() {
+            return this.value;
+        }
+    }
+
 }

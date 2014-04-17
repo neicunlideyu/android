@@ -69,6 +69,8 @@
     <!-- get info fail message -->
     <string name="get_company_list_fail">获取公司失败</string>
     <string name="get_project_list_fail">获取项目失败</string>
+    <string name="get_discussion_fail">获取讨论失败</string>
+    <string name="get_document_fail">获取文档失败</string>
     <string name="get_todolist_list_fail">获取任务列表失败</string>
     <string name="get_todo_list_fail">获取任务失败</string>
     <string name="get_department_name_user_map_fail">获取团队信息失败</string>

@@ -103,7 +103,6 @@ public class UIHelper {
             intent = new Intent(context,
                     EditTodo.class);
             intent.putExtra("todoId", id);
-            intent.putExtra("editType", EditTodo.EditType.UPDATE.value());
         } else if (type.equals(ModelType.UPLOAD)) {
             intent = new Intent(context,
                     UploadDetail.class);

@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+
     <TextView
         android:layout_marginTop="20.0dp"
         android:layout_marginLeft="10.0dp"
@@ -14,6 +15,7 @@
         android:textSize="@dimen/text_size_13"
         android:textColor="@color/author_text"
         android:text="评论" />
+
 
     <View style="@style/detail_cut_line" />
 

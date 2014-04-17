@@ -169,8 +169,8 @@ public class UploadDetail extends SherlockFragmentActivity {
         uploadId = getIntent().getIntExtra("uploadId", 0);
         companyId = getIntent().getIntExtra("companyId", 0);
         projectId = getIntent().getIntExtra("projectId", 0);
-        mAuthor = (TextView) findViewById(R.id.blog_detail_author);
-        mPubDate = (TextView) findViewById(R.id.blog_detail_date);
+        mAuthor = (TextView) findViewById(R.id.discussion_creator);
+        mPubDate = (TextView) findViewById(R.id.discussion_created_date);
         mCommentCount = (TextView) findViewById(R.id.blog_detail_commentcount);
 
         attachmentListview = (ListView) findViewById(R.id.upload_attachment_list);

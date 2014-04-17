@@ -13,7 +13,7 @@ import cn.onboard.android.app.ui.fragment.TodoFragment;
 /**
  * 查看某一天的todo
  */
-class DayTodo extends SherlockFragmentActivity {
+public class DayTodo extends SherlockFragmentActivity {
 
     private int companyId;
     private long startTime;

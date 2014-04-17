@@ -3,7 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
         android:id="@+id/loading_progress_bar"
         android:layout_width="fill_parent"
@@ -22,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp" >
+            android:padding="10dp">
 
             <TextView
                 style="@style/HeaderTitleText"
@@ -49,7 +48,7 @@
                 android:background="@drawable/inset_background"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="10dp" >
+                android:padding="10dp">
 
                 <ImageView
                     android:id="@+id/iv_assignee_avatar"
@@ -79,7 +78,7 @@
                 android:background="@drawable/inset_background"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="10dp" >
+                android:padding="10dp">
 
                 <ImageView
                     android:layout_height="24dip"
@@ -102,7 +101,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <include layout="@layout/comment_footer" />
 
 </LinearLayout>
