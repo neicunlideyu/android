@@ -49,7 +49,7 @@ public class Login extends BaseActivity {
         setContentView(R.layout.login);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        ac = (AppContext)getApplication();
+        ac = (AppContext) getApplication();
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         loading = (ProgressBar) findViewById(R.id.loading_progress_bar);
         email = (AutoCompleteTextView) findViewById(R.id.userName);
@@ -90,7 +90,7 @@ public class Login extends BaseActivity {
         if (!Strings.isNullOrEmpty(user.getPassword())) {
             password.setText(user.getPassword());
         }
-        if (Boolean.parseBoolean(ac.getProperty("remember_me")))
+        if (ac.getProperty("remember_me") != null && Boolean.parseBoolean(ac.getProperty("remember_me")))
             btn_login.performClick();
     }
 
