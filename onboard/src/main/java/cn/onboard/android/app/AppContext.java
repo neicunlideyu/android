@@ -147,7 +147,8 @@ public class AppContext extends Application {
      */
     public User getLoginInfo() {
         User user = new User();
-        user.setId(Integer.parseInt(getProperty("user.id")));
+        String id = getProperty("user.id");
+        user.setId(Integer.parseInt(id));
         user.setName(getProperty("user.name"));
         user.setEmail(getProperty("user.email"));
         user.setPassword(getProperty("user.password"));
@@ -494,6 +495,10 @@ public class AppContext extends Application {
         Map<String, List<User>> departmentNameUserMap = ApiClient.getDepartmentNameUserMapByCompanyId(this, companyId);
 
         return departmentNameUserMap;
+    }
+
+    public int getLatestVersionCode() throws AppException {
+        return ApiClient.getLatestVersionCode(this);
     }
 
 }

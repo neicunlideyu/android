@@ -9,7 +9,6 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.fragment.TopicFragment;
-import cn.onboard.android.app.ui.fragment.ProjectMenuFragment;
 import cn.onboard.android.slidingmenu.SlidingMenu;
 import cn.onboard.android.slidingmenu.app.SlidingFragmentActivity;
 
