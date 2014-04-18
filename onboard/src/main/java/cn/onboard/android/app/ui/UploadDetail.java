@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
 import com.onboard.api.dto.Upload;
@@ -36,7 +35,7 @@ import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class UploadDetail extends SherlockFragmentActivity {
+public class UploadDetail extends BaseActivity {
     private ListViewNewsAdapter attachmentAdapter;
 
     private TextView mAuthor;

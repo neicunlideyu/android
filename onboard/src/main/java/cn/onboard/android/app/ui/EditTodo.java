@@ -17,7 +17,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Todo;
@@ -40,7 +39,7 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class EditTodo extends SherlockFragmentActivity {
+public class EditTodo extends BaseActivity {
 
     private Todolist todolist;
     private Todo todo;

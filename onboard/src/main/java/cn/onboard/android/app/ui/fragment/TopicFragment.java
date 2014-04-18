@@ -3,7 +3,6 @@ package cn.onboard.android.app.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,15 +21,13 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.onboard.api.dto.Topic;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.bean.URLs;
-import cn.onboard.android.app.common.BitmapManager;
+import cn.onboard.android.app.adapter.TopicListViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.NewDiscussion;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
@@ -49,7 +45,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
         setRetainInstance(true);
     }
 
-    private ListViewNewsAdapter lvca;
+    private TopicListViewAdapter lvca;
 
     private PullToRefreshListView topicsPullToRefreshListView;
 
@@ -83,7 +79,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
 
 
     void initTopicView() {
-        lvca = new ListViewNewsAdapter(
+        lvca = new TopicListViewAdapter(
                 getActivity().getApplicationContext(), topicList,
                 R.layout.topic_listitem);
 
@@ -254,94 +250,6 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
         super.onSaveInstanceState(outState);
     }
 
-    private static class ListViewNewsAdapter extends BaseAdapter {
-        private final List<Topic> listItems;// 数据集合
-        private final LayoutInflater listContainer;// 视图容器
-        private final int itemViewResource;// 自定义项视图源
-        private final BitmapManager bmpManager;
-
-        static class ListItemView { // 自定义控件集合
-            public ImageView face;
-            public TextView title;
-            public TextView author;
-            public TextView count;
-        }
-
-        /**
-         * 实例化Adapter
-         *
-         * @param context
-         * @param data
-         * @param resource
-         */
-        public ListViewNewsAdapter(Context context, List<Topic> data,
-                                   int resource) {
-            this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-            this.itemViewResource = resource;
-            this.listItems = data;
-            this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
-                    context.getResources(), R.drawable.widget_dface_loading));
-        }
-
-        public int getCount() {
-            return listItems.size();
-        }
-
-        public Object getItem(int arg0) {
-            return null;
-        }
-
-        public long getItemId(int arg0) {
-            return 0;
-        }
-
-        /**
-         * ListView Item设置
-         */
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // Log.d("method", "getView");
-
-            // 自定义视图
-            ListItemView listItemView = null;
-
-            if (convertView == null) {
-                // 获取list_item布局文件的视图
-                convertView = listContainer
-                        .inflate(this.itemViewResource, null);
-
-                listItemView = new ListItemView();
-                // 获取控件对象
-                listItemView.face = (ImageView) convertView
-                        .findViewById(R.id.topic_listitem_userface);
-                listItemView.title = (TextView) convertView
-                        .findViewById(R.id.topic_listitem_title);
-                listItemView.author = (TextView) convertView
-                        .findViewById(R.id.topic_listitem_author);
-                listItemView.count = (TextView) convertView
-                        .findViewById(R.id.topic_listitem_count);
-
-                // 设置控件集到convertView
-                convertView.setTag(listItemView);
-            } else {
-                listItemView = (ListItemView) convertView.getTag();
-            }
-
-            // 设置文字和图片
-            Topic topic = listItems.get(position);
-            String faceURL = URLs.USER_FACE_HTTP + topic.getLastUpdator().getAvatar();
-            bmpManager.loadBitmap(faceURL, listItemView.face);
-            // }
-            // listItemView.face.setOnClickListener(faceClickListener);
-            listItemView.face.setTag(topic);
-
-            listItemView.title.setText(topic.getTitle());
-            listItemView.title.setTag(topic);// 设置隐藏参数(实体类)
-            listItemView.author.setText((topic.getExcerpt().length() > 20) ? (topic.getExcerpt().substring(0, 19) + "……") : topic.getExcerpt());
-            listItemView.count.setText(new SimpleDateFormat("MM-dd日hh:mm").format(topic.getCreated()));
-
-            return convertView;
-        }
-    }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

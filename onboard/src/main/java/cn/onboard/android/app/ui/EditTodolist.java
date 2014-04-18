@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Todolist;
@@ -28,7 +27,7 @@ import cn.onboard.android.app.ui.fragment.CommentListFragment;
  * Created by XingLiang on 14-4-4.
  */
 
-public class EditTodolist extends SherlockFragmentActivity {
+public class EditTodolist extends BaseActivity {
 
     private Integer todolistId;
 
