@@ -3,7 +3,6 @@ package cn.onboard.android.app.ui;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -95,6 +94,7 @@ public class Login extends BaseActivity {
     }
 
 
+
     private class LoginTask extends AsyncTask<Void, Void, User> {
 
         @Override
@@ -131,11 +131,5 @@ public class Login extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            this.onDestroy();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+
 }

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import cn.onboard.android.app.AppManager;
 
 
-class BaseActivity extends Activity {
+public class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

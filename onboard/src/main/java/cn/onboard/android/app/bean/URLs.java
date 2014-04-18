@@ -7,8 +7,6 @@ import java.io.Serializable;
  */
 public class URLs implements Serializable {
 
-//    public final static String HOST = "192.168.100.31:8080";
-
     public final static String HOST = "onboard.cn";
 
     private final static String IMAGE_HOST = "teamforge.b0.upaiyun.com";
@@ -57,5 +55,8 @@ public class URLs implements Serializable {
     public final static String TODO_HTTP = URL_API_HOST + "api/companyId/projects/projectId/todos";
 
     public final static String USER_FACE_HTTP = HTTP + IMAGE_HOST;
+
+    public final static String VERSION_HTTP = URL_API_HOST + "api/version";
+    public final static String LATEST_VERSION_DOWNLOAD_HTTP = VERSION_HTTP + "/download";
 
 }

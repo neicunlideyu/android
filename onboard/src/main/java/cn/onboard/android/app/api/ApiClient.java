@@ -838,4 +838,16 @@ public class ApiClient {
             throw AppException.network(e);
         }
     }
+
+    public static Integer getLatestVersionCode(AppContext appContext) throws AppException {
+        String newUrl = URLs.VERSION_HTTP;
+        try {
+            return HttpStreamToObject.inputStreamToObject(new TypeReference<Integer>() {
+            }, http_get(appContext, newUrl));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+    }
 }
