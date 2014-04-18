@@ -9,7 +9,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Document;
 
@@ -21,7 +20,7 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class DocumentDetail extends SherlockFragmentActivity {
+public class DocumentDetail extends BaseActivity {
 
 
     private TextView mAuthor;

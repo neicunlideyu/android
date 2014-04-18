@@ -51,7 +51,6 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
@@ -96,10 +95,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                 R.layout.todo_list, null);
         data = new ArrayList<Item>();
         listViewAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), data, 0);
-        HashMap<String, Integer> idMap = new HashMap<String, Integer>();
-        idMap.put("projectId", projectId);
-        idMap.put("companyId", companyId);
-        new InitDataTask().execute(idMap);
+        new InitDataTask().execute();
         return lv;
 
 
@@ -115,7 +111,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         new AlertDialog.Builder(getActivity()).setTitle("请输入任务列表标题").setView(input).setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                new newTodolistTask().execute(input.getText().toString());
+                new SaveTodolistTask().execute(input.getText().toString());
             }
         }).setNegativeButton("取消", null).show();
         return true;
@@ -429,7 +425,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         }
     }
 
-    private class newTodolistTask extends AsyncTask<String, Void, Todolist> {
+    private class SaveTodolistTask extends AsyncTask<String, Void, Todolist> {
 
         @Override
         protected Todolist doInBackground(String... todolistTitle) {
@@ -495,10 +491,10 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         }
     }
 
-    private class InitDataTask extends AsyncTask<HashMap<String, Integer>, Void, List<Todolist>> {
+    private class InitDataTask extends AsyncTask<Void, Void, List<Todolist>> {
 
         @Override
-        protected List<Todolist> doInBackground(HashMap<String, Integer>... hashMaps) {
+        protected List<Todolist> doInBackground(Void... params) {
             AppContext ac = (AppContext) getActivity().getApplication();
             List<Todolist> todolists = new ArrayList<Todolist>();
             try {

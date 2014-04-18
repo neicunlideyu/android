@@ -1,13 +1,14 @@
 package cn.onboard.android.app.ui;
 
 
-import android.app.Activity;
 import android.os.Bundle;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import cn.onboard.android.app.AppManager;
 
 
-class BaseActivity extends Activity {
+class BaseActivity extends SherlockFragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

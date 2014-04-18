@@ -232,9 +232,9 @@ public class AppContext extends Application {
         return exist;
     }
 
-    /**
-     * 清除app缓存
-     */
+//    /**
+//     * 清除app缓存
+//     */
 //	public void clearAppCache() {
 //		// 清除webview缓存
 //		File file = CacheManager.getCacheFileBaseDir();

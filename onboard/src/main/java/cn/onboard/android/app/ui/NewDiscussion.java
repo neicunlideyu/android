@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
@@ -35,7 +34,7 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 
-public class NewDiscussion extends SherlockActivity {
+public class NewDiscussion extends BaseActivity {
     private TextView discussionTitleTextView;
     private TextView discussionContentTextView;
     private int companyId;

@@ -5,13 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.onboard.api.dto.User;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.ui.fragment.ActivityFragment;
 import cn.onboard.android.app.ui.fragment.AttachmentFragment;
 import cn.onboard.android.app.ui.fragment.TodoFragment;
@@ -19,7 +17,7 @@ import cn.onboard.android.app.ui.fragment.TodoFragment;
 /**
  * 用户登录页面
  */
-public class Person extends SherlockFragmentActivity {
+public class Person extends BaseActivity {
 
 
     private Button meActivityButton;

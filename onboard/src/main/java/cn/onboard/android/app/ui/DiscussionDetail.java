@@ -12,7 +12,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Discussion;
 
@@ -26,7 +25,7 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
-public class DiscussionDetail extends SherlockFragmentActivity {
+public class DiscussionDetail extends BaseActivity {
 
 
     private TextView mAuthor;

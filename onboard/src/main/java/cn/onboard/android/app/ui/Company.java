@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -24,14 +23,14 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.EveryoneAdapter;
-import cn.onboard.android.app.adapter.GridViewProjectAdapter;
+import cn.onboard.android.app.adapter.ProjectGridViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.ui.fragment.ActivityFragment;
 import cn.onboard.android.app.widget.calendar.CalendarController;
 import cn.onboard.android.app.widget.calendar.MonthByWeekFragment;
 import cn.onboard.android.app.widget.scroll.ScrollLayout;
 
-public class Company extends FragmentActivity implements CalendarController.EventHandler {
+public class Company extends BaseActivity implements CalendarController.EventHandler {
     private AppContext ac;
 
     private int companyId;
@@ -184,7 +183,7 @@ public class Company extends FragmentActivity implements CalendarController.Even
         @Override
         protected void onPostExecute(List<Project> projects) {
             if (projects != null) {
-                GridViewProjectAdapter gridViewProjectAdapter = new GridViewProjectAdapter(
+                ProjectGridViewAdapter gridViewProjectAdapter = new ProjectGridViewAdapter(
                         getBaseContext(), projects, R.layout.project_item);
                 projectGridView.setAdapter(gridViewProjectAdapter);
                 findViewById(R.id.loading_progress_bar).setVisibility(View.GONE);

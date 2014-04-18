@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,8 +21,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,9 +38,7 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
-import cn.onboard.android.app.bean.AttachmentIconType;
-import cn.onboard.android.app.bean.URLs;
-import cn.onboard.android.app.common.BitmapManager;
+import cn.onboard.android.app.adapter.AttachmentListViewAdapter;
 import cn.onboard.android.app.common.ImageUtils;
 import cn.onboard.android.app.common.UIHelper;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
@@ -56,7 +51,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
 
     private PullToRefreshListView attachmentPullToRefreshListView;
 
-    private ListViewNewsAdapter attachmentAdapter;
+    private AttachmentListViewAdapter attachmentAdapter;
 
     private View attachment_list_footer;
 
@@ -217,118 +212,11 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
         this.userId = userId;
     }
 
-    private static class ListViewNewsAdapter extends BaseAdapter {
-        private final List<Attachment> listItems;// 数据集合
-        private final LayoutInflater listContainer;// 视图容器
-        private final int itemViewResource;// 自定义项视图源
-        private final BitmapManager bmpManager;
 
-        static class ListItemView { // 自定义控件集合
-            public ImageView face;
-            public TextView title;
-            public TextView author;
-            public TextView date;
-            public Button btn_download;
-        }
-
-        /**
-         * 实例化Adapter
-         *
-         * @param context
-         * @param attachments
-         * @param resource
-         */
-        public ListViewNewsAdapter(Context context, List<Attachment> attachments, int resource) {
-            this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-            this.itemViewResource = resource;
-            this.listItems = attachments;
-            this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.widget_dface_loading));
-        }
-
-        public int getCount() {
-            return listItems.size();
-        }
-
-        public Object getItem(int arg0) {
-            return null;
-        }
-
-        public long getItemId(int arg0) {
-            return 0;
-        }
-
-        private final View.OnClickListener imageClickListener = new View.OnClickListener() {
-            public void onClick(View v) {
-                UIHelper.showImageDialog(v.getContext(), (String) v.getTag());
-            }
-        };
-
-        /**
-         * ListView Item设置
-         */
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            // 自定义视图
-            ListItemView listItemView = null;
-            final Attachment attachment = listItems.get(position);
-
-            if (convertView == null) {
-                // 获取list_item布局文件的视图
-                convertView = listContainer.inflate(this.itemViewResource, null);
-
-                listItemView = new ListItemView();
-                // 获取控件对象
-                listItemView.face = (ImageView) convertView.findViewById(R.id.attachment_listitem_icon);
-                listItemView.title = (TextView) convertView.findViewById(R.id.attachment_listitem_title);
-                listItemView.author = (TextView) convertView.findViewById(R.id.attachment_listitem_author);
-                listItemView.date = (TextView) convertView.findViewById(R.id.attachment_listitem_date);
-                listItemView.btn_download = (Button) convertView.findViewById(R.id.button_download);
-
-                listItemView.btn_download.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        AppContext appContext = (AppContext) v.getContext();
-                        appContext.downloadAttachmentByAttachmentId(attachment.getId(),
-                                attachment.getName(), companyId, projectId);
-                    }
-                });
-
-                // 设置控件集到convertView
-                convertView.setTag(listItemView);
-            } else {
-                listItemView = (ListItemView) convertView.getTag();
-            }
-
-            // 设置文字和图片
-            if (attachment.getContentType().contains("image")) {
-                String attachmentImageURL = URLs.ATTACHMENT_IMAGE_HTTP;
-                attachmentImageURL = attachmentImageURL.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "").replaceAll("attachmentId", attachment.getId() + "");
-                bmpManager.loadBitmap(attachmentImageURL, listItemView.face);
-                listItemView.face.setTag(attachmentImageURL);
-                listItemView.face.setOnClickListener(imageClickListener);
-
-            } else {
-                listItemView.face.setImageDrawable(convertView.getResources()
-                        .getDrawable(AttachmentIconType.getAttachmentTypeIconResourceId(attachment.getName(),
-                                attachment.getContentType())));
-            }
-
-            // }
-
-            listItemView.title.setText(attachment.getName());
-            listItemView.title.setTag(attachment);// 设置隐藏参数(实体类)
-            listItemView.author.setText(attachment.getCreatorName());
-            listItemView.date.setText(new SimpleDateFormat("yyyy-MM-dd").format(attachment.getCreated()));
-
-            return convertView;
-        }
-    }
 
     private void initView(LinearLayout lv) {
         attachments = new ArrayList<Attachment>();
-        attachmentAdapter = new ListViewNewsAdapter(getActivity().getApplicationContext(), attachments,
+        attachmentAdapter = new AttachmentListViewAdapter(getActivity().getApplicationContext(), attachments,
                 R.layout.attachment_listitem);
         attachmentPullToRefreshListView = (PullToRefreshListView) lv
                 .findViewById(R.id.attachment_list_view);
