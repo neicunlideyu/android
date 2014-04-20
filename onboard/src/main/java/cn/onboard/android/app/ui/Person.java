@@ -73,8 +73,7 @@ public class Person extends BaseActivity {
         @Override
         protected void onPostExecute(User user) {
             getSupportActionBar().setTitle("成员/"+user.getName());
-//            String faceURL = URLs.USER_FACE_HTTP + user.getAvatar();
-//            bitmapManager.loadBitmap(faceURL, (ImageView) findViewById(R.id.homeAsUp));
+            // TODO: 设置icon为用户头像
         }
     }
 

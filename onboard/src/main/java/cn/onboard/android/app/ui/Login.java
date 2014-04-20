@@ -22,6 +22,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.google.common.base.Strings;
+import com.koushikdutta.async.ByteBufferList;
+import com.koushikdutta.async.DataEmitter;
+import com.koushikdutta.async.callback.DataCallback;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.WebSocket;
 import com.onboard.api.dto.User;
 
 import cn.onboard.android.app.AppContext;

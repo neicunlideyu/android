@@ -75,6 +75,7 @@ dependencies {
     compile 'com.google.guava:guava:16.0.1'
     compile 'org.ocpsoft.prettytime:prettytime:2.1.2.Final'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0@aar'
+    compile 'com.koushikdutta.async:androidasync:1.2.4'
     compile('com.onboard:com.onboard.api:2.0.7-SNAPSHOT') {
         transitive = false
     }

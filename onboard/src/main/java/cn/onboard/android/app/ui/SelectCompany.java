@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.WebSocket;
 import com.onboard.api.dto.Company;
 
 import java.util.List;
@@ -35,6 +38,26 @@ public class SelectCompany extends BaseActivity {
         getActionBar().setTitle(R.string.company_list_title);
         initCompanyListView();
         new GetCompanyListTask().execute();
+        setUpWebSocket();
+
+    }
+    private void setUpWebSocket(){
+        AsyncHttpClient.getDefaultInstance().websocket("ws://192.168.100.37:8080/websocket", "my-protocol", new AsyncHttpClient.WebSocketConnectCallback() {
+            @Override
+            public void onCompleted(Exception ex, WebSocket webSocket) {
+                if (ex != null) {
+                    ex.printStackTrace();
+                    return;
+                }
+                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                    public void onStringAvailable(String s) {
+                        System.out.println("I got a string: " + s);
+                        Log.i("string available",s);
+                    }
+                });
+            }
+        });
+
     }
 
     private void initCompanyListView() {

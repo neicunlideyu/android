@@ -148,7 +148,8 @@ public class AppContext extends Application {
     public User getLoginInfo() {
         User user = new User();
         String id = getProperty("user.id");
-        user.setId(Integer.parseInt(id));
+        if(id!=null)
+            user.setId(Integer.parseInt(id));
         user.setName(getProperty("user.name"));
         user.setEmail(getProperty("user.email"));
         user.setPassword(getProperty("user.password"));
