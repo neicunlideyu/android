@@ -34,6 +34,21 @@ public class AttachmentIconType {
         }
     };
 
+    private static final Map<String, Integer> TYPE_RESOURCE_MAP = new HashMap<String, Integer>(){
+        {
+            put("ppt", R.drawable.powerpoint);
+            put("word", R.drawable.word);
+            put("txt", R.drawable.text);
+            put("excel", R.drawable.excel);
+            put("pdf", R.drawable.pdf);
+            put("css", R.drawable.css);
+            put("ai", R.drawable.illustrator);
+            put("zip", R.drawable.keynote);
+            put("script", R.drawable.html);
+            put("html", R.drawable.html);
+        }
+    };
+
     private final static String IMAGE = "image";
 
     private static final String DEFAULT = "default";
@@ -56,35 +71,9 @@ public class AttachmentIconType {
         attachment.setContentType(attachmentContentType);
 
         String attachmentType = getAttachmentType(attachment);
-        if (attachmentType.contains("ppt")) {
-            return R.drawable.powerpoint;
-        }
-        else if (attachmentType.contains("word")) {
-            return R.drawable.word;
-        }
-        else if (attachmentType.contains("txt")) {
-            return R.drawable.text;
-        }
-        else if (attachmentType.contains("excel")) {
-            return R.drawable.excel;
-        }
-        else if (attachmentType.contains("pdf")) {
-            return R.drawable.pdf;
-        }
-        else if (attachmentType.contains("css")) {
-            return R.drawable.css;
-        }
-        else if (attachmentType.contains("ai")) {
-            return R.drawable.illustrator;
-        }
-        else if (attachmentType.contains("zip")) {
-            return R.drawable.keynote;
-        }
-        else if (attachmentType.contains("script")) {
-            return R.drawable.html;
-        }
-        else if (attachmentType.contains("html")) {
-            return R.drawable.html;
+
+        if (TYPE_RESOURCE_MAP.containsKey(attachmentType)) {
+            return TYPE_RESOURCE_MAP.get(attachmentType);
         }
         else {
             return R.drawable.folder;
