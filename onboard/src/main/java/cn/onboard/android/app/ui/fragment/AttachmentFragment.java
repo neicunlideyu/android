@@ -213,7 +213,6 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
     }
 
 
-
     private void initView(LinearLayout lv) {
         attachments = new ArrayList<Attachment>();
         attachmentAdapter = new AttachmentListViewAdapter(getActivity().getApplicationContext(), attachments,
@@ -298,7 +297,8 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                 if (attachment == null)
                     return;
                 Context context = view.getContext();
-                UIHelper.pageLink(context, attachment.getTargetType(), attachment.getTargetId(), attachment.getCompanyId(), attachment.getProjectId());
+                Intent intent = UIHelper.pageLink(context, attachment.getTargetType(), attachment.getTargetId(), attachment.getCompanyId(), attachment.getProjectId());
+                context.startActivity(intent);
             }
         });
     }

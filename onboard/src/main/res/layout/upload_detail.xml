@@ -77,6 +77,7 @@
             </LinearLayout>
 
             <View style="@style/detail_cut_line" />
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_gravity="center"
@@ -85,11 +86,14 @@
                 android:layout_marginTop="6.0dip"
                 android:layout_marginLeft="6.0dip"
                 android:layout_marginRight="6.0dip">
-                <ListView android:layout_width="fill_parent"
+
+                <ListView
+                    android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:id="@+id/upload_attachment_list" />
 
             </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/discussion_comments"
                 android:layout_width="fill_parent"

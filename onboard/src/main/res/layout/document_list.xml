@@ -6,7 +6,8 @@
 
     <include layout="@layout/data_empty_tip" />
 
-    <include layout="@layout/progress_bar"/>
+    <include layout="@layout/progress_bar" />
+
     <ListView
         android:id="@+id/document_list_view"
         style="@style/widget_listview" />

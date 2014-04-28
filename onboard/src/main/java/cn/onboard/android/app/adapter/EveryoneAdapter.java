@@ -32,7 +32,8 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
         final int userId;
         final String avatar;
         final String departmentName;
-        UserDepartmentName(String departmentName, String username,int userId, String avatar) {
+
+        UserDepartmentName(String departmentName, String username, int userId, String avatar) {
             this.userName = username;
             this.departmentName = departmentName;
             this.userId = userId;
@@ -48,13 +49,13 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
     private final int mItemResId;
     private final BitmapManager bmpManager;
 
-    public EveryoneAdapter(Context context, Map<String, List<User>> departmentNameUserMap, int companyId,int mHeaderResId, int mItemResId) {
+    public EveryoneAdapter(Context context, Map<String, List<User>> departmentNameUserMap, int companyId, int mHeaderResId, int mItemResId) {
         this.companyId = companyId;
         this.mHeaderResId = mHeaderResId;
         this.mItemResId = mItemResId;
         this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
                 context.getResources(), R.drawable.widget_dface_loading));
-        users = new ArrayList<UserDepartmentName> ();
+        users = new ArrayList<UserDepartmentName>();
         int headPosition = 0;
         for (String departmentName : departmentNameUserMap.keySet()) {
             List<User> departmentUsers = departmentNameUserMap.get(departmentName);
@@ -111,10 +112,10 @@ public class EveryoneAdapter extends BaseAdapter implements StickyGridHeadersSim
                 Context context = view.getContext();
                 Intent intent = new Intent(context,
                         Person.class);
-                intent.putExtra("userId",item.userId);
+                intent.putExtra("userId", item.userId);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                intent.putExtra("companyId",companyId);
+                intent.putExtra("companyId", companyId);
                 context.startActivity(intent);
 
             }

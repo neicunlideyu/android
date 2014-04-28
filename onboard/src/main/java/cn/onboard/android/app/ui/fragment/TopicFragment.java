@@ -166,7 +166,8 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                         if (topic == null)
                             return;
                         Context context = view.getContext();
-                        UIHelper.pageLink(context, topic.getRefType(), topic.getRefId(), companyId, topic.getProjectId());
+                        Intent intent = UIHelper.pageLink(context, topic.getRefType(), topic.getRefId(), companyId, topic.getProjectId());
+                        context.startActivity(intent);
                     }
                 });
 

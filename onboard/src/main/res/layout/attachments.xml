@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView
         android:id="@+id/attachment_list_view"

@@ -2,11 +2,15 @@ package cn.onboard.android.app.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.WebSocket;
 
+import cn.onboard.android.app.AppManager;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.fragment.ProjectMenuFragment;
 import cn.onboard.android.app.ui.fragment.TopicFragment;
@@ -63,6 +67,29 @@ public class Project extends SlidingFragmentActivity {
         sm.setShadowDrawable(R.drawable.shadow);
         sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         sm.setFadeDegree(0.35f);
+        //添加Activity到堆栈
+        AppManager.getAppManager().addActivity(this);
+        setUpWebSocket();
+
+    }
+
+    private void setUpWebSocket() {
+        AsyncHttpClient.getDefaultInstance().websocket("ws://192.168.100.37:8080/websocket", "my-protocol", new AsyncHttpClient.WebSocketConnectCallback() {
+            @Override
+            public void onCompleted(Exception ex, WebSocket webSocket) {
+                if (ex != null) {
+                    ex.printStackTrace();
+                    return;
+                }
+                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                    public void onStringAvailable(String s) {
+                        System.out.println("I got a string: " + s);
+                        Log.i("string available", s);
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
@@ -109,6 +136,14 @@ public class Project extends SlidingFragmentActivity {
 
     public void setPopupListener(OnMenuItemClickListener popupListener) {
         this.popupListener = popupListener;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //结束Activity&从堆栈中移除
+        AppManager.getAppManager().finishActivity(this);
     }
 
 }

@@ -10,23 +10,23 @@ import android.widget.RelativeLayout;
 class RepositoryFragment extends Fragment {
 
     private RepositoryFragment() {
-		setRetainInstance(true);
-	}
-
-	public RepositoryFragment(int companyId, int projectId) {
-		this();
+        setRetainInstance(true);
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		RelativeLayout v = new RelativeLayout(getActivity());
-		return v;
-	}
+    public RepositoryFragment(int companyId, int projectId) {
+        this();
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        RelativeLayout v = new RelativeLayout(getActivity());
+        return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
 }

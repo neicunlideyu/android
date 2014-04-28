@@ -116,7 +116,6 @@ public class MonthWeekEventsView extends SimpleWeekView {
     protected FloatRef mEventOutlines = new FloatRef(10 * 4 * 4 * 7);
 
 
-
     private static final StringBuilder mStringBuilder = new StringBuilder(50);
     // TODO recreate formatter when locale changes
     private static final Formatter mFormatter = new Formatter(mStringBuilder, Locale.getDefault());
@@ -433,9 +432,9 @@ public class MonthWeekEventsView extends SimpleWeekView {
         mEventExtrasPaint.setColor(mMonthEventExtraColor);
         mEventExtrasPaint.setStyle(Style.FILL);
         mEventExtrasPaint.setTextAlign(Align.LEFT);
-        mExtrasHeight = (int)(mEventExtrasPaint.descent() - mEventExtrasPaint.ascent() + 0.5f);
-        mExtrasAscentHeight = (int)(-mEventExtrasPaint.ascent() + 0.5f);
-        mExtrasDescent = (int)(mEventExtrasPaint.descent() + 0.5f);
+        mExtrasHeight = (int) (mEventExtrasPaint.descent() - mEventExtrasPaint.ascent() + 0.5f);
+        mExtrasAscentHeight = (int) (-mEventExtrasPaint.ascent() + 0.5f);
+        mExtrasDescent = (int) (mEventExtrasPaint.descent() + 0.5f);
 
         mEventDeclinedExtrasPaint = new TextPaint();
         mEventDeclinedExtrasPaint.setFakeBoldText(false);
@@ -806,16 +805,16 @@ public class MonthWeekEventsView extends SimpleWeekView {
      * if the event and its extras won't fit or if there are more events and the
      * more events line would not fit after drawing this event.
      *
-     * @param canvas the canvas to draw on
-     * @param event the event to draw
-     * @param x the top left corner for this event's color chip
-     * @param y the top left corner for this event's color chip
-     * @param rightEdge the rightmost point we're allowed to draw on (exclusive)
+     * @param canvas     the canvas to draw on
+     * @param event      the event to draw
+     * @param x          the top left corner for this event's color chip
+     * @param y          the top left corner for this event's color chip
+     * @param rightEdge  the rightmost point we're allowed to draw on (exclusive)
      * @param moreEvents indicates whether additional events will follow this one
-     * @param showTimes if set, a second line with a time range will be displayed for non-all-day
-     *   events
-     * @param doDraw if set, do the actual drawing; otherwise this just computes the height
-     *   and returns
+     * @param showTimes  if set, a second line with a time range will be displayed for non-all-day
+     *                   events
+     * @param doDraw     if set, do the actual drawing; otherwise this just computes the height
+     *                   and returns
      * @return the y for the next event or the original y if it won't fit
      */
     int drawEvent(Canvas canvas, CalendarEvent event, int x, int y, int rightEdge,
@@ -1102,6 +1101,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         mClickedDayIndex = getDayIndexFromLocation(xLocation);
         invalidate();
     }
+
     public void clearClickedDay() {
         mClickedDayIndex = -1;
         invalidate();

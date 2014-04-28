@@ -50,7 +50,7 @@ class MonthListView extends ListView {
     private final Rect mFirstViewRect = new Rect();
 
     private Context mListContext;
-    
+
     private TimeZone tz;
 
     // Updates the time zone when it changes
@@ -59,7 +59,7 @@ class MonthListView extends ListView {
         public void run() {
             if (mTempTime != null && mListContext != null) {
                 mTempTime.timezone =
-                		tz.getDisplayName();
+                        tz.getDisplayName();
             }
         }
     };
@@ -80,9 +80,9 @@ class MonthListView extends ListView {
     }
 
     private void init(Context c) {
-    	tz = TimeZone.getDefault();
+        tz = TimeZone.getDefault();
         mListContext = c;
-        mTracker  = VelocityTracker.obtain();
+        mTracker = VelocityTracker.obtain();
         mTempTime = new Time(tz.getDisplayName());
         if (mScale == 0) {
             mScale = c.getResources().getDisplayMetrics().density;
@@ -104,7 +104,7 @@ class MonthListView extends ListView {
         return processEvent(ev) || super.onInterceptTouchEvent(ev);
     }
 
-    private boolean processEvent (MotionEvent ev) {
+    private boolean processEvent(MotionEvent ev) {
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
             // Since doFling sends a cancel, make sure not to process it.
             case MotionEvent.ACTION_CANCEL:
@@ -118,15 +118,15 @@ class MonthListView extends ListView {
             case MotionEvent.ACTION_UP:
                 mTracker.addMovement(ev);
                 mTracker.computeCurrentVelocity(1000);    // in pixels per second
-                float vel =  mTracker.getYVelocity ();
+                float vel = mTracker.getYVelocity();
                 if (Math.abs(vel) > MIN_VELOCITY_FOR_FLING) {
                     doFling(vel);
                     return true;
                 }
                 break;
             default:
-                 mTracker.addMovement(ev);
-                 break;
+                mTracker.addMovement(ev);
+                break;
         }
         return false;
     }
@@ -135,7 +135,7 @@ class MonthListView extends ListView {
     private void doFling(float velocityY) {
 
         // Stop the list-view movement and take over
-        MotionEvent cancelEvent = MotionEvent.obtain(mDownActionTime,  SystemClock.uptimeMillis(),
+        MotionEvent cancelEvent = MotionEvent.obtain(mDownActionTime, SystemClock.uptimeMillis(),
                 MotionEvent.ACTION_CANCEL, 0, 0, 0);
         onTouchEvent(cancelEvent);
 

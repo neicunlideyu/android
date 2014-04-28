@@ -112,7 +112,8 @@ public class ImageZoomDialog extends BaseActivity implements OnTouchListener, On
             public void run() {
                 Message msg = new Message();
                 Bitmap bmp = null;
-                String filename =  imgURL.replaceAll("/", "-");;
+                String filename = imgURL.replaceAll("/", "-");
+                ;
                 try {
                     //读取本地图片
                     if (imgURL.endsWith("portrait.gif") || Strings.isNullOrEmpty(imgURL)) {

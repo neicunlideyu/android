@@ -44,8 +44,8 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     private Time mToday;
     private int mFirstJulianDay;
     private int mQueryDays;
-//    protected boolean mIsMiniMonth = false;
-private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
+    //    protected boolean mIsMiniMonth = false;
+    private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
     private final boolean mShowAgendaWithMonth;
 
     private ArrayList<ArrayList<CalendarEvent>> mEventDayList = new ArrayList<ArrayList<CalendarEvent>>();
@@ -133,7 +133,7 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
         }
 
         if (events == null || events.size() == 0) {
-            if(Log.isLoggable(TAG, Log.DEBUG)) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "No events. Returning early--go schedule something fun.");
             }
             mEventDayList = eventDayList;
@@ -163,10 +163,10 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
                 }
             }
         }
-        if(Log.isLoggable(TAG, Log.DEBUG)) {
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "Processed " + events.size() + " events.");
         }
-		mEventDayList = eventDayList;
+        mEventDayList = eventDayList;
         refresh();
     }
 
@@ -280,7 +280,7 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
         day.minute = currTime.minute;
         day.allDay = false;
         day.normalize(true);
-         if (mShowAgendaWithMonth) {
+        if (mShowAgendaWithMonth) {
             // If agenda view is visible with month view , refresh the views
             // with the selected day's info
             mController.sendEvent(mContext, CalendarController.EventType.GO_TO, day, day, -1,
@@ -289,7 +289,7 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
             // Else , switch to the detailed view
             mController.sendEvent(mContext, CalendarController.EventType.GO_TO, day, day, -1,
                     CalendarController.ViewType.DETAIL,
-                            CalendarController.EXTRA_GOTO_DATE
+                    CalendarController.EXTRA_GOTO_DATE
                             | CalendarController.EXTRA_GOTO_BACK_TO_PREVIOUS, null, null);
         }
     }
@@ -316,7 +316,7 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
             // On Up/scroll/move/cancel: hide the "clicked" color.
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
-                    mClickedView = (MonthWeekEventsView)v;
+                    mClickedView = (MonthWeekEventsView) v;
                     mClickedXLocation = event.getX();
                     mClickTime = System.currentTimeMillis();
                     mListView.postDelayed(mDoClick, mOnDownDelay);
@@ -324,12 +324,12 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_SCROLL:
                 case MotionEvent.ACTION_CANCEL:
-                    clearClickedView((MonthWeekEventsView)v);
+                    clearClickedView((MonthWeekEventsView) v);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     // No need to cancel on vertical movement, ACTION_SCROLL will do that.
                     if (Math.abs(event.getX() - mClickedXLocation) > mMovedPixelToCancel) {
-                        clearClickedView((MonthWeekEventsView)v);
+                        clearClickedView((MonthWeekEventsView) v);
                     }
                     break;
                 default:
@@ -354,7 +354,7 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
     // Clear the visual cues of the click animation and related running code.
     private void clearClickedView(MonthWeekEventsView v) {
         mListView.removeCallbacks(mDoClick);
-        synchronized(v) {
+        synchronized (v) {
             v.clearClickedDay();
         }
         mClickedView = null;
@@ -366,7 +366,7 @@ private int mOrientation = Configuration.ORIENTATION_LANDSCAPE;
         @Override
         public void run() {
             if (mClickedView != null) {
-                synchronized(mClickedView) {
+                synchronized (mClickedView) {
                     mClickedView.setClickedDay(mClickedXLocation);
                 }
                 mClickedView = null;

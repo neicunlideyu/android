@@ -1,41 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="horizontal" 
-	android:id="@+id/company_linearlayout_footer"
-	android:layout_width="fill_parent" 
-	android:layout_height="wrap_content"
-	android:gravity="center_vertical"
-	android:background="@drawable/widget_bar_bg_n">
-	<RadioButton 
-		android:id="@+id/company_footbar_projects"
-		style="@style/main_footbar_radio"
-		android:drawableTop="@drawable/widget_bar_news"/>
-	<ImageView
-		style="@style/main_footbar_cutline"
-		android:src="@drawable/widget_bar_cut_off"/>
-	<RadioButton 
-		android:id="@+id/company_footbar_calendar"
-		style="@style/main_footbar_radio"
-		android:drawableTop="@drawable/widget_bar_question"/>
-	<ImageView
-		style="@style/main_footbar_cutline"
-		android:src="@drawable/widget_bar_cut_off"/>
-	<RadioButton 
-		android:id="@+id/company_footbar_everyone"
-		style="@style/main_footbar_radio"
-		android:drawableTop="@drawable/widget_bar_tweet"/>
-	<ImageView
-		style="@style/main_footbar_cutline"
-		android:src="@drawable/widget_bar_cut_off"/>
-	<RadioButton
-		android:id="@+id/company_footbar_me"
-		style="@style/main_footbar_radio"
-		android:drawableTop="@drawable/widget_bar_active"/>
-	<ImageView
-		style="@style/main_footbar_cutline"
-		android:src="@drawable/widget_bar_cut_off"/>
-	<ImageView
-		android:id="@+id/app_footbar_setting"
-		style="@style/main_footbar_image"
-		android:src="@drawable/widget_bar_more"/>
+    android:orientation="horizontal"
+    android:id="@+id/company_linearlayout_footer"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@drawable/widget_bar_bg_n">
+
+    <RadioButton
+        android:id="@+id/company_footbar_projects"
+        style="@style/main_footbar_radio"
+        android:drawableTop="@drawable/widget_bar_news" />
+
+    <ImageView
+        style="@style/main_footbar_cutline"
+        android:src="@drawable/widget_bar_cut_off" />
+
+    <RadioButton
+        android:id="@+id/company_footbar_calendar"
+        style="@style/main_footbar_radio"
+        android:drawableTop="@drawable/widget_bar_question" />
+
+    <ImageView
+        style="@style/main_footbar_cutline"
+        android:src="@drawable/widget_bar_cut_off" />
+
+    <RadioButton
+        android:id="@+id/company_footbar_everyone"
+        style="@style/main_footbar_radio"
+        android:drawableTop="@drawable/widget_bar_tweet" />
+
+    <ImageView
+        style="@style/main_footbar_cutline"
+        android:src="@drawable/widget_bar_cut_off" />
+
+    <RadioButton
+        android:id="@+id/company_footbar_me"
+        style="@style/main_footbar_radio"
+        android:drawableTop="@drawable/widget_bar_active" />
+
+    <ImageView
+        style="@style/main_footbar_cutline"
+        android:src="@drawable/widget_bar_cut_off" />
+
+    <ImageView
+        android:id="@+id/app_footbar_setting"
+        style="@style/main_footbar_image"
+        android:src="@drawable/widget_bar_more" />
 </LinearLayout>

@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    android:gravity="center" >
+    android:gravity="center">
+
     <ImageView
         android:id="@+id/user_face"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        style="@style/user_face_image"/>
+        style="@style/user_face_image" />
+
     <TextView
         android:id="@+id/user_name"
         android:layout_width="50dp"

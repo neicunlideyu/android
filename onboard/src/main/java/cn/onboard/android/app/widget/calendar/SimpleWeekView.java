@@ -50,7 +50,7 @@ import cn.onboard.android.app.R;
  */
 class SimpleWeekView extends View {
     private static final String TAG = "MonthView";
-    
+
     private static final int MONDAY_BEFORE_JULIAN_EPOCH = Time.EPOCH_JULIAN_DAY - 3;
     private static final StringBuilder mSB = new StringBuilder(50);
     private static final Formatter mF = new Formatter(mSB, Locale.getDefault());
@@ -203,7 +203,7 @@ class SimpleWeekView extends View {
         // Sets up any standard paints that will be used
         initView();
     }
-    
+
     private static int getJulianMondayFromWeeksSinceEpoch(int week) {
         return MONDAY_BEFORE_JULIAN_EPOCH + week * 7;
     }
@@ -216,8 +216,8 @@ class SimpleWeekView extends View {
      * {@link #VIEW_PARAMS_HEIGHT} for more info on parameters.
      *
      * @param params A map of the new parameters, see
-     *            {@link #VIEW_PARAMS_HEIGHT}
-     * @param tz The time zone this view should reference times in
+     *               {@link #VIEW_PARAMS_HEIGHT}
+     * @param tz     The time zone this view should reference times in
      */
     public void setWeekParams(HashMap<String, Integer> params, String tz) {
         if (!params.containsKey(VIEW_PARAMS_WEEK)) {
@@ -297,7 +297,7 @@ class SimpleWeekView extends View {
             if (time.monthDay == 1) {
                 mFirstMonth = time.month;
             }
-            mOddMonth [i] = (time.month %2) == 1;
+            mOddMonth[i] = (time.month % 2) == 1;
             if (time.month == focusMonth) {
                 mFocusDay[i] = true;
             } else {
@@ -373,7 +373,7 @@ class SimpleWeekView extends View {
      *
      * @param x The x position of the touch event
      * @return A time object for the tapped day or null if the position wasn't
-     *         in a day
+     * in a day
      */
     public Time getDayFromLocation(float x) {
         int dayStart = mShowWeekNum ? (mWidth - mPadding * 2) / mNumCells + mPadding : mPadding;
@@ -548,7 +548,7 @@ class SimpleWeekView extends View {
                 String date = formatDateRange(context, millis, millis,
                         DateUtils.FORMAT_SHOW_DATE);
                 AccessibilityEvent accessEvent =
-                    AccessibilityEvent.obtain(AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
+                        AccessibilityEvent.obtain(AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
                 accessEvent.getText().add(date);
                 sendAccessibilityEventUnchecked(accessEvent);
                 mLastHoverTime = hover;
@@ -556,7 +556,7 @@ class SimpleWeekView extends View {
         }
         return true;
     }
-    
+
     String formatDateRange(Context context, long startMillis,
                            long endMillis, int flags) {
         String date;

@@ -37,7 +37,7 @@ import java.util.Locale;
 
 /**
  * A class containing utility methods related to Calendar apps.
- *
+ * <p/>
  * This class is expected to move into the app framework eventually.
  */
 class CalendarUtils {
@@ -49,9 +49,9 @@ class CalendarUtils {
      * values.
      */
     public static class TimeZoneUtils {
-        private static final String[] TIMEZONE_TYPE_ARGS = { CalendarCache.KEY_TIMEZONE_TYPE };
+        private static final String[] TIMEZONE_TYPE_ARGS = {CalendarCache.KEY_TIMEZONE_TYPE};
         private static final String[] TIMEZONE_INSTANCES_ARGS =
-                { CalendarCache.KEY_TIMEZONE_INSTANCES };
+                {CalendarCache.KEY_TIMEZONE_INSTANCES};
         public static final String[] CALENDAR_CACHE_POJECTION = {
                 CalendarCache.KEY, CalendarCache.VALUE
         };
@@ -88,9 +88,9 @@ class CalendarUtils {
          * time zone settings in Calendar.
          */
         @SuppressLint("HandlerLeak")
-		private class AsyncTZHandler extends AsyncQueryHandler {
+        private class AsyncTZHandler extends AsyncQueryHandler {
             @SuppressLint("HandlerLeak")
-			public AsyncTZHandler(ContentResolver cr) {
+            public AsyncTZHandler(ContentResolver cr) {
                 super(cr);
             }
 
@@ -107,7 +107,7 @@ class CalendarUtils {
                     // Check the values in the db
                     int keyColumn = cursor.getColumnIndexOrThrow(CalendarCache.KEY);
                     int valueColumn = cursor.getColumnIndexOrThrow(CalendarCache.VALUE);
-                    while(cursor.moveToNext()) {
+                    while (cursor.moveToNext()) {
                         String key = cursor.getString(keyColumn);
                         String value = cursor.getString(valueColumn);
                         if (TextUtils.equals(key, CalendarCache.KEY_TIMEZONE_TYPE)) {
@@ -127,7 +127,7 @@ class CalendarUtils {
                     }
                     cursor.close();
                     if (writePrefs) {
-                        SharedPreferences prefs = getSharedPreferences((Context)cookie, mPrefsName);
+                        SharedPreferences prefs = getSharedPreferences((Context) cookie, mPrefsName);
                         // Write the prefs
                         setSharedPreference(prefs, KEY_HOME_TZ_ENABLED, mUseHomeTZ);
                         setSharedPreference(prefs, KEY_HOME_TZ, mHomeTZ);
@@ -157,23 +157,23 @@ class CalendarUtils {
 
         /**
          * Formats a date or a time range according to the local conventions.
-         *
+         * <p/>
          * This formats a date/time range using Calendar's time zone and the
          * local conventions for the region of the device.
-         *
+         * <p/>
          * If the {@link android.text.format.DateUtils#FORMAT_UTC} flag is used it will pass in
          * the UTC time zone instead.
          *
-         * @param context the context is required only if the time is shown
+         * @param context     the context is required only if the time is shown
          * @param startMillis the start time in UTC milliseconds
-         * @param endMillis the end time in UTC milliseconds
-         * @param flags a bit mask of options See
-         * {@link android.text.format.DateUtils#formatDateRange(android.content.Context, java.util.Formatter, long, long, int, String) formatDateRange}
+         * @param endMillis   the end time in UTC milliseconds
+         * @param flags       a bit mask of options See
+         *                    {@link android.text.format.DateUtils#formatDateRange(android.content.Context, java.util.Formatter, long, long, int, String) formatDateRange}
          * @return a string containing the formatted date/time range.
          */
         @SuppressWarnings("deprecation")
-		public String formatDateRange(Context context, long startMillis,
-                long endMillis, int flags) {
+        public String formatDateRange(Context context, long startMillis,
+                                      long endMillis, int flags) {
             String date;
             String tz;
             if ((flags & DateUtils.FORMAT_UTC) != 0) {
@@ -191,15 +191,15 @@ class CalendarUtils {
 
         /**
          * Writes a new home time zone to the db.
-         *
+         * <p/>
          * Updates the home time zone in the db asynchronously and updates
          * the local cache. Sending a time zone of
          * {@link android.provider.CalendarContract.CalendarCache#TIMEZONE_TYPE_AUTO} will cause it to be set
          * to the device's time zone. null or empty tz will be ignored.
          *
-         * @param context The calling activity
+         * @param context  The calling activity
          * @param timeZone The time zone to set Calendar to, or
-         * {@link android.provider.CalendarContract.CalendarCache#TIMEZONE_TYPE_AUTO}
+         *                 {@link android.provider.CalendarContract.CalendarCache#TIMEZONE_TYPE_AUTO}
          */
         @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         public void setTimeZone(Context context, String timeZone) {
@@ -261,7 +261,7 @@ class CalendarUtils {
 
         /**
          * Gets the time zone that Calendar should be displayed in
-         *
+         * <p/>
          * This is a helper method to get the appropriate time zone for Calendar. If this
          * is the first time this method has been called it will initiate an asynchronous
          * query to verify that the data in preferences is correct. The callback supplied
@@ -269,12 +269,12 @@ class CalendarUtils {
          * preferences and should cause the calling activity to refresh anything that
          * depends on calling this method.
          *
-         * @param context The calling activity
+         * @param context  The calling activity
          * @param callback The runnable that should execute if a query returns new values
          * @return The string value representing the time zone Calendar should display
          */
         public String getTimeZone(Context context, Runnable callback) {
-            synchronized (mTZCallbacks){
+            synchronized (mTZCallbacks) {
                 if (mFirstTZRequest) {
                     mTZQueryInProgress = true;
                     mFirstTZRequest = false;
@@ -306,12 +306,12 @@ class CalendarUtils {
          * query is already in progress the callback will be added to the list
          * of callbacks to be called when it returns.
          *
-         * @param context The calling activity
+         * @param context  The calling activity
          * @param callback The runnable that should execute if a query returns
-         *            new values
+         *                 new values
          */
         public void forceDBRequery(Context context, Runnable callback) {
-            synchronized (mTZCallbacks){
+            synchronized (mTZCallbacks) {
                 if (mTZQueryInProgress) {
                     mTZCallbacks.add(callback);
                     return;
@@ -322,38 +322,40 @@ class CalendarUtils {
         }
     }
 
-        /**
-         * A helper method for writing a String value to the preferences
-         * asynchronously.
-         *
-         * @param prefs A context with access to the correct preferences
-         * @param key The preference to write to
-         * @param value The value to write
-         */
-        private static void setSharedPreference(SharedPreferences prefs, String key, String value) {
+    /**
+     * A helper method for writing a String value to the preferences
+     * asynchronously.
+     *
+     * @param prefs A context with access to the correct preferences
+     * @param key   The preference to write to
+     * @param value The value to write
+     */
+    private static void setSharedPreference(SharedPreferences prefs, String key, String value) {
 //            SharedPreferences prefs = getSharedPreferences(context);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(key, value);
-            editor.apply();
-        }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
 
-        /**
-         * A helper method for writing a boolean value to the preferences
-         * asynchronously.
-         *
-         * @param prefs A context with access to the correct preferences
-         * @param key The preference to write to
-         * @param value The value to write
-         */
-        private static void setSharedPreference(SharedPreferences prefs, String key, boolean value) {
+    /**
+     * A helper method for writing a boolean value to the preferences
+     * asynchronously.
+     *
+     * @param prefs A context with access to the correct preferences
+     * @param key   The preference to write to
+     * @param value The value to write
+     */
+    private static void setSharedPreference(SharedPreferences prefs, String key, boolean value) {
 //            SharedPreferences prefs = getSharedPreferences(context, prefsName);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean(key, value);
-            editor.apply();
-        }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
 
-        /** Return a properly configured SharedPreferences instance */
-        private static SharedPreferences getSharedPreferences(Context context, String prefsName) {
-            return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
-        }
+    /**
+     * Return a properly configured SharedPreferences instance
+     */
+    private static SharedPreferences getSharedPreferences(Context context, String prefsName) {
+        return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
+    }
 }

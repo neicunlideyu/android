@@ -166,7 +166,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
                 Time.getJulianDay(millis, mSelectedDay.gmtoff), mFirstDayOfWeek);
         notifyDataSetChanged();
     }
-    
+
     private static int getWeeksSinceEpochFromJulianDay(int julianDay, int firstDayOfWeek) {
         int diff = Time.THURSDAY - firstDayOfWeek;
         if (diff < 0) {
@@ -264,7 +264,7 @@ public class SimpleWeeksAdapter extends BaseAdapter implements OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         if (mGestureDetector.onTouchEvent(event)) {
             SimpleWeekView view = (SimpleWeekView) v;
-            Time day = ((SimpleWeekView)v).getDayFromLocation(event.getX());
+            Time day = ((SimpleWeekView) v).getDayFromLocation(event.getX());
             if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "Touched day at Row=" + view.mWeek + " day=" + day.toString());
             }

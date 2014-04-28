@@ -61,7 +61,7 @@ public class Person extends BaseActivity {
         @Override
         protected User doInBackground(Integer... userId) {
             AppContext ac = (AppContext) getApplication();
-            User user=new User();
+            User user = new User();
             try {
                 user = ac.getUserById(userId[0]);
             } catch (AppException e) {
@@ -72,7 +72,7 @@ public class Person extends BaseActivity {
 
         @Override
         protected void onPostExecute(User user) {
-            getSupportActionBar().setTitle("成员/"+user.getName());
+            getSupportActionBar().setTitle("成员/" + user.getName());
             // TODO: 设置icon为用户头像
         }
     }

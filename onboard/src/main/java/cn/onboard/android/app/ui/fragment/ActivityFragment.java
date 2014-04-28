@@ -1,6 +1,7 @@
 package cn.onboard.android.app.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,8 +34,6 @@ public class ActivityFragment extends Fragment {
     private Integer userId;
 
     private PullToRefreshListView activiPullToRefreshListView;
-
-    private ActivityListViewAdapter listViewNewsAdapter;
 
     private Handler handler;
 
@@ -73,7 +72,7 @@ public class ActivityFragment extends Fragment {
     }
 
     private void initActivityListView() {
-        listViewNewsAdapter = new ActivityListViewAdapter(getActivity(), activities,
+        ActivityListViewAdapter listViewNewsAdapter = new ActivityListViewAdapter(getActivity(), activities,
                 R.layout.activity_listitem);
         listviewFooter = getActivity().getLayoutInflater().inflate(
                 R.layout.listview_footer, null);
@@ -103,7 +102,8 @@ public class ActivityFragment extends Fragment {
                             activity = (Activity) tv.getTag();
                         }
                         Context context = view.getContext();
-                        UIHelper.pageLink(context, activity.getAttachType(), activity.getAttachId(), activity.getCompanyId(), activity.getProjectId());
+                        Intent intent = UIHelper.pageLink(context, activity.getAttachType(), activity.getAttachId(), activity.getCompanyId(), activity.getProjectId());
+                        context.startActivity(intent);
                     }
                 });
         activiPullToRefreshListView

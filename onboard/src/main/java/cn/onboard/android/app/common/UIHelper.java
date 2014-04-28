@@ -89,7 +89,7 @@ public class UIHelper {
     }
 
 
-    public static void pageLink(Context context, String type, int id, int companyId, int projectId) {
+    public static Intent pageLink(Context context, String type, int id, int companyId, int projectId) {
         Intent intent = null;
         if (type.equals(ModelType.DISCUSSSION)) {
             intent = new Intent(context,
@@ -114,6 +114,7 @@ public class UIHelper {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
+        return intent;
     }
 
     /**

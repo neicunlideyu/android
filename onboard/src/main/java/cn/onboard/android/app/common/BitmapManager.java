@@ -24,134 +24,140 @@ import cn.onboard.android.app.api.ApiClient;
  * BitmapManager bmpManager;
  * bmpManager = new BitmapManager(BitmapFactory.decodeResource(context.getResources(), R.drawable.loading));
  * bmpManager.loadBitmap(imageURL, imageView);
+ *
  * @author liux (http://my.oschina.net/liux)
  * @version 1.0
  * @created 2012-6-25
  */
-public class BitmapManager {  
-	  
+public class BitmapManager {
+
     private static final HashMap<String, SoftReference<Bitmap>> cache;
     private static final ExecutorService pool;
     private static final Map<ImageView, String> imageViews;
     private final Bitmap defaultBmp;
-    
-    static {  
-        cache = new HashMap<String, SoftReference<Bitmap>>();  
+
+    static {
+        cache = new HashMap<String, SoftReference<Bitmap>>();
         pool = Executors.newFixedThreadPool(5);  //固定线程池
         imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     }
 
     public BitmapManager(Bitmap def) {
-    	this.defaultBmp = def;
+        this.defaultBmp = def;
     }
 
     /**
      * 加载图片
+     *
      * @param url
      * @param imageView
      */
-    public void loadBitmap(String url, ImageView imageView) {  
-    	loadBitmap(url, imageView, this.defaultBmp, 0, 0);
+    public void loadBitmap(String url, ImageView imageView) {
+        loadBitmap(url, imageView, this.defaultBmp, 0, 0);
     }
 
     /**
      * 加载图片-可指定显示图片的高宽
+     *
      * @param url
      * @param imageView
      * @param width
      * @param height
      */
     void loadBitmap(String url, ImageView imageView, Bitmap defaultBmp, int width, int height) {
-        imageViews.put(imageView, url);  
-        Bitmap bitmap = getBitmapFromCache(url);  
-   
-        if (bitmap != null) {  
-			//显示缓存图片
-            imageView.setImageBitmap(bitmap);  
-        } else {  
-        	//加载SD卡中的图片缓存
-        	String filename = url.replaceAll("/", "-");
-        	String filepath = imageView.getContext().getFilesDir() + File.separator + filename;
-    		File file = new File(filepath);
-    		if(file.exists()){
-				//显示SD卡中的图片缓存
-    			Bitmap bmp = ImageUtils.getBitmap(imageView.getContext(), filename);
-        		imageView.setImageBitmap(bmp);
-        	}else{
-				//线程加载网络图片
-        		imageView.setImageBitmap(defaultBmp);
-        		queueJob(url, imageView, width, height);
-        	}
-        }  
-    }  
-  
+        imageViews.put(imageView, url);
+        Bitmap bitmap = getBitmapFromCache(url);
+
+        if (bitmap != null) {
+            //显示缓存图片
+            imageView.setImageBitmap(bitmap);
+        } else {
+            //加载SD卡中的图片缓存
+            String filename = url.replaceAll("/", "-");
+            String filepath = imageView.getContext().getFilesDir() + File.separator + filename;
+            File file = new File(filepath);
+            if (file.exists()) {
+                //显示SD卡中的图片缓存
+                Bitmap bmp = ImageUtils.getBitmap(imageView.getContext(), filename);
+                imageView.setImageBitmap(bmp);
+            } else {
+                //线程加载网络图片
+                imageView.setImageBitmap(defaultBmp);
+                queueJob(url, imageView, width, height);
+            }
+        }
+    }
+
     /**
      * 从缓存中获取图片
+     *
      * @param url
      */
     Bitmap getBitmapFromCache(String url) {
-    	Bitmap bitmap = null;
-        if (cache.containsKey(url)) {  
-            bitmap = cache.get(url).get();  
-        }  
-        return bitmap;  
-    }  
-    
+        Bitmap bitmap = null;
+        if (cache.containsKey(url)) {
+            bitmap = cache.get(url).get();
+        }
+        return bitmap;
+    }
+
     /**
      * 从网络中加载图片
+     *
      * @param url
      * @param imageView
      * @param width
      * @param height
      */
     void queueJob(final String url, final ImageView imageView, final int width, final int height) {
-        /* Create handler in UI thread. */  
-        final Handler handler = new Handler() {  
-            public void handleMessage(Message msg) {  
-                String tag = imageViews.get(imageView);  
-                if (tag != null && tag.equals(url)) {  
-                    if (msg.obj != null) {  
-                        imageView.setImageBitmap((Bitmap) msg.obj);  
+        /* Create handler in UI thread. */
+        final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                String tag = imageViews.get(imageView);
+                if (tag != null && tag.equals(url)) {
+                    if (msg.obj != null) {
+                        imageView.setImageBitmap((Bitmap) msg.obj);
                         try {
-                        	//向SD卡中写入图片缓存
-							ImageUtils.saveImage(imageView.getContext(), url.replaceAll("/", "-"), (Bitmap) msg.obj);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-                    } 
-                }  
-            }  
-        };  
-  
-        pool.execute(new Runnable() {   
-            public void run() {  
-                Message message = Message.obtain();  
-                message.obj = downloadBitmap(url, width, height);  
-                handler.sendMessage(message);  
-            }  
-        });  
-    } 
-  
+                            //向SD卡中写入图片缓存
+                            ImageUtils.saveImage(imageView.getContext(), url.replaceAll("/", "-"), (Bitmap) msg.obj);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        };
+
+        pool.execute(new Runnable() {
+            public void run() {
+                Message message = Message.obtain();
+                message.obj = downloadBitmap(url, width, height);
+                handler.sendMessage(message);
+            }
+        });
+    }
+
     /**
      * 下载图片-可指定显示图片的高宽
+     *
      * @param url
      * @param width
      * @param height
      */
-    private Bitmap downloadBitmap(String url, int width, int height) {   
+    private Bitmap downloadBitmap(String url, int width, int height) {
         Bitmap bitmap = null;
         try {
-			//http加载图片
-			bitmap = ApiClient.getNetBitmap(url);
-			if(width > 0 && height > 0) {
-				//指定显示图片的高宽
-				bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
-			} 
-			//放入缓存
-			cache.put(url, new SoftReference<Bitmap>(bitmap));
-		} catch (AppException e) {
-			e.printStackTrace();
-		}
-        return bitmap;  
-    }  
+            //http加载图片
+            bitmap = ApiClient.getNetBitmap(url);
+            if (width > 0 && height > 0) {
+                //指定显示图片的高宽
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+            }
+            //放入缓存
+            cache.put(url, new SoftReference<Bitmap>(bitmap));
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
 }

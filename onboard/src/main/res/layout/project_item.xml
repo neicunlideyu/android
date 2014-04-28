@@ -4,12 +4,13 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    android:gravity="center" >
+    android:gravity="center">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/project"/>
+        android:background="@drawable/project" />
+
     <TextView
         android:id="@+id/project_name"
         android:layout_width="match_parent"

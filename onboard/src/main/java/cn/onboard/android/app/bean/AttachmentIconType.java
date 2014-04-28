@@ -43,8 +43,7 @@ public class AttachmentIconType {
 
         if (attachment.getContentType().startsWith("image")) {
             return IMAGE;
-        }
-        else if (SUFFIX_TYPE_MAP.containsKey(attachmentType)) {
+        } else if (SUFFIX_TYPE_MAP.containsKey(attachmentType)) {
             return SUFFIX_TYPE_MAP.get(attachmentType);
         }
         return DEFAULT;
@@ -58,35 +57,25 @@ public class AttachmentIconType {
         String attachmentType = getAttachmentType(attachment);
         if (attachmentType.contains("ppt")) {
             return R.drawable.powerpoint;
-        }
-        else if (attachmentType.contains("word")) {
+        } else if (attachmentType.contains("word")) {
             return R.drawable.word;
-        }
-        else if (attachmentType.contains("txt")) {
+        } else if (attachmentType.contains("txt")) {
             return R.drawable.text;
-        }
-        else if (attachmentType.contains("excel")) {
+        } else if (attachmentType.contains("excel")) {
             return R.drawable.excel;
-        }
-        else if (attachmentType.contains("pdf")) {
+        } else if (attachmentType.contains("pdf")) {
             return R.drawable.pdf;
-        }
-        else if (attachmentType.contains("css")) {
+        } else if (attachmentType.contains("css")) {
             return R.drawable.css;
-        }
-        else if (attachmentType.contains("ai")) {
+        } else if (attachmentType.contains("ai")) {
             return R.drawable.illustrator;
-        }
-        else if (attachmentType.contains("zip")) {
+        } else if (attachmentType.contains("zip")) {
             return R.drawable.keynote;
-        }
-        else if (attachmentType.contains("script")) {
+        } else if (attachmentType.contains("script")) {
             return R.drawable.html;
-        }
-        else if (attachmentType.contains("html")) {
+        } else if (attachmentType.contains("html")) {
             return R.drawable.html;
-        }
-        else {
+        } else {
             return R.drawable.folder;
         }
 

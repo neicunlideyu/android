@@ -91,16 +91,16 @@ public class EditTodolist extends BaseActivity {
         @Override
         protected Todolist doInBackground(Todolist... todolist) {
             Todolist t = todolist[0];
-            t.setName(todolistContent.getText() +    "");
+            t.setName(todolistContent.getText() + "");
             AppContext ac = (AppContext) getApplication();
             try {
 
-                    Todolist sample = new Todolist();
-                    sample.setId(t.getId());
-                    sample.setName(t.getName());
-                    sample.setCompanyId(t.getCompanyId());
-                    sample.setProjectId(t.getProjectId());
-                    t = ac.updateTodolist(sample);
+                Todolist sample = new Todolist();
+                sample.setId(t.getId());
+                sample.setName(t.getName());
+                sample.setCompanyId(t.getCompanyId());
+                sample.setProjectId(t.getProjectId());
+                t = ac.updateTodolist(sample);
             } catch (AppException e) {
                 e.printStackTrace();
             }

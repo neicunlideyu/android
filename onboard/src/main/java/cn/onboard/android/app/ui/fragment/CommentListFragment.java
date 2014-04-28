@@ -73,7 +73,6 @@ public class CommentListFragment extends Fragment {
     }
 
 
-
     private final View.OnClickListener publishClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             // 隐藏软键盘

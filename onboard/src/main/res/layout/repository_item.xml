@@ -7,7 +7,7 @@
     android:paddingBottom="7dip"
     android:paddingLeft="6dip"
     android:paddingRight="6dip"
-    android:paddingTop="8dip" >
+    android:paddingTop="8dip">
 
     <TextView
         android:id="@+id/repository_listitem_title"

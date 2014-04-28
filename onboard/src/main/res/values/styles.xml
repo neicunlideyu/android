@@ -57,7 +57,6 @@
     </style>
 
 
-
     <style name="Theme.HalfTranslucent" parent="@android:style/Theme.Translucent">
         <item name="android:windowBackground">@color/half_transparent</item>
         <item name="android:windowNoTitle">true</item>
@@ -194,7 +193,6 @@
     </style>
 
     <style name="ListSubtitleText" parent="SubtitleText"></style>
-
 
 
 </resources>

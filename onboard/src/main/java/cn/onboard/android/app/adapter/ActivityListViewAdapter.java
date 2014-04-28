@@ -37,7 +37,7 @@ public class ActivityListViewAdapter extends BaseAdapter {
      * @param resource
      */
     public ActivityListViewAdapter(Context context, List<Activity> data,
-                               int resource) {
+                                   int resource) {
         this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
         this.itemViewResource = resource;
         this.listItems = data;

@@ -21,6 +21,8 @@ import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.URI;
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -43,7 +45,7 @@ import java.util.Map;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.bean.URLs;
-import cn.onboard.android.app.common.HttpStreamToObject;
+import cn.onboard.android.app.common.DataHandleUtil;
 
 /**
  * API客户端接口：用于访问网络数据
@@ -67,7 +69,7 @@ public class ApiClient {
         appCookie = "";
     }
 
-    private static String getCookie(AppContext appContext) {
+    public static String getCookie(AppContext appContext) {
         if (appCookie == null || appCookie == "") {
             appCookie = appContext.getProperty("cookie");
         }
@@ -109,6 +111,7 @@ public class ApiClient {
 
     private static GetMethod getHttpGet(String url, String cookie,
                                         String userAgent) {
+
         GetMethod httpGet = new GetMethod(url);
         // 设置 请求超时时间
         httpGet.getParams().setSoTimeout(TIMEOUT_SOCKET);
@@ -308,6 +311,14 @@ public class ApiClient {
      */
     public static Bitmap getNetBitmap(String url) throws AppException {
         // System.out.println("image_url==> "+url);
+        URI uri = null;
+        try {
+            uri = new URI(url, false, "UTF-8");
+        } catch (URIException e) {
+            e.printStackTrace();
+        }
+        if (uri != null)
+            url = uri.toString();
         HttpClient httpClient = null;
         GetMethod httpGet = null;
         Bitmap bitmap = null;
@@ -367,7 +378,7 @@ public class ApiClient {
 
         String loginurl = URLs.LOGIN_VALIDATE_HTTP;
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<User>() {
                     }, _post(appContext, loginurl, params, null));
         } catch (Exception e) {
@@ -387,7 +398,7 @@ public class ApiClient {
             throws AppException {
         String newUrl = URLs.COMPANY_LIST_HTTP;
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Company>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -402,7 +413,7 @@ public class ApiClient {
         String newUrl = URLs.PROJECT_LIST_HTTP.replaceAll("companyId",
                 companyId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Project>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -418,7 +429,7 @@ public class ApiClient {
         String url = URLs.TODOLIST_LIST_BY_PROJECT_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("projectId", projectId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Todolist>>() {
                     }, http_get(appContext, url));
         } catch (Exception e) {
@@ -434,7 +445,7 @@ public class ApiClient {
         String url = URLs.TODOLIST_LIST_BY_USER_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("userId", userId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Todolist>>() {
                     }, http_get(appContext, url));
         } catch (Exception e) {
@@ -450,7 +461,7 @@ public class ApiClient {
         String url = URLs.TODOLIST_LIST_BY_DATE_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("duedatetime", date.getTime() + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Todolist>>() {
                     }, http_get(appContext, url));
         } catch (Exception e) {
@@ -464,7 +475,7 @@ public class ApiClient {
     public static List<Comment> getCommentsByCommentable(AppContext appContext, int companyId, int projectId, String attachType, int attachId) throws AppException {
         String url = URLs.COMMENT_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "").replaceAll("attachType", attachType).replaceAll("attachId", attachId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Comment>>() {
                     }, http_get(appContext, url));
         } catch (Exception e) {
@@ -479,7 +490,7 @@ public class ApiClient {
         String newUrl = URLs.TOPIC_LIST_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("projectId", projectId + "") + "?page=" + page;
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Topic>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -495,7 +506,7 @@ public class ApiClient {
         String newUrl = URLs.DOCUMENT_LIST_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("projectId", projectId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Document>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -512,7 +523,7 @@ public class ApiClient {
                 .replaceAll("projectId", projectId + "")
                 .replaceAll("discussionId", discussionId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Discussion>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -530,7 +541,7 @@ public class ApiClient {
                 .replaceAll("projectId", projectId + "")
                 .replaceAll("documentId", documentId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Document>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -547,7 +558,7 @@ public class ApiClient {
         String url = URLs.ACTIVITY_BY_COMPANY_LIST_HTTP.replaceAll("companyId",
                 companyId + "") + "?page=" + page;
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Activity>>() {
                     }, http_get(appContext, url));
         } catch (Exception e) {
@@ -563,7 +574,7 @@ public class ApiClient {
         String url = URLs.ACTIVITY_BY_USER_LIST_HTTP.replaceAll("companyId", companyId + "").replaceAll("userId",
                 userId + "") + "?page=" + page;
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Activity>>() {
                     }, http_get(appContext, url));
         } catch (Exception e) {
@@ -577,7 +588,7 @@ public class ApiClient {
         String newUrl = URLs.UPLOAD_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "")
                 .replaceAll("uploadId", uploadId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(new TypeReference<Upload>() {
+            return DataHandleUtil.inputStreamToObject(new TypeReference<Upload>() {
             }, http_get(appContext, newUrl));
         } catch (Exception e) {
             if (e instanceof AppException)
@@ -590,7 +601,7 @@ public class ApiClient {
         String newUrl = URLs.TODOLIST_LIST_BY_TODOLISTID_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "")
                 .replaceAll("todolistId", todolistId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(new TypeReference<Todolist>() {
+            return DataHandleUtil.inputStreamToObject(new TypeReference<Todolist>() {
             }, http_get(appContext, newUrl));
         } catch (Exception e) {
             if (e instanceof AppException)
@@ -605,7 +616,7 @@ public class ApiClient {
                 companyId + "").replaceAll("projectId", projectId + "") + "?page=" + page;
         ;
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Attachment>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -620,7 +631,7 @@ public class ApiClient {
         String newUrl = URLs.ATTACHMENT_LIST_BY_USER_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("userId", userId + "") + "?page=" + page;
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Attachment>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -635,7 +646,7 @@ public class ApiClient {
         String newUrl = URLs.USERS__LIST_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("projectId", projectId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<User>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -648,7 +659,7 @@ public class ApiClient {
     public static User getUserById(AppContext appContext, int userId) throws AppException {
         String newUrl = URLs.USER_HTTP.replaceAll("userId", userId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<User>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -661,7 +672,7 @@ public class ApiClient {
     public static Map<String, List<User>> getDepartmentNameUserMapByCompanyId(AppContext appContext, int companyId) throws AppException {
         String newUrl = URLs.DEPARTMENT_NAME_USER_MAP_HTTP.replaceAll("companyId", companyId + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Map<String, List<User>>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -674,9 +685,9 @@ public class ApiClient {
     public static Comment publishComment(AppContext appContext, Comment comment)
             throws AppException {
         String url = URLs.COMMENT_HTTP.replaceAll("companyId", comment.getCompanyId() + "").replaceAll("projectId", comment.getProjectId() + "").replaceAll("attachType", comment.getAttachType()).replaceAll("attachId", comment.getAttachId() + "");
-        Map<String, Object> params = HttpStreamToObject.objectToMap(comment);
+        Map<String, Object> params = DataHandleUtil.objectToMap(comment);
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Comment>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
@@ -688,12 +699,12 @@ public class ApiClient {
 
     public static Todo createTodo(AppContext appContext, Todo todo) throws AppException {
         String url = URLs.TODO_HTTP.replaceAll("companyId", todo.getCompanyId() + "").replaceAll("projectId", todo.getProjectId() + "");
-        Map<String, Object> params = HttpStreamToObject.objectToMap(todo);
+        Map<String, Object> params = DataHandleUtil.objectToMap(todo);
         Object dueTime = params.get("dueDate");
         params.remove("dueDate");
         params.put("date", dueTime);
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Todo>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
@@ -707,12 +718,12 @@ public class ApiClient {
 
     public static Upload createUpload(AppContext appContext, Upload upload, File file) throws AppException {
         String url = URLs.UPLOAD_LIST_BY_PROJECT_HTTP.replaceAll("companyId", upload.getCompanyId() + "").replaceAll("projectId", upload.getProjectId() + "");
-        Map<String, Object> params = HttpStreamToObject.objectToMap(upload);
+        Map<String, Object> params = DataHandleUtil.objectToMap(upload);
         Map<String, File> files = new HashMap<String, File>();
         files.put("file", file);
 
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Upload>() {
                     }, _post(appContext, url, params, files));
         } catch (Exception e) {
@@ -725,12 +736,12 @@ public class ApiClient {
 
     public static Todo updateTodo(AppContext appContext, Todo todo) throws AppException {
         String url = URLs.TODO_HTTP.replaceAll("companyId", todo.getCompanyId() + "").replaceAll("projectId", todo.getProjectId() + "") + "/" + todo.getId();
-        Map<String, Object> params = HttpStreamToObject.objectToMap(todo);
+        Map<String, Object> params = DataHandleUtil.objectToMap(todo);
         Object dueTime = params.get("dueDate");
         params.remove("dueDate");
         params.put("date", dueTime);
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Todo>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
@@ -744,9 +755,9 @@ public class ApiClient {
         String url = URLs.TODOLIST_UPDATE_HTTP.replaceAll("companyId", todolist.getCompanyId() + "").replaceAll("projectId", todolist.getProjectId() + "")
                 .replaceAll("todolistId", todolist.getId() + "");
 
-        Map<String, Object> params = HttpStreamToObject.objectToMap(todolist);
+        Map<String, Object> params = DataHandleUtil.objectToMap(todolist);
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Todolist>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
@@ -759,9 +770,9 @@ public class ApiClient {
     public static Todolist createTodolist(AppContext appContext, Todolist todolist)
             throws AppException {
         String url = URLs.TODOLIST_LIST_BY_PROJECT_HTTP.replaceAll("companyId", todolist.getCompanyId() + "").replaceAll("projectId", todolist.getProjectId() + "");
-        Map<String, Object> params = HttpStreamToObject.objectToMap(todolist);
+        Map<String, Object> params = DataHandleUtil.objectToMap(todolist);
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Todolist>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
@@ -776,7 +787,7 @@ public class ApiClient {
         String url = URLs.DISCUSSION_LIST_HTTP.replaceAll("companyId", discussion.getCompanyId() + "").replaceAll("projectId", discussion.getProjectId() + "");
         List<User> subscribers = discussion.getSubscribers();
         discussion.setSubscribers(null);
-        Map<String, Object> params = HttpStreamToObject.objectToMap(discussion);
+        Map<String, Object> params = DataHandleUtil.objectToMap(discussion);
         StringBuilder builder = new StringBuilder();
         if (subscribers != null) {
             for (User user : subscribers) {
@@ -787,7 +798,7 @@ public class ApiClient {
 
         params.put("subscriberIds", builder.toString());
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Discussion>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
@@ -800,9 +811,9 @@ public class ApiClient {
     public static Document createDocument(AppContext appContext, Document document)
             throws AppException {
         String url = URLs.DOCUMENT_LIST_HTTP.replaceAll("companyId", document.getCompanyId() + "").replaceAll("projectId", document.getProjectId() + "");
-        Map<String, Object> params = HttpStreamToObject.objectToMap(document);
+        Map<String, Object> params = DataHandleUtil.objectToMap(document);
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<Document>() {
                     }, _post(appContext, url, params, null));
         } catch (Exception e) {
@@ -816,7 +827,7 @@ public class ApiClient {
         String newUrl = URLs.CALENDAR_TODO_HTTP.replaceAll("companyId",
                 companyId + "").replaceAll("startTime", startTime + "").replaceAll("endTime", endTime + "");
         try {
-            return HttpStreamToObject.inputStreamToObject(
+            return DataHandleUtil.inputStreamToObject(
                     new TypeReference<List<Todo>>() {
                     }, http_get(appContext, newUrl));
         } catch (Exception e) {
@@ -830,7 +841,7 @@ public class ApiClient {
     public static Todo getTodoById(AppContext appContext, int companyId, int projectId, int todoId) throws AppException {
         String newUrl = URLs.TODO_HTTP.replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "") + "/" + todoId;
         try {
-            return HttpStreamToObject.inputStreamToObject(new TypeReference<Todo>() {
+            return DataHandleUtil.inputStreamToObject(new TypeReference<Todo>() {
             }, http_get(appContext, newUrl));
         } catch (Exception e) {
             if (e instanceof AppException)
@@ -842,7 +853,7 @@ public class ApiClient {
     public static Integer getLatestVersionCode(AppContext appContext) throws AppException {
         String newUrl = URLs.VERSION_HTTP;
         try {
-            return HttpStreamToObject.inputStreamToObject(new TypeReference<Integer>() {
+            return DataHandleUtil.inputStreamToObject(new TypeReference<Integer>() {
             }, http_get(appContext, newUrl));
         } catch (Exception e) {
             if (e instanceof AppException)
