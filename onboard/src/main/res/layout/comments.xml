@@ -21,7 +21,7 @@
 
     <include layout="@layout/data_empty_tip" />
 
-    <ListView
+    <cn.onboard.android.app.widget.scrollViewWithListView.ScrollViewWithListView
         android:id="@+id/frame_listview_comment"
         style="@style/widget_listview" />
 

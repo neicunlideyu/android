@@ -5,85 +5,83 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-            android:id="@+id/loading_progress_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:layout_marginTop="-6dip" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10.0dip"
-            android:layout_marginLeft="6.0dip"
-            android:layout_marginRight="6.0dip">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6.0dip"
-            android:layout_marginLeft="6.0dip"
-            android:layout_marginRight="6.0dip">
-
-            <TextView
-                android:id="@+id/discussion_creator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_13"
-                android:textColor="@color/author_text" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6.0dip"
-                android:textSize="@dimen/text_size_12"
-                android:textColor="@color/gray"
-                android:text="发布于" />
-
-            <TextView
-                android:id="@+id/discussion_created_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6.0dip"
-                android:textSize="@dimen/text_size_12"
-                android:textColor="@color/gray" />
-
-        </LinearLayout>
-
-        <View style="@style/detail_cut_line" />
-
-        <WebView
-            android:id="@+id/discussion_content_webview"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white" />
-
-        <FrameLayout
-            android:id="@+id/discussion_comments"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-
-
-    </LinearLayout>
-
     <ScrollView
+        android:id="@+id/sv_issue_content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:scrollbars="vertical"
-        android:fadingEdge="none">
+        android:scrollbars="vertical">
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+                android:id="@+id/loading_progress_bar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:layout_marginTop="-6dip" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:layout_marginLeft="6.0dip"
+                android:layout_marginRight="6.0dip">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.0dip"
+                android:layout_marginLeft="6.0dip"
+                android:layout_marginRight="6.0dip">
+
+                <TextView
+                    android:id="@+id/discussion_creator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_13"
+                    android:textColor="@color/author_text" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6.0dip"
+                    android:textSize="@dimen/text_size_12"
+                    android:textColor="@color/gray"
+                    android:text="发布于" />
+
+                <TextView
+                    android:id="@+id/discussion_created_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6.0dip"
+                    android:textSize="@dimen/text_size_12"
+                    android:textColor="@color/gray" />
+
+            </LinearLayout>
+
+            <View style="@style/detail_cut_line" />
+
+            <WebView
+                android:id="@+id/discussion_content_webview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
+
+            <FrameLayout
+                android:id="@+id/discussion_comments"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+
+        </LinearLayout>
     </ScrollView>
 
     <include layout="@layout/comment_footer" />

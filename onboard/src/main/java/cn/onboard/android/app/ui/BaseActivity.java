@@ -5,21 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
 import com.koushikdutta.async.http.WebSocket;
 
 import cn.onboard.android.app.AppContext;
+import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.AppManager;
+import cn.onboard.android.app.R;
 import cn.onboard.android.app.api.ApiClient;
+import cn.onboard.android.app.common.UIHelper;
 
-
-class BaseActivity extends SherlockFragmentActivity {
+public class BaseActivity extends SherlockFragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //添加Activity到堆栈
         AppManager.getAppManager().addActivity(this);
         setUpWebSocket();
@@ -27,7 +31,7 @@ class BaseActivity extends SherlockFragmentActivity {
 
     private void setUpWebSocket() {
 
-        AsyncHttpGet req=new AsyncHttpGet("http://192.168.100.37:8080/api/websocket");
+        AsyncHttpGet req = new AsyncHttpGet("http://192.168.100.37:8080/api/websocket");
         req.setHeader("Cookie", ApiClient.getCookie((AppContext) getApplication()));
         AsyncHttpClient.getDefaultInstance().websocket(req, "my-protocol", new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
@@ -56,4 +60,32 @@ class BaseActivity extends SherlockFragmentActivity {
         AppManager.getAppManager().finishActivity(this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.activity_main, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                Intent intent = new Intent(this, Setting.class);
+                startActivity(intent);
+                return true;
+            case R.id.log_out:
+                AppContext ac = (AppContext) getApplication();
+                try {
+                    ac.logOut();
+                    ac.setProperty("remember_me", "false");
+                } catch (AppException e) {
+                    UIHelper.ToastMessage(BaseActivity.this, R.string.msg_login_success);
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

@@ -29,6 +29,7 @@ public class AttachmentListViewAdapter extends BaseAdapter {
     private final LayoutInflater listContainer;// 视图容器
     private final int itemViewResource;// 自定义项视图源
     private final BitmapManager bmpManager;
+    private boolean simplified;
 
     static class ListItemView { // 自定义控件集合
         public ImageView face;
@@ -45,12 +46,13 @@ public class AttachmentListViewAdapter extends BaseAdapter {
      * @param attachments
      * @param resource
      */
-    public AttachmentListViewAdapter(Context context, List<Attachment> attachments, int resource) {
+    public AttachmentListViewAdapter(Context context, List<Attachment> attachments, int resource, boolean simplified) {
         this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
         this.itemViewResource = resource;
         this.listItems = attachments;
         this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.widget_dface_loading));
+        this.simplified = simplified;
     }
 
     public int getCount() {
@@ -90,6 +92,11 @@ public class AttachmentListViewAdapter extends BaseAdapter {
             listItemView.title = (TextView) convertView.findViewById(R.id.attachment_listitem_title);
             listItemView.author = (TextView) convertView.findViewById(R.id.attachment_listitem_author);
             listItemView.date = (TextView) convertView.findViewById(R.id.attachment_listitem_date);
+            if(simplified){
+                listItemView.author.setVisibility(View.GONE);
+                listItemView.date.setVisibility(View.GONE);
+
+            }
             listItemView.btn_download = (Button) convertView.findViewById(R.id.button_download);
 
             listItemView.btn_download.setOnClickListener(new View.OnClickListener() {

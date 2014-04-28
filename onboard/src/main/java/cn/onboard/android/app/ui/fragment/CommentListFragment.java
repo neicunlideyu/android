@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.common.base.Strings;
@@ -100,7 +99,7 @@ public class CommentListFragment extends Fragment {
                         commentContent.setText("");
                         comments.add(comment);
                         lvCommentAdapter.notifyDataSetChanged();
-                        setListViewHeightBasedOnChildren(lvComment);
+//                        setListViewHeightBasedOnChildren(lvComment);
                         getActivity().findViewById(R.id.data_empty).setVisibility(View.GONE);
                         return;
                     } else {
@@ -148,32 +147,10 @@ public class CommentListFragment extends Fragment {
             lvCommentAdapter = new CommentListViewAdapter(getActivity(), comments,
                     R.layout.comment_listitem);
             lvComment.setAdapter(lvCommentAdapter);
-            setListViewHeightBasedOnChildren(lvComment);
+//            setListViewHeightBasedOnChildren(lvComment);
             if (comments.size() == 0)
                 getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
         }
-    }
-
-    private static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null)
-            return;
-
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0)
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
     }
 
 }

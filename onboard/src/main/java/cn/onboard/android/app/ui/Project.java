@@ -2,20 +2,17 @@ package cn.onboard.android.app.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.WebSocket;
 
 import cn.onboard.android.app.AppManager;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.fragment.ProjectMenuFragment;
 import cn.onboard.android.app.ui.fragment.TopicFragment;
+import cn.onboard.android.app.widget.slidingmenu.SlidingFragmentActivity;
 import cn.onboard.android.slidingmenu.SlidingMenu;
-import cn.onboard.android.slidingmenu.app.SlidingFragmentActivity;
 
 public class Project extends SlidingFragmentActivity {
 
@@ -69,26 +66,6 @@ public class Project extends SlidingFragmentActivity {
         sm.setFadeDegree(0.35f);
         //添加Activity到堆栈
         AppManager.getAppManager().addActivity(this);
-        setUpWebSocket();
-
-    }
-
-    private void setUpWebSocket() {
-        AsyncHttpClient.getDefaultInstance().websocket("ws://192.168.100.37:8080/websocket", "my-protocol", new AsyncHttpClient.WebSocketConnectCallback() {
-            @Override
-            public void onCompleted(Exception ex, WebSocket webSocket) {
-                if (ex != null) {
-                    ex.printStackTrace();
-                    return;
-                }
-                webSocket.setStringCallback(new WebSocket.StringCallback() {
-                    public void onStringAvailable(String s) {
-                        System.out.println("I got a string: " + s);
-                        Log.i("string available", s);
-                    }
-                });
-            }
-        });
 
     }
 
@@ -106,7 +83,7 @@ public class Project extends SlidingFragmentActivity {
                 toggle();
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

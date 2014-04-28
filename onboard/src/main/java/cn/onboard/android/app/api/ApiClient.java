@@ -388,6 +388,20 @@ public class ApiClient {
         }
     }
 
+    public static User logout(AppContext appContext) throws AppException{
+        String url = URLs.LOGOUT;
+        try {
+            return DataHandleUtil.inputStreamToObject(
+                    new TypeReference<User>() {
+                    }, http_get(appContext, url));
+        } catch (Exception e) {
+            if (e instanceof AppException)
+                throw (AppException) e;
+            throw AppException.network(e);
+        }
+
+    }
+
     /**
      * 获得公司列表
      *

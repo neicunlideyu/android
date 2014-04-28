@@ -36,14 +36,10 @@
             android:textColor="@color/listitem_black"
             android:textColorLink="@color/listitem_blue" />
 
-        <ImageView
-            android:id="@+id/comment_listitem_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dip"
-            android:scaleType="fitCenter"
-            android:src="@drawable/image_loading"
-            android:visibility="gone" />
+        <cn.onboard.android.app.widget.scrollViewWithListView.ScrollViewWithListView
+            android:id="@+id/attachments"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
 
         <LinearLayout
             android:orientation="horizontal"

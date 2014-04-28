@@ -112,7 +112,6 @@ public class UIHelper {
             intent.putExtra("companyId", companyId);
             intent.putExtra("projectId", projectId);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
         }
         return intent;
     }

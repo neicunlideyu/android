@@ -20,6 +20,8 @@ public class URLs implements Serializable {
     private final static String URL_API_HOST = HTTP + HOST + URL_SPLITTER;
 
     public final static String LOGIN_VALIDATE_HTTP = URL_API_HOST + "api/signin";
+    public final static String LOGOUT = URL_API_HOST + "api/signout";
+
     public final static String COMPANY_LIST_HTTP = URL_API_HOST + "api";
     public final static String PROJECT_LIST_HTTP = URL_API_HOST + "api/companyId";
 

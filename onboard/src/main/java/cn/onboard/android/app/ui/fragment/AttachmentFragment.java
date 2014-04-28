@@ -216,7 +216,7 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
     private void initView(LinearLayout lv) {
         attachments = new ArrayList<Attachment>();
         attachmentAdapter = new AttachmentListViewAdapter(getActivity().getApplicationContext(), attachments,
-                R.layout.attachment_listitem);
+                R.layout.attachment_listitem, false);
         attachmentPullToRefreshListView = (PullToRefreshListView) lv
                 .findViewById(R.id.attachment_list_view);
 

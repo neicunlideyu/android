@@ -140,6 +140,9 @@ public class AppContext extends Application {
         return ApiClient.login(this, account, pwd);
     }
 
+    public User logOut() throws  AppException{
+        return ApiClient.logout(this);
+    }
     /**
      * 获取登录信息
      *
