@@ -95,7 +95,7 @@ public class UIHelper {
             intent = new Intent(context,
                     DiscussionDetail.class);
             intent.putExtra("discussionId", id);
-        } else if (type.equals(ModelType.DISCUSSSION)) {
+        } else if (type.equals(ModelType.DOCUMENT)) {
             intent = new Intent(context,
                     DocumentDetail.class);
             intent.putExtra("projectId", projectId);

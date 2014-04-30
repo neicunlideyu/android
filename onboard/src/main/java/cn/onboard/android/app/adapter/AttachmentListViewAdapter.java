@@ -103,7 +103,7 @@ public class AttachmentListViewAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View v) {
-                    AppContext appContext = (AppContext) v.getContext();
+                    AppContext appContext = (AppContext) v.getContext().getApplicationContext();
                     appContext.downloadAttachmentByAttachmentId(attachment.getId(),
                             attachment.getName(), attachment.getCompanyId(), attachment.getProjectId());
                 }
