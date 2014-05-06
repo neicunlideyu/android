@@ -275,7 +275,6 @@ public class EditTodo extends BaseActivity {
                                                     int id) {
                                 }
                             });
-
             return builder.create();
         }
     }

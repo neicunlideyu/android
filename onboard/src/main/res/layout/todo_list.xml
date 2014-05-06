@@ -5,7 +5,7 @@
 
     <include layout="@layout/data_empty_tip" />
 
-    <include layout="@layout/progress_bar" />
+    <include layout="@layout/listview_footer" />
 
     <ListView
         android:id="@+id/todolist"
