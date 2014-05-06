@@ -7,4 +7,6 @@ public class ModelType {
     public static final String TODO = "todo";
     public static final String DISCUSSSION = "discussion";
     public static final String UPLOAD = "upload";
+    public static final String DOCUMENT = "document";
+
 }
