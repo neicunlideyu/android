@@ -50,7 +50,7 @@ import cn.onboard.android.app.common.DataHandleUtil;
 /**
  * API客户端接口：用于访问网络数据
  *
- * @author liux (http://my.oschina.net/liux)
+ * @author xuchen
  * @version 1.0
  * @created 2012-3-21
  */

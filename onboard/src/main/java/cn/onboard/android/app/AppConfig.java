@@ -15,7 +15,6 @@ public class AppConfig {
     public final static String CONF_APP_UNIQUEID = "APP_UNIQUEID";
     public final static String CONF_COOKIE = "cookie";
     public final static String CONF_LOAD_IMAGE = "perf_loadimage";
-    public final static String CONF_VOICE = "perf_voice";
 
     private Context mContext;
     private static AppConfig appConfig;
@@ -28,12 +27,8 @@ public class AppConfig {
         return appConfig;
     }
 
-    public String get(String key) {
-        Properties props = get();
-        return (props != null) ? props.getProperty(key) : null;
-    }
 
-    Properties get() {
+    Properties getProps() {
         FileInputStream fis = null;
         Properties props = new Properties();
         try {
@@ -79,19 +74,25 @@ public class AppConfig {
     }
 
     public void set(Properties ps) {
-        Properties props = get();
+        Properties props = getProps();
         props.putAll(ps);
         setProps(props);
     }
 
     public void set(String key, String value) {
-        Properties props = get();
+        Properties props = getProps();
         props.setProperty(key, value);
         setProps(props);
     }
 
+
+    public String get(String key) {
+        Properties props = getProps();
+        return (props != null) ? props.getProperty(key) : null;
+    }
+
     public void remove(String... key) {
-        Properties props = get();
+        Properties props = getProps();
         for (String k : key)
             props.remove(k);
         setProps(props);

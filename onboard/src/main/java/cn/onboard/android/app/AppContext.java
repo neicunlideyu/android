@@ -241,37 +241,37 @@ public class AppContext extends Application {
 //    /**
 //     * 清除app缓存
 //     */
-//	public void clearAppCache() {
-//		// 清除webview缓存
-//		File file = CacheManager.getCacheFileBaseDir();
-//		if (file != null && file.exists() && file.isDirectory()) {
-//			for (File item : file.listFiles()) {
-//				item.delete();
-//			}
-//			file.delete();
-//		}
-//		deleteDatabase("webview.db");
-//		deleteDatabase("webview.db-shm");
-//		deleteDatabase("webview.db-wal");
-//		deleteDatabase("webviewCache.db");
-//		deleteDatabase("webviewCache.db-shm");
-//		deleteDatabase("webviewCache.db-wal");
-//		// 清除数据缓存
-//		clearCacheFolder(getFilesDir(), System.currentTimeMillis());
-//		clearCacheFolder(getCacheDir(), System.currentTimeMillis());
-//		// 2.2版本才有将应用缓存转移到sd卡的功能
-//		if (isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
-//			clearCacheFolder(MethodsCompat.getExternalCacheDir(this),
-//					System.currentTimeMillis());
-//		}
-//		// 清除编辑器保存的临时内容
-//		Properties props = getProperties();
-//		for (Object key : props.keySet()) {
-//			String _key = key.toString();
-//			if (_key.startsWith("temp"))
-//				removeProperty(_key);
-//		}
-//	}
+//    public void clearAppCache() {
+//        // 清除webview缓存
+//        File file = CacheManager.getCacheFileBaseDir();
+//        if (file != null && file.exists() && file.isDirectory()) {
+//            for (File item : file.listFiles()) {
+//                item.delete();
+//            }
+//            file.delete();
+//        }
+//        deleteDatabase("webview.db");
+//        deleteDatabase("webview.db-shm");
+//        deleteDatabase("webview.db-wal");
+//        deleteDatabase("webviewCache.db");
+//        deleteDatabase("webviewCache.db-shm");
+//        deleteDatabase("webviewCache.db-wal");
+//        // 清除数据缓存
+//        clearCacheFolder(getFilesDir(), System.currentTimeMillis());
+//        clearCacheFolder(getCacheDir(), System.currentTimeMillis());
+//        // 2.2版本才有将应用缓存转移到sd卡的功能
+//        if (isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
+//            clearCacheFolder(MethodsCompat.getExternalCacheDir(this),
+//                    System.currentTimeMillis());
+//        }
+//        // 清除编辑器保存的临时内容
+//        Properties props = getProperties();
+//        for (Object key : props.keySet()) {
+//            String _key = key.toString();
+//            if (_key.startsWith("temp"))
+//                removeProperty(_key);
+//        }
+//    }
 
     /**
      * 读取对象

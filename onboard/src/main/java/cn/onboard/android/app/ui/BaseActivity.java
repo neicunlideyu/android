@@ -2,6 +2,7 @@ package cn.onboard.android.app.ui;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -11,6 +12,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
 import com.koushikdutta.async.http.WebSocket;
+import com.onboard.api.dto.User;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
@@ -77,15 +79,27 @@ public class BaseActivity extends SherlockFragmentActivity {
                 startActivity(intent);
                 return true;
             case R.id.log_out:
-                AppContext ac = (AppContext) getApplication();
-                try {
-                    ac.logOut();
-                    ac.setProperty("remember_me", "false");
-                } catch (AppException e) {
-                    UIHelper.ToastMessage(BaseActivity.this, R.string.msg_login_success);
-                }
+                new GetProjectListTask().execute();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class GetProjectListTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            AppContext ac = (AppContext) getApplication();
+            try {
+                User user = ac.logOut();
+                if (user != null) {
+                    ac.setProperty("remember_me", "false");
+                    Intent intent = new Intent(BaseActivity.this, Login.class);
+                    startActivity(intent);
+                }
+            } catch (AppException e) {
+                UIHelper.ToastMessage(BaseActivity.this, "注销失败");
+            }
+            return null;
         }
     }
 }

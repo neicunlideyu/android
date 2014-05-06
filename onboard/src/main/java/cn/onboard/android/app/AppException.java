@@ -33,8 +33,6 @@ public class AppException extends Exception implements UncaughtExceptionHandler 
     private final static byte TYPE_SOCKET = 0x02;
     private final static byte TYPE_HTTP_CODE = 0x03;
     private final static byte TYPE_HTTP_ERROR = 0x04;
-    public final static byte TYPE_XML = 0x05;
-    public final static byte TYPE_RUN = 0x07;
 
     private byte type;
     private int code;
@@ -73,7 +71,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler 
             //判断是否挂载了SD卡
             String storageState = Environment.getExternalStorageState();
             if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/OSChina/Log/";
+                savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Onboard/Log/";
                 File file = new File(savePath);
                 if (!file.exists()) {
                     file.mkdirs();

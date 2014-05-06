@@ -35,6 +35,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -56,7 +62,6 @@ android {
 
 }
 
-
 spoon {
     debug = false
     baseOutputDir = file("$buildDir/custom-report-dir")
@@ -76,7 +81,7 @@ dependencies {
     compile 'org.ocpsoft.prettytime:prettytime:2.1.2.Final'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0@aar'
     compile 'com.koushikdutta.async:androidasync:1.2.4'
-    compile('com.onboard:com.onboard.api:2.0.7-SNAPSHOT') {
+    compile('com.onboard:com.onboard.api:2.2.8-SNAPSHOT') {
         transitive = false
     }
 

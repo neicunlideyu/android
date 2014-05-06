@@ -210,7 +210,7 @@ public class EditTodo extends BaseActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Todo t = new Todo();
+            Todo t;
             AppContext ac = (AppContext) getApplication();
             try {
                 t = ac.getTodoById(companyId, projectId, todoId);
@@ -224,7 +224,7 @@ public class EditTodo extends BaseActivity {
         @Override
         protected void onPostExecute(Void params) {
             findViewById(R.id.loading_progress_bar).setVisibility(View.GONE);
-            // getSupportActionBar().setTitle("任务列表/" + todo.getTodolistName());
+            getSupportActionBar().setTitle("任务列表/" + todo.getTodolistName());
             if (todo.getDueDate() != null)
                 assigneeDateText.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(todo.getDueDate().getTime()));
             if (todo.getContent() != null)
