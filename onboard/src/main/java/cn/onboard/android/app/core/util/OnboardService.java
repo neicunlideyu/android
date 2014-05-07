@@ -36,8 +36,4 @@ public abstract class OnboardService {
 
         return restTemplate;
     }
-
-    private HttpHeaders getHeaderWithCookie(AppContext appContext) {
-        String cookie = appContext.getProperty("cookie");
-    }
 }
