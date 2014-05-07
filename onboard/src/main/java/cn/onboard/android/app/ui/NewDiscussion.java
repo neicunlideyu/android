@@ -24,6 +24,7 @@ import com.onboard.api.dto.User;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.discussion.DiscussionService;
+import cn.onboard.android.app.core.user.UserService;
 
 public class NewDiscussion extends BaseActivity {
     private TextView discussionTitleTextView;
@@ -44,6 +47,8 @@ public class NewDiscussion extends BaseActivity {
     private boolean[] ifAssigned;
     private final static int SELECT_ALL_POS = 0;
     private ListView AlertMultiView = null;
+    private DiscussionService discussionService;
+    private UserService userService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,9 +63,15 @@ public class NewDiscussion extends BaseActivity {
             }
 
         });
+        initService();
         initView();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("新建讨论");
+    }
+
+    private void initService() {
+        discussionService = new DiscussionService();
+        userService = new UserService();
     }
 
     private String[] getAssigneeNameList() {
@@ -98,14 +109,13 @@ public class NewDiscussion extends BaseActivity {
             public void run() {
                 Message msg = new Message();
                 try {
-                    final AppContext ac = (AppContext) getApplication();
-                    assigneesList = ac.getUsersByProjectId(companyId, projectId);
+                    assigneesList = userService.getUsersByProjectId(companyId, projectId);
                     msg.what = 1;
                     ifAssigned = new boolean[assigneesList.size() + 1];
                     for (int i = 0; i < assigneesList.size(); i++) {
                         ifAssigned[i] = false;
                     }
-                } catch (AppException e) {
+                } catch (RestClientException e) {
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e;
@@ -182,9 +192,9 @@ public class NewDiscussion extends BaseActivity {
                     Message msg = new Message();
 
                     try {
-                        discussion = ac.createDiscussion(discussion);
+                        discussion = discussionService.createDiscussion(discussion);
                         msg.what = 1;
-                    } catch (AppException e) {
+                    } catch (RestClientException e) {
                         e.printStackTrace();
                         msg.what = -1;
                         msg.obj = e;

@@ -2,15 +2,18 @@ package cn.onboard.android.app.core.util;
 
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import cn.onboard.android.app.AppContext;
 
 /**
  * Created by XingLiang on 14-4-21.
  */
 public abstract class OnboardService {
 
-    public final static String BASE_URL = "http://onboard.cn/api";
+    public final static String BASE_URL = "http://192.168.100.31:8080/api";
 
     protected RestTemplate restTemplate;
 
@@ -32,5 +35,9 @@ public abstract class OnboardService {
         restTemplate.getMessageConverters().add(converter);
 
         return restTemplate;
+    }
+
+    private HttpHeaders getHeaderWithCookie(AppContext appContext) {
+        String cookie = appContext.getProperty("cookie");
     }
 }
