@@ -17,6 +17,8 @@ buildscript {
 apply plugin: 'android'
 apply plugin: 'spoon'
 
+def SpringVersion = '1.0.1.RELEASE'
+
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.1"
@@ -45,8 +47,10 @@ android {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/jdbc.properties'
     }
@@ -62,6 +66,12 @@ android {
 
 }
 
+configurations.compile {
+    exclude module: 'spring-core'
+    exclude module: 'spring-web'
+    exclude module: 'commons-logging'
+}
+
 spoon {
     debug = false
     baseOutputDir = file("$buildDir/custom-report-dir")
@@ -72,6 +82,7 @@ dependencies {
     compile project(':slidingmenu')
     compile 'com.android.support:support-v4:18.0.+'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile "org.springframework.android:spring-android-rest-template:$SpringVersion"
 
     compile 'commons-httpclient:commons-httpclient:3.1'
     compile 'joda-time:joda-time:2.3'
@@ -81,7 +92,7 @@ dependencies {
     compile 'org.ocpsoft.prettytime:prettytime:2.1.2.Final'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0@aar'
     compile 'com.koushikdutta.async:androidasync:1.2.4'
-    compile('com.onboard:com.onboard.api:2.2.8-SNAPSHOT') {
+    compile('com.onboard:com.onboard.api:2.0.7-SNAPSHOT') {
         transitive = false
     }
 
