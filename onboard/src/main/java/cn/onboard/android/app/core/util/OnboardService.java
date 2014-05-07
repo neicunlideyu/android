@@ -7,8 +7,10 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 import org.springframework.web.client.RestTemplate;
 
 import cn.onboard.android.app.AppContext;
+import cn.onboard.android.app.cache.Cache;
 import cn.onboard.android.app.cache.CacheDao;
 import cn.onboard.android.app.common.DataHandleUtil;
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * Created by XingLiang on 14-4-21.
@@ -42,13 +44,21 @@ public abstract class OnboardService {
         return restTemplate;
     }
 
-    public void saveData(String url,Object data){
+    public void saveData(String url, Object data) {
         String json = DataHandleUtil.objectToJson(data);
-
+        Cache cache = new Cache();
+        cache.setUrl(url);
+        cache.setData(json);
+        cacheDao.insertOrReplace(cache);
     }
 
-    public <T> T readData(final TypeReference<T> type,String url){
-
-        return DataHandleUtil.StringToObject(type,url);
+    public <T> T readData(final TypeReference<T> type, String url) {
+        QueryBuilder<Cache> qb = cacheDao.queryBuilder();
+        qb.where(CacheDao.Properties.Url.eq(url));
+        String data = "";
+        if (qb.list().size() > 0) {
+            data = qb.list().get(0).getData();
+        }
+        return DataHandleUtil.StringToObject(type, data);
     }
 }
