@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.core.util.OnboardService;
 
 /**
@@ -17,10 +18,13 @@ public class UserService extends OnboardService{
 
     private final static String GET_USER_BY_PROJECT_URI = "/%d/projects/%d/users";
 
+    public UserService(AppContext appContext) {
+        super(appContext);
+    }
+
     public List<User> getUsersByProjectId(int companyId, int projectId) throws RestClientException{
         String uri = String.format(GET_USER_BY_PROJECT_URI, companyId, projectId);
-        String url = super.getUrl(uri);
-        User[] users = restTemplate.getForObject(url, User[].class);
-        return Arrays.asList(users);
+
+        return Arrays.asList(getForObjectWithCookie(uri, User[].class));
     }
 }

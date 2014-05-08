@@ -5,6 +5,7 @@ import com.onboard.api.dto.Project;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.core.util.OnboardService;
 
 /**
@@ -14,6 +15,9 @@ public class ProjectService extends OnboardService{
 
     private final static String GET_PROJECT_BY_COMPANY_ID_URI = "/%d";
 
+    public ProjectService(AppContext appContext) {
+        super(appContext);
+    }
     /**
      * 通过companyID获取这个公司的所有项目
      * @param companyId
@@ -23,6 +27,6 @@ public class ProjectService extends OnboardService{
         String uri = String.format(GET_PROJECT_BY_COMPANY_ID_URI, companyId);
         String url = super.getUrl(uri);
 
-        return Arrays.asList(restTemplate.getForObject(url, Project[].class));
+        return Arrays.asList(getForObjectWithCookie(url, Project[].class));
     }
 }

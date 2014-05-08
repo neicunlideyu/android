@@ -70,8 +70,9 @@ public class NewDiscussion extends BaseActivity {
     }
 
     private void initService() {
-        discussionService = new DiscussionService();
-        userService = new UserService();
+        AppContext appContext = (AppContext)getApplicationContext();
+        discussionService =  new DiscussionService(appContext);
+        userService = new UserService(appContext);
     }
 
     private String[] getAssigneeNameList() {

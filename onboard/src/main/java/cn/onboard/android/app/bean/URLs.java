@@ -9,7 +9,7 @@ public class URLs implements Serializable {
 
     //  public final static String HOST = "192.168.100.37:8080";
 
-    public final static String HOST = "192.168.100.31:8080";
+    public final static String HOST = "onboard.cn";
 
     private final static String IMAGE_HOST = "teamforge.b0.upaiyun.com";
 

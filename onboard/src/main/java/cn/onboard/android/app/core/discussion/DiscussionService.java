@@ -26,26 +26,26 @@ public class DiscussionService extends OnboardService {
 
     private final static String GET_TOPIC_BY_PROJECT_URI = "/%d/projects/%d/topics?page=%d";
 
+    public DiscussionService(AppContext appContext) {
+        super(appContext);
+    }
+
     public Discussion createDiscussion(Discussion discussion, AppContext appContext) throws RestClientException{
         String uri = String.format(CREATE_DISCUSSION_URI, discussion.getCompanyId(), discussion.getProjectId());
-        String url = super.getUrl(uri);
-        HttpEntity<Discussion> httpEntity = new HttpEntity(discussion, super.getHeaderWithCookie(appContext));
 
-        return restTemplate.exchange(url, HttpMethod.POST, httpEntity, Discussion.class).getBody();
+        return postForObjectWithCookie(uri, discussion, Discussion.class);
     }
 
     public Discussion getDiscussionById(int companyId, int projectId, int discussionId) throws RestClientException {
         String uri = String.format(GET_DISCUSSION_BY_ID_URI, companyId, projectId, discussionId);
-        String url = super.getUrl(uri);
 
-        return restTemplate.getForObject(url, Discussion.class);
+        return getForObjectWithCookie(uri, Discussion.class);
     }
 
     public List<Topic> getTopicsByProjectId(int companyId, int projectId, int page) throws RestClientException {
-        String uri = String.format(GET_TOPIC_BY_PROJECT_URI, companyId, projectId, page);
-        String url = super.getUrl(uri);
+        String uri = String.format(GET_TOPIC_BY_PROJECT_URI, companyId, projectId, page);        String url = super.getUrl(uri);
 
-        return Arrays.asList(restTemplate.getForObject(url, Topic[].class));
+        return Arrays.asList(getForObjectWithCookie(uri, Topic[].class));
     }
 
 }
