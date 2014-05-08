@@ -192,7 +192,7 @@ public class NewDiscussion extends BaseActivity {
                     Message msg = new Message();
 
                     try {
-                        discussion = discussionService.createDiscussion(discussion);
+                        discussion = discussionService.createDiscussion(discussion, (AppContext)getApplicationContext());
                         msg.what = 1;
                     } catch (RestClientException e) {
                         e.printStackTrace();
