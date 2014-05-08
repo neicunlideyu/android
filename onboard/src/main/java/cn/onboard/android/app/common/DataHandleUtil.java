@@ -1,8 +1,11 @@
 package cn.onboard.android.app.common;
 
 
+import android.util.Log;
+
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.type.TypeReference;
 
@@ -52,6 +55,19 @@ public class DataHandleUtil {
             e.printStackTrace();
         }
         return data;
+    }
+
+    public static String objectToJson(Object object) {
+        ObjectMapper m = new ObjectMapper();
+        m.configure(SerializationConfig.Feature.WRITE_NULL_PROPERTIES, false);
+        ObjectWriter ow = m.writer().withDefaultPrettyPrinter();
+        String message = "";
+        try {
+            message = ow.writeValueAsString(object);
+        } catch (IOException e) {
+            Log.i("","activity to json failure");
+        }
+        return message;
     }
 
     @SuppressWarnings({"deprecation", "unchecked"})

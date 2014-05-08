@@ -40,6 +40,8 @@ import java.util.UUID;
 
 import cn.onboard.android.app.api.ApiClient;
 import cn.onboard.android.app.bean.URLs;
+import cn.onboard.android.app.cache.DaoMaster;
+import cn.onboard.android.app.cache.DaoSession;
 
 public class AppContext extends Application {
 
@@ -51,12 +53,46 @@ public class AppContext extends Application {
 
     private int userId = 0; // 登录用户的id
 
+    private static AppContext mInstance;
+    private static DaoMaster daoMaster;
+    private static DaoSession daoSession;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        if (mInstance == null)
+            mInstance = this;
         // 注册App异常崩溃处理器
         Thread.setDefaultUncaughtExceptionHandler(AppException
                 .getAppExceptionHandler());
+    }
+
+    /**
+     * 取得DaoMaster
+     *
+     * @return
+     */
+    public static DaoMaster getDaoMaster() {
+        if (daoMaster == null) {
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(mInstance, "cache", null);
+            daoMaster = new DaoMaster(helper.getWritableDatabase());
+        }
+        return daoMaster;
+    }
+
+    /**
+     * 取得DaoSession
+     *
+     * @return
+     */
+    public static DaoSession getDaoSession() {
+        if (daoSession == null) {
+            if (daoMaster == null) {
+                daoMaster = getDaoMaster();
+            }
+            daoSession = daoMaster.newSession();
+        }
+        return daoSession;
     }
 
     /**
@@ -140,9 +176,10 @@ public class AppContext extends Application {
         return ApiClient.login(this, account, pwd);
     }
 
-    public User logOut() throws  AppException{
+    public User logOut() throws AppException {
         return ApiClient.logout(this);
     }
+
     /**
      * 获取登录信息
      *
