@@ -25,8 +25,7 @@ public class ProjectService extends OnboardService{
      */
     public List<Project> getProjectByCompanyId(int companyId) {
         String uri = String.format(GET_PROJECT_BY_COMPANY_ID_URI, companyId);
-        String url = super.getUrl(uri);
 
-        return Arrays.asList(getForObjectWithCookie(url, Project[].class));
+        return Arrays.asList(getForObjectWithCookie(uri, Project[].class));
     }
 }

@@ -21,6 +21,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.onboard.api.dto.Topic;
 
+import org.springframework.web.client.RestClientException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +31,14 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.TopicListViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.company.CompanyService;
+import cn.onboard.android.app.core.discussion.DiscussionService;
 import cn.onboard.android.app.ui.NewDiscussion;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 public class TopicFragment extends Fragment implements OnMenuItemClickListener {
+    private DiscussionService discussionService;
+
     private int companyId;
 
     private int projectId;
@@ -72,9 +78,14 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                              Bundle savedInstanceState) {
         lv = (LinearLayout) inflater.inflate(
                 R.layout.topics, null);
+        initService();
         initTopicView();
         loadTopicsData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
         return lv;
+    }
+
+    private void initService() {
+        discussionService = new DiscussionService((AppContext)getActivity().getApplicationContext());
     }
 
 
@@ -231,11 +242,11 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                     isRefresh = true;
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
-                    returnedTopics = ac
+                    returnedTopics = discussionService
                             .getTopicsByProjectId(companyId, projectId, pageIndex);
                     msg.what = returnedTopics.size();
                     msg.obj = returnedTopics;
-                } catch (AppException e) {
+                } catch (RestClientException e) {
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e;

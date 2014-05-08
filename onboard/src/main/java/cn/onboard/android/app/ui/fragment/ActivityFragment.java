@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.onboard.api.dto.Activity;
 
+import org.springframework.web.client.RestClientException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +28,15 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.ActivityListViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.activity.ActivityService;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 public class ActivityFragment extends Fragment {
     private Integer companyId;
 
     private Integer userId;
+
+    private ActivityService activityService;
 
     private PullToRefreshListView activiPullToRefreshListView;
 
@@ -56,7 +61,6 @@ public class ActivityFragment extends Fragment {
     }
 
     public ActivityFragment(Integer companyId, Integer userId) {
-        this();
         this.companyId = companyId;
         this.userId = userId;
     }
@@ -66,9 +70,14 @@ public class ActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         lv = (LinearLayout) inflater.inflate(R.layout.activities, null);
+        initService();
         initActivityListView();
         loadActivityData(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
         return lv;
+    }
+
+    private void initService() {
+        activityService = new ActivityService((AppContext) getActivity().getApplication());
     }
 
     private void initActivityListView() {
@@ -171,12 +180,12 @@ public class ActivityFragment extends Fragment {
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
                     if (userId != null)
-                        returnedActivities = ac.getActivitiesByCompanyIdByUserId(companyId, userId, pageIndex);
+                        returnedActivities = activityService.getActivitiesByCompanyIdByUserId(companyId, userId, pageIndex);
                     else
-                        returnedActivities = ac.getActivitiesByCompanyId(companyId, pageIndex);
+                        returnedActivities = activityService.getActivitiesByCompany(companyId, pageIndex);
                     msg.what = returnedActivities.size();
                     msg.obj = returnedActivities;
-                } catch (AppException e) {
+                } catch (RestClientException e) {
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e;

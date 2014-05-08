@@ -19,6 +19,8 @@ import android.widget.ListView;
 import com.google.common.base.Strings;
 import com.onboard.api.dto.Comment;
 
+import org.springframework.web.client.RestClientException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +30,12 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.CommentListViewAdapter;
 import cn.onboard.android.app.api.ApiClient;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.comment.CommentService;
 
 
 public class CommentListFragment extends Fragment {
+
+    private CommentService commentService;
 
     private CommentListViewAdapter lvCommentAdapter;
     private ListView lvComment;
@@ -62,6 +67,7 @@ public class CommentListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final LinearLayout lv = (LinearLayout) inflater.inflate(R.layout.comments, null);
+        initService();
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         commentContent = (EditText) getActivity().findViewById(R.id.comment_foot_editer);
         commentPublish = (Button) getActivity().findViewById(R.id.comment_foot_pubcomment);
@@ -69,6 +75,10 @@ public class CommentListFragment extends Fragment {
         lvComment = (ListView) lv.findViewById(R.id.frame_listview_comment);
         new GetCommentsTask().execute();
         return lv;
+    }
+
+    private void initService() {
+        commentService = new CommentService((AppContext)getActivity().getApplicationContext());
     }
 
 
@@ -112,9 +122,9 @@ public class CommentListFragment extends Fragment {
                     Message msg = new Message();
                     Log.i("comment", comment.getContent());
                     try {
-                        comment = ac.publishComment(comment);
+                        comment = commentService.publishComment(comment);
                         msg.what = 1;
-                    } catch (AppException e) {
+                    } catch (RestClientException e) {
                         e.printStackTrace();
                         msg.what = -1;
                         msg.obj = e;

@@ -25,7 +25,7 @@ public class CompanyService extends OnboardService {
      * @throws cn.onboard.android.app.AppException
      */
     public List<Company> getCompanyList() {
-        String url = super.BASE_URL;
+        String url = "";
 
         return Arrays.asList(getForObjectWithCookie(url, Company[].class));
     }

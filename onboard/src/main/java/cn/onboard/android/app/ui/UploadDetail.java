@@ -23,6 +23,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
 import com.onboard.api.dto.Upload;
 
+import org.springframework.web.client.RestClientException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +35,14 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.bean.AttachmentIconType;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
+import cn.onboard.android.app.core.attachment.AttachmentService;
+import cn.onboard.android.app.core.upload.UploadService;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class UploadDetail extends BaseActivity {
+
+    private UploadService uploadService;
+
     private ListViewNewsAdapter attachmentAdapter;
 
     private TextView mAuthor;
@@ -58,6 +65,7 @@ public class UploadDetail extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_detail);
+        initService();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Log.d("initData", "started");
         this.initView();
@@ -73,6 +81,11 @@ public class UploadDetail extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    private void initService() {
+        AppContext appContext = (AppContext)getApplicationContext();
+        uploadService = new UploadService(appContext);
     }
 
     private static class ListViewNewsAdapter extends BaseAdapter {
@@ -125,9 +138,8 @@ public class UploadDetail extends BaseActivity {
 
                     @Override
                     public void onClick(View v) {
-                        AppContext appContext = (AppContext) v.getContext();
-                        appContext.downloadAttachmentByAttachmentId(attachment.getId(),
-                                attachment.getName(), companyId, projectId);
+                        AppContext appContext = (AppContext)v.getContext().getApplicationContext();
+                        new AttachmentService(appContext).downloadAttachment(attachment.getId(), attachment.getName(), companyId, projectId);
                     }
                 });
 
@@ -230,11 +242,11 @@ public class UploadDetail extends BaseActivity {
             public void run() {
                 Message msg = new Message();
                 try {
-                    upload = ((AppContext) getApplication()).getUploadById(companyId, projectId, uploadId);
+                    upload = uploadService.getUploadById(companyId, projectId, uploadId);
                     msg.what = (upload != null && upload.getId() > 0) ? 1 : 0;
                     // msg.obj = (discussion!=null) ? discussion.getNotice() :
                     // null;
-                } catch (AppException e) {
+                } catch (RestClientException e) {
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e;

@@ -28,6 +28,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,9 +38,16 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.core.todo.TodoService;
+import cn.onboard.android.app.core.todo.TodolistService;
+import cn.onboard.android.app.core.user.UserService;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class EditTodo extends BaseActivity {
+
+    private TodoService todoService;
+    private TodolistService todolistService;
+    private UserService userService;
 
     private Todolist todolist;
     private Todo todo;
@@ -58,6 +66,7 @@ public class EditTodo extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todo_edit);
+        initService();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ac = (AppContext) getApplication();
         assigneeText = (TextView) findViewById(R.id.tv_assignee_name);
@@ -70,6 +79,13 @@ public class EditTodo extends BaseActivity {
         initView();
         new GetUsersInProject().execute();
 
+    }
+
+    private void initService() {
+        AppContext appContext = (AppContext)getApplicationContext();
+        todoService = new TodoService(appContext);
+        todolistService = new TodolistService(appContext);
+        userService = new UserService(appContext);
     }
 
     void initView() {
@@ -152,7 +168,6 @@ public class EditTodo extends BaseActivity {
         protected Todo doInBackground(Todo... todo) {
             Todo t = todo[0];
             t.setContent(todoContent.getText() + "");
-            AppContext ac = (AppContext) getApplication();
             try {
                 Todo sample = new Todo();
                 sample.setId(t.getId());
@@ -162,8 +177,8 @@ public class EditTodo extends BaseActivity {
                 sample.setCompanyId(t.getCompanyId());
                 sample.setProjectId(t.getProjectId());
                 sample.setTodolistId(t.getTodolistId());
-                t = ac.updateTodo(sample);
-            } catch (AppException e) {
+                t = todoService.updateTodo(sample);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return t;
@@ -192,8 +207,8 @@ public class EditTodo extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                assigneesList = ac.getUsersByProjectId(companyId, projectId);
-            } catch (AppException e) {
+                assigneesList = userService.getUsersByProjectId(companyId, projectId);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return null;
@@ -211,11 +226,10 @@ public class EditTodo extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             Todo t;
-            AppContext ac = (AppContext) getApplication();
             try {
-                t = ac.getTodoById(companyId, projectId, todoId);
+                t = todoService.getTodoById(companyId, projectId, todoId);
                 todo = t;
-            } catch (AppException e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return null;

@@ -29,6 +29,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Attachment;
 import com.onboard.api.dto.Upload;
 
+import org.springframework.web.client.RestClientException;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +43,8 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.AttachmentListViewAdapter;
 import cn.onboard.android.app.common.ImageUtils;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.attachment.AttachmentService;
+import cn.onboard.android.app.core.upload.UploadService;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
 
 
@@ -48,6 +52,10 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
     private static Integer companyId;
 
     private static Integer projectId;
+
+    private AttachmentService attachmentService;
+
+    private UploadService uploadService;
 
     private PullToRefreshListView attachmentPullToRefreshListView;
 
@@ -165,13 +173,12 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
         @Override
         protected Void doInBackground(Void... params) {
             //获取头像缩略图
-            AppContext ac = (AppContext) getActivity().getApplication();
             Upload upload = new Upload();
             upload.setCompanyId(companyId);
             upload.setProjectId(projectId);
             try {
-                upload = ac.createUpload(upload, protraitFile);
-            } catch (AppException e) {
+                upload = uploadService.createUpload(upload, protraitFile, companyId, projectId);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return null;
@@ -352,9 +359,16 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final LinearLayout lv = (LinearLayout) inflater.inflate(R.layout.attachments, null);
+        initService();
         initView(lv);
         initGetUploadsByProject(0, handler, UIHelper.LISTVIEW_ACTION_REFRESH);
         return lv;
+    }
+
+    private void initService() {
+        AppContext appContext = (AppContext) getActivity().getApplicationContext();
+        attachmentService = new AttachmentService(appContext);
+        uploadService = new UploadService(appContext);
     }
 
     private void initGetUploadsByProject(final int pageIndex, final Handler handler,
@@ -367,15 +381,13 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                         || action == UIHelper.LISTVIEW_ACTION_SCROLL)
                     isRefresh = true;
                 try {
-                    AppContext ac = (AppContext) getActivity().getApplication();
-                    List<Attachment> attachments = new ArrayList<Attachment>();
                     if (projectId != null)
-                        returnedAttachments = ac.getAttachmentsByProjectId(companyId, projectId, pageIndex);
+                        returnedAttachments = attachmentService.getAttachmentsByCompanyIdAndProjectId(companyId, projectId, pageIndex);
                     else if (userId != null)
-                        returnedAttachments = ac.getAttachmentsByCompanyIdByUserId(companyId, userId, pageIndex);
+                        returnedAttachments = attachmentService.getAttachmentsByCompanyByUser(companyId, userId, pageIndex);
                     msg.what = returnedAttachments.size();
                     msg.obj = returnedAttachments;
-                } catch (AppException e) {
+                } catch (RestClientException e) {
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e;

@@ -18,6 +18,8 @@ public class UserService extends OnboardService{
 
     private final static String GET_USER_BY_PROJECT_URI = "/%d/projects/%d/users";
 
+    private final static String GET_USER_BY_ID = "/users/%d";
+
     public UserService(AppContext appContext) {
         super(appContext);
     }
@@ -26,5 +28,11 @@ public class UserService extends OnboardService{
         String uri = String.format(GET_USER_BY_PROJECT_URI, companyId, projectId);
 
         return Arrays.asList(getForObjectWithCookie(uri, User[].class));
+    }
+
+    public User getUserById(int id) throws RestClientException {
+        String uri = String.format(GET_USER_BY_ID, id);
+
+        return getForObjectWithCookie(uri, User.class);
     }
 }

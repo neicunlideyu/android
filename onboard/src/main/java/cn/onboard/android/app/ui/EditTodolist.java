@@ -15,12 +15,14 @@ import com.onboard.api.dto.Todolist;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.core.todo.TodolistService;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 /**
@@ -41,10 +43,13 @@ public class EditTodolist extends BaseActivity {
 
     private Todolist todolist;
 
+    private TodolistService todolistService;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todolist_edit);
+        initService();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         companyId = getIntent().getIntExtra("companyId", -1);
         projectId = getIntent().getIntExtra("projectId", -1);
@@ -61,6 +66,10 @@ public class EditTodolist extends BaseActivity {
         todolist.setId(todolistId);
 
         initView();
+    }
+
+    void initService() {
+        todolistService = new TodolistService((AppContext)getApplicationContext());
     }
 
     private final MenuItem.OnMenuItemClickListener saveTodolistListener = new MenuItem.OnMenuItemClickListener() {
@@ -100,8 +109,8 @@ public class EditTodolist extends BaseActivity {
                 sample.setName(t.getName());
                 sample.setCompanyId(t.getCompanyId());
                 sample.setProjectId(t.getProjectId());
-                t = ac.updateTodolist(sample);
-            } catch (AppException e) {
+                t = todolistService.updateTodolist(sample);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return t;

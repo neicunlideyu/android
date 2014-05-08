@@ -16,6 +16,8 @@ import com.onboard.api.dto.Project;
 import com.onboard.api.dto.User;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView;
 
+import org.springframework.web.client.RestClientException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.EveryoneAdapter;
 import cn.onboard.android.app.adapter.ProjectGridViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.Project.ProjectService;
 import cn.onboard.android.app.ui.fragment.ActivityFragment;
 import cn.onboard.android.app.widget.calendar.CalendarController;
 import cn.onboard.android.app.widget.calendar.MonthByWeekFragment;
@@ -35,6 +38,7 @@ public class Company extends BaseActivity implements CalendarController.EventHan
 
     private int companyId;
 
+    private ProjectService projectService;
     private ScrollLayout mScrollLayout;
     private RadioButton[] mButtons;
     private String[] mHeadTitles;
@@ -54,6 +58,7 @@ public class Company extends BaseActivity implements CalendarController.EventHan
         setContentView(R.layout.company);
         ac = (AppContext) getApplication();
         companyId = getIntent().getIntExtra("companyId", 0);
+        initService();
         initPageScroll();
 
         initProjectFrameView();
@@ -74,6 +79,9 @@ public class Company extends BaseActivity implements CalendarController.EventHan
         });
     }
 
+    private void initService() {
+        projectService = new ProjectService((AppContext)getApplicationContext());
+    }
 
     private void initProjectFrameView() {
         projectGridView = (GridView) findViewById(R.id.project_grid_list);
@@ -173,8 +181,9 @@ public class Company extends BaseActivity implements CalendarController.EventHan
         protected List<Project> doInBackground(Void... params) {
             List<Project> projects = null;
             try {
-                projects = ac.getProjectListByCompanyId(companyId);
-            } catch (AppException e) {
+                projects = projectService
+                        .getProjectByCompanyId(companyId);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return projects;

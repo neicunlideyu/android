@@ -12,16 +12,20 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Document;
 
+import org.springframework.web.client.RestClientException;
+
 import java.text.SimpleDateFormat;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.document.DocumentService;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class DocumentDetail extends BaseActivity {
 
+    private DocumentService documentService;
 
     private TextView mAuthor;
     private TextView mPubDate;
@@ -40,13 +44,17 @@ public class DocumentDetail extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.document_detail);
-
+        initService();
         this.initView();
         new GetDocumentTask().execute();
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    private void initService() {
+        documentService = new DocumentService((AppContext)getApplicationContext());
     }
 
     @Override
@@ -84,10 +92,10 @@ public class DocumentDetail extends BaseActivity {
         @Override
         protected Document doInBackground(Void... params) {
             try {
-                document = ((AppContext) getApplication())
+                document = documentService
                         .getDocumentById(companyId, projectId,
                                 documentId);
-            } catch (AppException e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return document;

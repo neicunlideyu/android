@@ -37,6 +37,7 @@ import com.onboard.api.dto.Todolist;
 
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +48,8 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.TodoListViewAdapter;
+import cn.onboard.android.app.core.todo.TodoService;
+import cn.onboard.android.app.core.todo.TodolistService;
 
 
 public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickListener {
@@ -57,6 +60,10 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
     private Integer userId;
 
     private Date date;
+
+    private TodoService todoService;
+
+    private TodolistService todolistService;
 
     private List<Item> data;
 
@@ -81,11 +88,18 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                              Bundle savedInstanceState) {
         final LinearLayout lv = (LinearLayout) inflater.inflate(
                 R.layout.todo_list, null);
+        initService();
         data = new ArrayList<Item>();
         new InitDataTask().execute();
         return lv;
 
 
+    }
+
+    private void initService() {
+        AppContext appContext = (AppContext)getActivity().getApplicationContext();
+        this.todolistService = new TodolistService(appContext);
+        this.todoService = new TodoService(appContext);
     }
 
     @Override
@@ -246,9 +260,9 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             todolist.setProjectId(projectId);
             AppContext ac = (AppContext) getActivity().getApplication();
             try {
-                todolist = ac
+                todolist = todolistService
                         .createTodolist(todolist);
-            } catch (AppException e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return todolist;
@@ -276,9 +290,9 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             todo.setCompleted(true);
             AppContext ac = (AppContext) getActivity().getApplication();
             try {
-                todo = ac
+                todo = todoService
                         .updateTodo(todo);
-            } catch (AppException e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return todo;
@@ -306,20 +320,21 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
 
         @Override
         protected List<Todolist> doInBackground(Void... params) {
-            AppContext ac = (AppContext) getActivity().getApplication();
             List<Todolist> todolists = new ArrayList<Todolist>();
             try {
                 if (projectId != null) {
-                    todolists = ac
-                            .getTodoListsByProjectId(companyId, projectId);
+                    todolists = todolistService
+                            .getTodoListByProjectId(companyId, projectId);
                 } else if (userId != null)
-                    todolists = ac.getTodoListsByUserId(companyId, userId);
+                    todolists = todolistService
+                            .getTodoListByCompanyIdByUserId(companyId, userId);
                 else if (date != null) {
-                    todolists = ac.getTodoListsByDate(companyId, date);
+                    todolists = todolistService
+                            .getTodoListByCompanyIdByDate(companyId, date);
 
                 }
                 todolistList = todolists;
-            } catch (AppException e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return todolists;

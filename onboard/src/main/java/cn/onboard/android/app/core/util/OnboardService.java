@@ -26,9 +26,9 @@ import de.greenrobot.dao.query.QueryBuilder;
  */
 public abstract class OnboardService {
 
-    //public final static String BASE_URL = "http://192.168.100.31:8080/api";
+    public final static String BASE_URL = "http://192.168.100.31:8080/api";
 
-    public final static String BASE_URL = "http://onboard.cn/api";
+    //public final static String BASE_URL = "http://onboard.cn/api";
 
     private String cookie;
 

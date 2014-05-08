@@ -40,6 +40,8 @@ import android.widget.AbsListView.OnScrollListener;
 
 import com.onboard.api.dto.Todo;
 
+import org.springframework.web.client.RestClientException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,6 +53,7 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.todo.TodoService;
 
 public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         CalendarController.EventHandler, OnScrollListener, OnTouchListener {
@@ -63,6 +66,9 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
     private static final String INSTANCES_SORT_ORDER = Instances.START_DAY
             + "," + Instances.START_MINUTE + "," + Instances.TITLE;
     private static boolean mShowDetailsInMonth = false;
+
+    private TodoService todoService;
+
     private int companyId;
     private float mMinimumTwoMonthFlingVelocity;
     private final boolean mIsMiniMonth;
@@ -170,16 +176,14 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
                             if (size <= 2) {
                                 return;
                             }
-                            AppContext ac = (AppContext) getActivity()
-                                    .getApplication();
                             long first = Long.parseLong(pathSegments.get(size - 2));
                             long last = Long.parseLong(pathSegments.get(size - 1));
-                            List<Todo> todos = ac.getCalendarTodos(companyId,
+                            List<Todo> todos = todoService.getCalendarTodos(companyId,
                                     first, last);
 
                             msg.what = todos.size();
                             msg.obj = todos;
-                        } catch (AppException e) {
+                        } catch (RestClientException e) {
                             e.printStackTrace();
                             msg.what = -1;
                             msg.obj = e;
@@ -323,6 +327,7 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        initService();
         View v;
         // if (mIsMiniMonth) {
         // v = inflater.inflate(R.layout.month_by_week, container, false);
@@ -331,6 +336,11 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         // }
         mDayNamesHeader = (ViewGroup) v.findViewById(R.id.day_names);
         return v;
+    }
+
+    private void initService() {
+        AppContext appContext = (AppContext) getActivity().getApplicationContext();
+        todoService = new TodoService(appContext);
     }
 
     @Override
