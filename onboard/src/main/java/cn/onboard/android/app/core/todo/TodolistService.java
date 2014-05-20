@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.core.util.OnboardService;
 
 /**
@@ -23,6 +24,9 @@ public class TodolistService extends OnboardService {
 
     private final static String GET_TODOLIST_BY_ID_URI = "/%d/projects/%d/todoLists/%d";
 
+    public TodolistService(AppContext appContext) {
+        super(appContext);
+    }
     /**
      * 通过id获取todolist
      * @param companyId
@@ -33,9 +37,8 @@ public class TodolistService extends OnboardService {
      */
     public Todolist getTodolistById(int companyId, int projectId, int todolistId) throws RestClientException {
         String uri = String.format(GET_TODOLIST_BY_ID_URI, companyId, projectId, todolistId);
-        String url = super.getUrl(uri);
 
-        return restTemplate.getForObject(url, Todolist.class);
+        return getForObjectWithCookie(uri, Todolist.class);
     }
 
     /**
@@ -48,9 +51,8 @@ public class TodolistService extends OnboardService {
 
     public List<Todolist> getTodoListByProjectId(int companyId, int projectId)throws RestClientException {
         String uri = String.format(GET_TODOLIST_BY_PROJECT_URI, companyId, projectId);
-        String url = super.getUrl(uri);
 
-        return Arrays.asList(restTemplate.getForObject(url, Todolist[].class));
+        return Arrays.asList(getForObjectWithCookie(uri, Todolist[].class));
     }
 
     /**
@@ -62,9 +64,7 @@ public class TodolistService extends OnboardService {
      */
     public List<Todolist> getTodoListByCompanyIdByUserId(int companyId, int userId) throws RestClientException {
         String uri = String.format(GET_TODOLIST_BY_USER_URI, companyId, userId);
-        String url = super.getUrl(uri);
-
-        return Arrays.asList(restTemplate.getForObject(url, Todolist[].class));
+        return Arrays.asList(getForObjectWithCookie(uri, Todolist[].class));
     }
 
     /**
@@ -77,8 +77,16 @@ public class TodolistService extends OnboardService {
 
     public List<Todolist> getTodoListByCompanyIdByDate(int companyId, Date date) throws RestClientException {
         String uri = String.format(GET_TODOLIST_BY_DATE_URI, companyId, date.getTime());
-        String url = super.getUrl(uri);
+        return Arrays.asList(getForObjectWithCookie(uri, Todolist[].class));
+    }
 
-        return Arrays.asList(restTemplate.getForObject(url, Todolist[].class));
+    public Todolist createTodolist(Todolist todolist) throws RestClientException {
+        String uri = String.format(GET_TODOLIST_BY_PROJECT_URI, todolist.getCompanyId(), todolist.getProjectId());
+        return postForObjectWithCookie(uri, todolist, Todolist.class);
+    }
+
+    public Todolist updateTodolist(Todolist todolist) throws RestClientException {
+        String uri = String.format(GET_TODOLIST_BY_ID_URI, todolist.getCompanyId(), todolist.getProjectId(), todolist.getId());
+        return postForObjectWithCookie(uri, todolist, Todolist.class);
     }
 }

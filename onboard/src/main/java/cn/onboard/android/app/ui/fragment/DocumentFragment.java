@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Document;
 
+import org.springframework.web.client.RestClientException;
+
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
@@ -26,6 +28,7 @@ import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.DocumentListViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.document.DocumentService;
 import cn.onboard.android.app.ui.DocumentDetail;
 import cn.onboard.android.app.ui.NewDiscussion;
 
@@ -34,6 +37,8 @@ class DocumentFragment extends Fragment implements MenuItem.OnMenuItemClickListe
     private int projectId;
 
     private int companyId;
+
+    private DocumentService documentService;
 
     private DocumentFragment() {
         setRetainInstance(true);
@@ -52,6 +57,7 @@ class DocumentFragment extends Fragment implements MenuItem.OnMenuItemClickListe
 
         final LinearLayout lv = (LinearLayout) inflater.inflate(
                 R.layout.document_list, null);
+        initService();
 
         final Handler handler = new Handler() {
             public void handleMessage(Message msg) {
@@ -107,6 +113,11 @@ class DocumentFragment extends Fragment implements MenuItem.OnMenuItemClickListe
         return lv;
     }
 
+    private void initService() {
+        documentService = new DocumentService((AppContext) getActivity().getApplicationContext());
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -127,11 +138,11 @@ class DocumentFragment extends Fragment implements MenuItem.OnMenuItemClickListe
                 Message msg = new Message();
                 try {
                     AppContext ac = (AppContext) getActivity().getApplication();
-                    List<Document> documents = ac.getDocumentsByProjectId(
+                    List<Document> documents = documentService.getDocumentByProject(
                             companyId, projectId);
                     msg.what = documents.size();
                     msg.obj = documents;
-                } catch (AppException e) {
+                } catch (RestClientException e) {
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e;

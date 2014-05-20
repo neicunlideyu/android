@@ -11,6 +11,7 @@ import org.springframework.web.client.RestClientException;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.core.util.OnboardService;
 
 
@@ -27,39 +28,37 @@ public class AttachmentService extends OnboardService {
 
     private final static String DOWNLOAD_ATTACHMENT_URI = "/{companyId}/projects/{projectId}/attachments/{attachmentId}/download";
 
+    public AttachmentService(AppContext appContext) {
+        super(appContext);
+    }
+
     public List<Attachment> getAttachmentsByCompanyIdAndProjectId(int companyId, int projectId, int page) throws RestClientException {
         String uri = String.format(GET_ATTACHMENT_BY_PROJECTID_URI, companyId, projectId, page);
-        String url = super.getUrl(uri);
 
-        Attachment[] attachments = restTemplate.getForObject(url, Attachment[].class);
-        return Arrays.asList(attachments);
+        return Arrays.asList(getForObjectWithCookie(uri, Attachment[].class));
     }
 
     public List<Attachment> getAttachmentsByCompanyByUser(int companyId, int userId, int page) throws RestClientException {
         String uri = String.format(GET_ATTACHMENT_BY_USERID_URI, companyId, userId, page);
-        String url = super.getUrl(uri);
 
-        Attachment[] attachments = restTemplate.getForObject(url, Attachment[].class);
-        return Arrays.asList(attachments);
+        return Arrays.asList(getForObjectWithCookie(uri, Attachment[].class));
     }
 
     public Integer getAttachmentCommentCountsById(int companyId, int projectId, int attachmentId) throws RestClientException {
         String uri = String.format(GET_ATTACHMENT_COMMENT_COUNT_BY_ID_URI, companyId, projectId, attachmentId);
-        String url = super.getUrl(uri);
 
-        Integer commentCount = restTemplate.getForObject(url, Integer.class);
-        return commentCount;
+        return getForObjectWithCookie(uri, Integer.class);
     }
 
-    public void downloadAttachment(Context context, int attachmentId, String attachmentName, int companyId, int projectId) {
-        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    public void downloadAttachment(int attachmentId, String attachmentName, int companyId, int projectId) {
+        DownloadManager downloadManager = (DownloadManager) appContext.getSystemService(Context.DOWNLOAD_SERVICE);
 
         String uri = String.format(GET_ATTACHMENT_COMMENT_COUNT_BY_ID_URI, companyId, projectId, attachmentId);
         String url = super.getUrl(uri);
 
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(attachmentName);
-        request.setDestinationInExternalFilesDir(context, null, attachmentName);
+        request.setDestinationInExternalFilesDir(appContext, null, attachmentName);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         downloadManager.enqueue(request);
     }

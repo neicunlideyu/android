@@ -7,6 +7,7 @@ import org.springframework.web.client.RestClientException;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.core.util.OnboardService;
 
 /**
@@ -18,6 +19,9 @@ public class DocumentService extends OnboardService {
 
     private final static String GET_DOCUMENT_BY_ID = "/%d/projects/%d/documents/%d";
 
+    public DocumentService(AppContext appContext) {
+        super(appContext);
+    }
     /**
      * 获取一个项目的所有文档
      * @param companyId
@@ -27,9 +31,8 @@ public class DocumentService extends OnboardService {
      */
     public List<Document> getDocumentByProject(int companyId, int projectId) throws RestClientException {
         String uri = String.format(GET_DOCUMENT_BY_PROJECT_URI, companyId, projectId);
-        String url = super.getUrl(uri);
 
-        return Arrays.asList(restTemplate.getForObject(GET_DOCUMENT_BY_PROJECT_URI, Document[].class));
+        return Arrays.asList(getForObjectWithCookie(uri, Document[].class));
     }
 
     /**
@@ -42,8 +45,7 @@ public class DocumentService extends OnboardService {
      */
     public Document getDocumentById(int companyId, int projectId, int documentId) throws RestClientException {
         String uri = String.format(GET_DOCUMENT_BY_ID, companyId, projectId, documentId);
-        String url = super.getUrl(uri);
 
-        return restTemplate.getForObject(url, Document.class);
+        return getForObjectWithCookie(uri, Document.class);
     }
 }

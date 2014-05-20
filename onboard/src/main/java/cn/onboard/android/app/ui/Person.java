@@ -7,9 +7,12 @@ import android.widget.Button;
 
 import com.onboard.api.dto.User;
 
+import org.springframework.web.client.RestClientException;
+
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.core.user.UserService;
 import cn.onboard.android.app.ui.fragment.ActivityFragment;
 import cn.onboard.android.app.ui.fragment.AttachmentFragment;
 import cn.onboard.android.app.ui.fragment.TodoFragment;
@@ -19,6 +22,7 @@ import cn.onboard.android.app.ui.fragment.TodoFragment;
  */
 public class Person extends BaseActivity {
 
+    private UserService userService;
 
     private Button meActivityButton;
     private Button meTodoButton;
@@ -28,6 +32,7 @@ public class Person extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.person);
+        initService();
         meActivityButton = (Button) findViewById(R.id.frame_btn_me_acivities);
         meTodoButton = (Button) findViewById(R.id.frame_btn_me_todos);
         meFileButton = (Button) findViewById(R.id.frame_btn_me_files);
@@ -56,6 +61,10 @@ public class Person extends BaseActivity {
         new GetUserTask().execute(userId);
     }
 
+    private void initService() {
+        userService = new UserService((AppContext)getApplicationContext());
+    }
+
     private class GetUserTask extends AsyncTask<Integer, Void, User> {
 
         @Override
@@ -63,8 +72,8 @@ public class Person extends BaseActivity {
             AppContext ac = (AppContext) getApplication();
             User user = new User();
             try {
-                user = ac.getUserById(userId[0]);
-            } catch (AppException e) {
+                user = userService.getUserById(userId[0]);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return user;

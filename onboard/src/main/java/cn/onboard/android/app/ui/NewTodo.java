@@ -27,6 +27,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,8 +37,15 @@ import java.util.List;
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
+import cn.onboard.android.app.core.todo.TodoService;
+import cn.onboard.android.app.core.todo.TodolistService;
+import cn.onboard.android.app.core.user.UserService;
 
 public class NewTodo extends BaseActivity {
+
+    private TodoService todoService;
+    private TodolistService todolistService;
+    private UserService userService;
 
     private Todolist todolist;
     private Todo todo;
@@ -56,6 +64,7 @@ public class NewTodo extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todo_create);
+        initService();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ac = (AppContext) getApplication();
 
@@ -69,6 +78,13 @@ public class NewTodo extends BaseActivity {
         initView();
         new GetUsersInProject().execute();
 
+    }
+
+    private void initService() {
+        AppContext appContext = (AppContext)getApplicationContext();
+        todoService = new TodoService(appContext);
+        todolistService = new TodolistService(appContext);
+        userService = new UserService(appContext);
     }
 
     private final MenuItem.OnMenuItemClickListener saveTodoListener = new MenuItem.OnMenuItemClickListener() {
@@ -146,8 +162,8 @@ public class NewTodo extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                assigneesList = ac.getUsersByProjectId(companyId, projectId);
-            } catch (AppException e) {
+                assigneesList = userService.getUsersByProjectId(companyId, projectId);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return null;
@@ -169,8 +185,8 @@ public class NewTodo extends BaseActivity {
             t.setContent(todoContent.getText() + "");
             AppContext ac = (AppContext) getApplication();
             try {
-                t = ac.createTodo(t);
-            } catch (AppException e) {
+                t = todoService.createTodo(t);
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return t;
@@ -199,13 +215,13 @@ public class NewTodo extends BaseActivity {
         @Override
         protected Todolist doInBackground(Void... params) {
             try {
-                todolist = ac.getTodolistById(companyId, projectId, todolistId);
+                todolist = todolistService.getTodolistById(companyId, projectId, todolistId);
                 todo.setProjectId(todolist.getProjectId());
                 todo.setCompanyId(todolist.getCompanyId());
                 todo.setTodolistId(todolist.getId());
                 todo.setDeleted(false);
                 todo.setPosition((double) todolist.getTodos().size() * 100);
-            } catch (AppException e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return todolist;

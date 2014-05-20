@@ -7,6 +7,7 @@ import org.springframework.web.client.RestClientException;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.core.util.OnboardService;
 
 /**
@@ -16,17 +17,19 @@ public class CommentService extends OnboardService {
 
     private final static String COMMENTS_BY_COMMENTABLE_URI = "/%d/projects/%d/%s/%d/comments";
 
+    public CommentService(AppContext appContext) {
+        super(appContext);
+    }
+
     public List<Comment> getCommentsByCommentable(int companyId, int projectId, String attachType, int attachId) throws RestClientException{
         String uri = String.format(COMMENTS_BY_COMMENTABLE_URI, companyId, projectId, attachType, attachId);
-        String url = super.getUrl(uri);
 
-        return Arrays.asList(restTemplate.getForObject(url, Comment[].class));
+        return Arrays.asList(getForObjectWithCookie(uri, Comment[].class));
     }
 
     public Comment publishComment(Comment comment) {
         String uri = String.format(COMMENTS_BY_COMMENTABLE_URI, comment.getCompanyId(), comment.getProjectId(), comment.getAttachType(), comment.getAttachId());
-        String url = super.getUrl(uri);
 
-        return restTemplate.postForObject(url, comment, Comment.class);
+        return postForObjectWithCookie(uri, comment, Comment.class);
     }
 }

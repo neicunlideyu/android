@@ -16,6 +16,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.onboard.api.dto.Discussion;
 
 import org.ocpsoft.prettytime.PrettyTime;
+import org.springframework.web.client.RestClientException;
 
 import java.util.Locale;
 
@@ -23,10 +24,12 @@ import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.discussion.DiscussionService;
 import cn.onboard.android.app.ui.fragment.CommentListFragment;
 
 public class DiscussionDetail extends BaseActivity {
 
+    private DiscussionService discussionService;
 
     private TextView mAuthor;
     private TextView mPubDate;
@@ -48,7 +51,7 @@ public class DiscussionDetail extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.discussion_detail);
-
+        this.initService();
         this.initView();
         new GetDiscussionTask().execute();
         // 注册双击全屏事件
@@ -56,6 +59,10 @@ public class DiscussionDetail extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    private void initService() {
+        discussionService = new DiscussionService((AppContext)getApplicationContext());
     }
 
 
@@ -97,10 +104,10 @@ public class DiscussionDetail extends BaseActivity {
         @Override
         protected Discussion doInBackground(Void... params) {
             try {
-                discussion = ((AppContext) getApplication())
+                discussion = discussionService
                         .getDiscussionById(companyId, projectId,
                                 discussionId);
-            } catch (AppException e) {
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return discussion;

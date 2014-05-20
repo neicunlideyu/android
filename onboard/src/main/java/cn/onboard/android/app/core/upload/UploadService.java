@@ -10,6 +10,7 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.File;
 
+import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.core.util.OnboardService;
 
 /**
@@ -21,11 +22,13 @@ public class UploadService extends OnboardService {
 
     private final static String CREATE_UPLOAD_URI = "/%d/projects/%d/uploads";
 
+    public UploadService(AppContext appContext) {
+        super(appContext);
+    }
     public Upload getUploadById(int companyId, int projectId, int uploadId) throws RestClientException{
         String uri = String.format(GET_UPLOAD_BY_ID_URI, companyId, projectId, uploadId);
-        String url = super.getUrl(uri);
 
-        return restTemplate.getForObject(url, Upload.class);
+        return getForObjectWithCookie(uri, Upload.class);
     }
 
     public Upload createUpload(Upload upload, File file, int companyId, int projectId) throws RestClientException{

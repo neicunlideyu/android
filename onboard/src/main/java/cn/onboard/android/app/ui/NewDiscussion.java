@@ -70,8 +70,9 @@ public class NewDiscussion extends BaseActivity {
     }
 
     private void initService() {
-        discussionService = new DiscussionService();
-        userService = new UserService();
+        AppContext appContext = (AppContext)getApplicationContext();
+        discussionService =  new DiscussionService(appContext);
+        userService = new UserService(appContext);
     }
 
     private String[] getAssigneeNameList() {
@@ -192,7 +193,7 @@ public class NewDiscussion extends BaseActivity {
                     Message msg = new Message();
 
                     try {
-                        discussion = discussionService.createDiscussion(discussion);
+                        discussion = discussionService.createDiscussion(discussion, (AppContext)getApplicationContext());
                         msg.what = 1;
                     } catch (RestClientException e) {
                         e.printStackTrace();

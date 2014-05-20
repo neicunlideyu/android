@@ -23,6 +23,7 @@ import cn.onboard.android.app.bean.AttachmentIconType;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.BitmapManager;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.attachment.AttachmentService;
 
 public class AttachmentListViewAdapter extends BaseAdapter {
     private final List<Attachment> listItems;// 数据集合
@@ -104,7 +105,7 @@ public class AttachmentListViewAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     AppContext appContext = (AppContext) v.getContext().getApplicationContext();
-                    appContext.downloadAttachmentByAttachmentId(attachment.getId(),
+                    new AttachmentService(appContext).downloadAttachment(attachment.getId(),
                             attachment.getName(), attachment.getCompanyId(), attachment.getProjectId());
                 }
             });

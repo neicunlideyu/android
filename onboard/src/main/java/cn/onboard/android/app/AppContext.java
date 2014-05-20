@@ -2,26 +2,13 @@ package cn.onboard.android.app;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 
 import com.google.common.base.Strings;
-import com.onboard.api.dto.Activity;
-import com.onboard.api.dto.Attachment;
-import com.onboard.api.dto.Comment;
-import com.onboard.api.dto.Company;
-import com.onboard.api.dto.Discussion;
-import com.onboard.api.dto.Document;
-import com.onboard.api.dto.Project;
-import com.onboard.api.dto.Todo;
-import com.onboard.api.dto.Todolist;
-import com.onboard.api.dto.Topic;
-import com.onboard.api.dto.Upload;
 import com.onboard.api.dto.User;
 
 import java.io.File;
@@ -31,15 +18,12 @@ import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 import cn.onboard.android.app.api.ApiClient;
-import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.cache.DaoMaster;
 import cn.onboard.android.app.cache.DaoSession;
 
@@ -361,176 +345,6 @@ public class AppContext extends Application {
 
     void removeProperty(String... key) {
         AppConfig.getAppConfig(this).remove(key);
-    }
-
-    public List<Company> getCompanyList() throws AppException {
-        List<Company> companyList = new ArrayList<Company>();
-        companyList = ApiClient.getCompanyList(this);
-        return companyList;
-    }
-
-    public List<Project> getProjectListByCompanyId(int companyId)
-            throws AppException {
-        List<Project> projectList = new ArrayList<Project>();
-        projectList = ApiClient.getProjectByCompanyId(this, companyId);
-        return projectList;
-    }
-
-    public List<Todolist> getTodoListsByProjectId(int companyId, int projectId)
-            throws AppException {
-        List<Todolist> todolists = new ArrayList<Todolist>();
-        todolists = ApiClient
-                .getTodoListByProjectId(this, companyId, projectId);
-        return todolists;
-
-    }
-
-    public List<Todolist> getTodoListsByUserId(int companyId, int userId)
-            throws AppException {
-        List<Todolist> todolists = new ArrayList<Todolist>();
-        todolists = ApiClient
-                .getTodoListByCompanyIdByUserId(this, companyId, userId);
-        return todolists;
-
-    }
-
-    public List<Todolist> getTodoListsByDate(int companyId, Date date)
-            throws AppException {
-        List<Todolist> todolists = new ArrayList<Todolist>();
-        todolists = ApiClient
-                .getTodoListByCompanyIdByDate(this, companyId, date);
-        return todolists;
-
-    }
-
-    public List<Topic> getTopicsByProjectId(int companyId, int projectId, int page)
-            throws AppException {
-        List<Topic> topicList = new ArrayList<Topic>();
-        topicList = ApiClient.getTopicsByProjectId(this, companyId, projectId, page);
-        return topicList;
-
-    }
-
-    public List<Document> getDocumentsByProjectId(int companyId, int projectId)
-            throws AppException {
-        List<Document> documentList = new ArrayList<Document>();
-        documentList = ApiClient.getDocumentsByProjectId(this, companyId,
-                projectId);
-        return documentList;
-
-    }
-
-
-    public Discussion getDiscussionById(int companyId, int projectId,
-                                        int discussionId) throws AppException {
-        Discussion discussion = ApiClient.getDiscussionById(this, companyId,
-                projectId, discussionId);
-        return discussion;
-    }
-
-    public Document getDocumentById(int companyId, int projectId,
-                                    int documentId) throws AppException {
-        Document document = ApiClient.getDocumentById(this, companyId,
-                projectId, documentId);
-        return document;
-    }
-
-    public List<Activity> getActivitiesByCompanyId(int companyId, int page) throws AppException {
-        List<Activity> activities = new ArrayList<Activity>();
-        activities = ApiClient.getActivitiesByCompanyId(this, companyId, page);
-        return activities;
-    }
-
-    public List<Activity> getActivitiesByCompanyIdByUserId(int companyId, int userId, int page) throws AppException {
-        List<Activity> activities = new ArrayList<Activity>();
-        activities = ApiClient.getActivitiesByCompanyIdByUserId(this, companyId, userId, page);
-        return activities;
-    }
-
-
-    public Upload getUploadById(int companyId, int projectId, int uploadId) throws AppException {
-        return ApiClient.getUploadById(this, companyId, projectId, uploadId);
-    }
-
-    public Todolist getTodolistById(int companyId, int projectId, int todolistId) throws AppException {
-        return ApiClient.getTodolistById(this, companyId, projectId, todolistId);
-    }
-
-    public List<Attachment> getAttachmentsByProjectId(int companyId,
-                                                      int projectId, int page) throws AppException {
-        List<Attachment> attachments = new ArrayList<Attachment>();
-        attachments = ApiClient.getAttachmentsByProjectId(this, companyId, projectId, page);
-        return attachments;
-
-    }
-
-    public List<Attachment> getAttachmentsByCompanyIdByUserId(int companyId,
-                                                              int userId, int page) throws AppException {
-        List<Attachment> attachments = new ArrayList<Attachment>();
-        attachments = ApiClient.getAttachmentsByCompanyIdByUserId(this, companyId, userId, page);
-        return attachments;
-
-    }
-
-    public void downloadAttachmentByAttachmentId(int attachmentId, String attachmentName, int companyId, int projectId) {
-        DownloadManager downloadManager = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
-        String newUrl = URLs.ATTACHMENT_DOWNLOWD_HTTP.replaceAll("attachmentId", attachmentId + "")
-                .replaceAll("companyId", companyId + "").replaceAll("projectId", projectId + "");
-
-        Uri uri = Uri.parse(newUrl);
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setTitle(attachmentName);
-        request.setDestinationInExternalFilesDir(this, null, attachmentName);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        downloadManager.enqueue(request);
-    }
-
-    public List<User> getUsersByProjectId(int companyId, int projectId) throws AppException {
-        List<User> users = new ArrayList<User>();
-        users = ApiClient.getUsersByProjectId(this, companyId, projectId);
-        return users;
-    }
-
-    public User getUserById(int userId) throws AppException {
-        User user = ApiClient.getUserById(this, userId);
-        return user;
-    }
-
-    public Comment publishComment(Comment comment) throws AppException {
-        return ApiClient.publishComment(this, comment);
-    }
-
-    public Todo createTodo(Todo todo) throws AppException {
-        return ApiClient.createTodo(this, todo);
-    }
-
-    public Upload createUpload(Upload upload, File file) throws AppException {
-        return ApiClient.createUpload(this, upload, file);
-    }
-
-    public Todo updateTodo(Todo todo) throws AppException {
-        return ApiClient.updateTodo(this, todo);
-    }
-
-    public Todolist createTodolist(Todolist todolist) throws AppException {
-        return ApiClient.createTodolist(this, todolist);
-    }
-
-    public Todolist updateTodolist(Todolist todolist) throws AppException {
-        return ApiClient.updateTodolist(this, todolist);
-    }
-
-    public Discussion createDiscussion(Discussion discussion) throws AppException {
-        return ApiClient.createDiscussion(this, discussion);
-    }
-
-
-    public List<Todo> getCalendarTodos(int companyId, long startTime, long endTime) throws AppException {
-        return ApiClient.getCalendarTodos(this, companyId, startTime, endTime);
-    }
-
-    public Todo getTodoById(int companyId, int projectId, int todoId) throws AppException {
-        return ApiClient.getTodoById(this, companyId, projectId, todoId);
     }
 
     public Map<String, List<User>> getDepartmentNameUserMapByCompanyId(int companyId) throws AppException {

@@ -22,6 +22,8 @@ import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.onboard.api.dto.Company;
 
+import org.springframework.web.client.RestClientException;
+
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
@@ -30,10 +32,14 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.CompanyListViewAdapter;
 import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.common.UIHelper;
+import cn.onboard.android.app.core.comment.CommentService;
+import cn.onboard.android.app.core.company.CompanyService;
 
 public class SelectCompany extends BaseActivity {
 
     private AppContext appContext;
+
+    private CompanyService companyService;
 
     private CompanyListViewAdapter listViewCompanyAdapter;
 
@@ -52,9 +58,14 @@ public class SelectCompany extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initService();
         createView();
         new GetCompanyListTask().execute();
         new CheckVersionTask().execute();
+    }
+
+    private void initService() {
+        companyService = new CompanyService((AppContext)getApplicationContext());
     }
 
 
@@ -216,8 +227,8 @@ public class SelectCompany extends BaseActivity {
         protected List<Company> doInBackground(Void... params) {
             List<Company> companies = null;
             try {
-                companies = ((AppContext) getApplication()).getCompanyList();
-            } catch (AppException e) {
+                companies = companyService.getCompanyList();
+            } catch (RestClientException e) {
                 e.printStackTrace();
             }
             return companies;
