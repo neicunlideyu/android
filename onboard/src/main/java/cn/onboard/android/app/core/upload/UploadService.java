@@ -5,6 +5,7 @@ import com.onboard.api.dto.Upload;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
@@ -38,14 +39,15 @@ public class UploadService extends OnboardService {
         String url = super.getUrl(uri);
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<String> requestEntity = new HttpEntity<String>(requestHeaders);
-        return restTemplate.postForObject(url, requestEntity, Upload.class, getUploadRequestForm(upload, file));
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(getUploadRequestForm(upload, file), requestHeaders);
+        restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
+
+        return restTemplate.postForObject(url, requestEntity, Upload.class);
     }
 
 
     private MultiValueMap<String, Object> getUploadRequestForm(Upload upload, File file) {
         MultiValueMap<String, Object> formData = new LinkedMultiValueMap<String, Object>();
-        formData.add("upload", upload);
         formData.add("file", file);
 
         return formData;

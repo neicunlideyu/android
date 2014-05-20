@@ -75,8 +75,8 @@ public class BaseActivity extends SherlockFragmentActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_settings:
-                Intent intent = new Intent(this, Setting.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, Setting.class);
+//                startActivity(intent);
                 return true;
             case R.id.log_out:
                 new GetProjectListTask().execute();
