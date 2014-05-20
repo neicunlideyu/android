@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
-import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.ActivityListViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
@@ -101,6 +100,9 @@ public class ActivityFragment extends Fragment {
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
+                        if (view == listviewFooter)
+                            return;
+
                         Activity activity = null;
                         // 判断是否是TextView
                         if (view instanceof TextView) {

@@ -87,6 +87,6 @@ public class TodolistService extends OnboardService {
 
     public Todolist updateTodolist(Todolist todolist) throws RestClientException {
         String uri = String.format(GET_TODOLIST_BY_ID_URI, todolist.getCompanyId(), todolist.getProjectId(), todolist.getId());
-        return postForObjectWithCookie(uri, todolist, Todolist.class);
+        return putForObjectWithCookie(uri, todolist, Todolist.class);
     }
 }

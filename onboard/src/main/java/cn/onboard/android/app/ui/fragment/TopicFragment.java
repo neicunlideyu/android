@@ -27,11 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
-import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.TopicListViewAdapter;
 import cn.onboard.android.app.common.UIHelper;
-import cn.onboard.android.app.core.company.CompanyService;
 import cn.onboard.android.app.core.discussion.DiscussionService;
 import cn.onboard.android.app.ui.NewDiscussion;
 import cn.onboard.android.app.widget.pullrefresh.PullToRefreshListView;
@@ -85,7 +83,7 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
     }
 
     private void initService() {
-        discussionService = new DiscussionService((AppContext)getActivity().getApplicationContext());
+        discussionService = new DiscussionService((AppContext) getActivity().getApplicationContext());
     }
 
 
@@ -165,6 +163,8 @@ public class TopicFragment extends Fragment implements OnMenuItemClickListener {
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
+                        if (view == listview_footer)
+                            return;
                         Topic topic = null;
                         // 判断是否是TextView
                         if (view instanceof TextView) {

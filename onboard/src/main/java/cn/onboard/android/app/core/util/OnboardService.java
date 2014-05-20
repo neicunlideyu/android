@@ -1,7 +1,5 @@
 package cn.onboard.android.app.core.util;
 
-import com.onboard.api.dto.Discussion;
-
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -16,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 
 import cn.onboard.android.app.AppContext;
 import cn.onboard.android.app.cache.Cache;
-import cn.onboard.android.app.bean.URLs;
 import cn.onboard.android.app.cache.CacheDao;
 import cn.onboard.android.app.common.DataHandleUtil;
 import de.greenrobot.dao.query.QueryBuilder;
@@ -26,9 +23,7 @@ import de.greenrobot.dao.query.QueryBuilder;
  */
 public abstract class OnboardService {
 
-    public final static String BASE_URL = "http://192.168.100.31:8080/api";
-
-    //public final static String BASE_URL = "http://onboard.cn/api";
+    public final static String BASE_URL = "http://192.168.100.37:8080/api";
 
     private String cookie;
 

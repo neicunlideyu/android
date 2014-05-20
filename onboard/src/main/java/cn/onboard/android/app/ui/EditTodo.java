@@ -36,7 +36,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
-import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.core.todo.TodoService;
 import cn.onboard.android.app.core.todo.TodolistService;
@@ -238,7 +237,7 @@ public class EditTodo extends BaseActivity {
         @Override
         protected void onPostExecute(Void params) {
             findViewById(R.id.loading_progress_bar).setVisibility(View.GONE);
-           //TODO getSupportActionBar().setTitle("任务列表/" + todo.getTodolistName());
+            getSupportActionBar().setTitle("任务列表/" + todo.getTodolistName());
             if (todo.getDueDate() != null)
                 assigneeDateText.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(todo.getDueDate().getTime()));
             if (todo.getContent() != null)

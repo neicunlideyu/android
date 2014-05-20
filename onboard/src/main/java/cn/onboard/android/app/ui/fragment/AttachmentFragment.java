@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
-import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.AttachmentListViewAdapter;
 import cn.onboard.android.app.common.ImageUtils;
@@ -293,6 +292,9 @@ public class AttachmentFragment extends Fragment implements MenuItem.OnMenuItemC
                 });
         attachmentPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (view == attachment_list_footer)
+                    return;
+
                 Attachment attachment = null;
                 // 判断是否是TextView
                 if (view instanceof TextView) {

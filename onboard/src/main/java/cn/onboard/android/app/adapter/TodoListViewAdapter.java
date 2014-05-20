@@ -25,6 +25,7 @@ import cn.onboard.android.app.R;
 import cn.onboard.android.app.ui.EditTodo;
 import cn.onboard.android.app.ui.EditTodolist;
 import cn.onboard.android.app.ui.NewTodo;
+import cn.onboard.android.app.ui.fragment.TodoFragment;
 import cn.onboard.android.app.ui.fragment.TodoFragment.EditType;
 import cn.onboard.android.app.ui.fragment.TodoFragment.Item;
 import cn.onboard.android.app.ui.fragment.TodoFragment.Type;
@@ -45,7 +46,7 @@ public class TodoListViewAdapter extends BaseAdapter implements SectionIndexer {
      * @param context
      * @param data
      */
-    public TodoListViewAdapter(Context context, Fragment fragment,List<Item> data, int sectionSize) {
+    public TodoListViewAdapter(Context context, Fragment fragment, List<Item> data, int sectionSize) {
         this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
         this.listItems = data;
         this.sections = new Item[sectionSize];
@@ -185,8 +186,9 @@ public class TodoListViewAdapter extends BaseAdapter implements SectionIndexer {
 
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    if (isChecked)
-//                        new CompleteTodolistTask().execute(((Todo) item.identifiable).getId());
+                    if (isChecked) {
+                        ((TodoFragment) fragment).new CompleteTodolistTask().execute(((Todo) item.identifiable).getId());
+                    }
                 }
             });
             if (((Todo) item.identifiable).getCompleted() != null && ((Todo) item.identifiable).getCompleted()) {

@@ -34,7 +34,7 @@ public class TodoService extends OnboardService {
     }
 
     public Todo getTodoById(int companyId, int projectId, int todoId) throws RestClientException{
-        String uri = String.format(GET_TODO_BY_ID_URI, companyId, projectId, todoId);
+        String uri = String.format(TODO_URI, companyId, projectId, todoId);
 
         return getForObjectWithCookie(uri, Todo.class);
     }
@@ -48,7 +48,7 @@ public class TodoService extends OnboardService {
     public Todo updateTodo(Todo todo) throws RestClientException {
         String uri = String.format(TODO_URI, todo.getCompanyId(), todo.getProjectId(), todo.getId());
 
-        return postForObjectWithCookie(uri, todo, Todo.class);
+        return putForObjectWithCookie(uri, todo, Todo.class);
     }
 
 }

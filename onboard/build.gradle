@@ -95,7 +95,7 @@ dependencies {
     compile('de.greenrobot:greendao:1.3.0') {
         exclude module: 'support-v4'
     }
-    compile('com.onboard:com.onboard.api:2.0.7-SNAPSHOT') {
+    compile('com.onboard:com.onboard.api:2.3.3-SNAPSHOT') {
         transitive = false
     }
 

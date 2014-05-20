@@ -45,7 +45,6 @@ import java.util.Date;
 import java.util.List;
 
 import cn.onboard.android.app.AppContext;
-import cn.onboard.android.app.AppException;
 import cn.onboard.android.app.R;
 import cn.onboard.android.app.adapter.TodoListViewAdapter;
 import cn.onboard.android.app.core.todo.TodoService;
@@ -67,11 +66,11 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
 
     private List<Item> data;
 
-    private List<Todolist> todolistList;
+    private List<Todolist> todolistList = new ArrayList<Todolist>();
 
     private TodoListViewAdapter listViewAdapter;
 
-    private TodoFragment() {
+    public TodoFragment() {
         setRetainInstance(true);
     }
 
@@ -97,7 +96,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
     }
 
     private void initService() {
-        AppContext appContext = (AppContext)getActivity().getApplicationContext();
+        AppContext appContext = (AppContext) getActivity().getApplicationContext();
         this.todolistService = new TodolistService(appContext);
         this.todoService = new TodoService(appContext);
     }
@@ -271,7 +270,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
         @Override
         protected void onPostExecute(Todolist todolist) {
 
-            todolistList.add(todolist);
+            todolistList.add(0, todolist);
             data.clear();
             data.addAll(handleData(todolistList));
             listViewAdapter.notifyDataSetChanged();
@@ -288,7 +287,6 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             todo.setCompanyId(companyId);
             todo.setProjectId(projectId);
             todo.setCompleted(true);
-            AppContext ac = (AppContext) getActivity().getApplication();
             try {
                 todo = todoService
                         .updateTodo(todo);
@@ -333,7 +331,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
                             .getTodoListByCompanyIdByDate(companyId, date);
 
                 }
-                todolistList = todolists;
+                todolistList.addAll(todolists);
             } catch (RestClientException e) {
                 e.printStackTrace();
             }
@@ -355,7 +353,7 @@ public class TodoFragment extends Fragment implements MenuItem.OnMenuItemClickLi
             if (data.size() == 0) {
                 getActivity().findViewById(R.id.data_empty).setVisibility(View.VISIBLE);
             }
-            listViewAdapter = new TodoListViewAdapter(getActivity().getApplicationContext(),TodoFragment.this, data, todolists.size());
+            listViewAdapter = new TodoListViewAdapter(getActivity().getApplicationContext(), TodoFragment.this, data, todolists.size());
             pinnedSectionListView.setAdapter(listViewAdapter);
             getActivity().findViewById(R.id.progress_bar).setVisibility(View.GONE);
 
